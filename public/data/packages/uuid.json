@@ -1,0 +1,141 @@
+{
+  "id": "uuid",
+  "ecosystem": "npm",
+  "name": "uuid",
+  "summary": "RFC9562 UUIDs",
+  "tags": [
+    "uuid",
+    "guid",
+    "rfc4122",
+    "rfc9562",
+    "typescript"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "For the creation of RFC9562 (formerly RFC4122) UUIDs\n\n- **Complete** - Support for all RFC9562 UUID versions\n- **Cross-platform** - Support for...\n  - Typescript\n  - Chrome, Safari, Firefox, and Edge\n  - NodeJS\n  - React Native / Expo\n- **Secure** - Uses modern crypto API for random values\n- **Compact** - Zero-dependency, tree-shakable\n- **CLI** - uuid command line utility\n\n> [!NOTE]\n>\n> Starting with uuid@12 CommonJS is no longer supported.  See implications and motivation for details.",
+    "mental_model": "",
+    "when_to_use": "Use uuid when you need rfc9562 uuids.",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "uuid",
+        "type": "module",
+        "label": "uuid",
+        "summary": "Top-level module. Import as `import uuid` or `from uuid import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "package.json",
+        "type": "function",
+        "label": "package.json",
+        "summary": "Function exported from uuid.",
+        "difficulty": 1
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "uuid",
+        "to": "package.json",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install uuid",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install uuid"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'uuid';"
+        }
+      ]
+    },
+    {
+      "id": "quickstart",
+      "title": "Quickstart",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "**2. Create a UUID**"
+        }
+      ]
+    },
+    {
+      "id": "uuid-v1-options-buffer-offset",
+      "title": "uuid.v1([options[, buffer[, offset]]])",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "Example using `options`:"
+        }
+      ]
+    },
+    {
+      "id": "uuid-v4-options-buffer-offset",
+      "title": "uuid.v4([options[, buffer[, offset]]])",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "Example using predefined `random` values:"
+        }
+      ]
+    },
+    {
+      "id": "uuid-v5-name-namespace-buffer-offset",
+      "title": "uuid.v5(name, namespace[, buffer[, offset]])",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "Example with RFC `URL` namespace:"
+        }
+      ]
+    },
+    {
+      "id": "uuid-v6-options-buffer-offset",
+      "title": "uuid.v6([options[, buffer[, offset]]])",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "Example using `options`:"
+        }
+      ]
+    },
+    {
+      "id": "uuid-validate-str",
+      "title": "uuid.validate(str)",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "Using `validate` and `version` together it is possible to do per-version validation, e.g. validate for only v4 UUIds."
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/uuid",
+    "repo_url": "https://github.com/uuidjs/uuid",
+    "docs_url": "",
+    "weekly_downloads": 242593952,
+    "version": "13.0.0",
+    "license": "MIT"
+  }
+}

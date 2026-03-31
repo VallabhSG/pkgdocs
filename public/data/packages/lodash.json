@@ -1,0 +1,58 @@
+{
+  "id": "lodash",
+  "ecosystem": "npm",
+  "name": "lodash",
+  "summary": "Lodash modular utilities",
+  "tags": [
+    "modules",
+    "stdlib",
+    "util",
+    "javascript",
+    "lodash",
+    "utilities"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "Using npm:\n``shell\n$ npm i -g npm\n$ npm i --save lodash\n`\n\nIn Node.js:\n`js\n// Load the full build.\nvar _ = require('lodash');\n// Load the core build.\nvar _ = require('lodash/core');\n// Load the FP build for immutable auto-curried iteratee-first data-last methods.\nvar fp = require('lodash/fp');\n\n// Load method categories.\nvar array = require('lodash/array');\nvar object = require('lodash/fp/object');\n\n// Cherry-pick methods for smaller browserify/rollup/webpack bundles.\nvar at =…",
+    "mental_model": "",
+    "when_to_use": "Use lodash when you need lodash modular utilities.",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "lodash",
+        "type": "module",
+        "label": "lodash",
+        "summary": "Top-level module. Import as `import lodash` or `from lodash import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      }
+    ],
+    "edges": []
+  },
+  "tasks": [
+    {
+      "id": "installation",
+      "title": "Installation",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "In Node.js:"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/lodash",
+    "repo_url": "https://github.com/lodash/lodash",
+    "docs_url": "https://lodash.com/",
+    "weekly_downloads": 137659801,
+    "version": "4.18.0",
+    "license": "MIT"
+  }
+}

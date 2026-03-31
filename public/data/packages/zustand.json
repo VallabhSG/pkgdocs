@@ -1,0 +1,171 @@
+{
+  "id": "zustand",
+  "ecosystem": "npm",
+  "name": "zustand",
+  "summary": "🐻 Bear necessities for state management in React",
+  "tags": [
+    "react",
+    "state",
+    "manager",
+    "management",
+    "redux",
+    "store",
+    "hacktoberfest",
+    "hooks",
+    "react-context",
+    "reactjs"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "[](https://github.com/pmndrs/zustand/actions?query=workflow%3ATest)\n[](https://bundlejs.com/?q=zustand)\n[](https://www.npmjs.com/package/zustand)\n[](https://www.npmjs.com/package/zustand)\n[](https://discord.gg/poimandres)\n\n  \n    \n  \n\nA small, fast and scalable bearbones state-management solution using simplified flux principles. Has a comfy API based on hooks, isn't boilerplatey or opinionated.\n\nDon't disregard it because it's cute. It has quite the claws, lots of time was spent dealing with…",
+    "mental_model": "",
+    "when_to_use": "Reducing nested structures is tiresome. Have you tried immer?\n\n``jsx\nimport { produce } from 'immer'\n\nconst useLushStore = create((set) => ({\n  lush: { forest: { contains: { a: 'bear' } } },\n  clearForest: () =>\n    set(\n      produce((state) => {\n        state.lush.forest.contains = null\n      }),\n    ),\n}))\n\nconst clearForest =…",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "zustand",
+        "type": "module",
+        "label": "zustand",
+        "summary": "Top-level module. Import as `import zustand` or `from zustand import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "package.json",
+        "type": "function",
+        "label": "package.json",
+        "summary": "Function exported from zustand.",
+        "difficulty": 1
+      },
+      {
+        "id": "*",
+        "type": "function",
+        "label": "*",
+        "summary": "Function exported from zustand.",
+        "difficulty": 1
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "zustand",
+        "to": "package.json",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "zustand",
+        "to": "*",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install zustand",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install zustand"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'zustand';"
+        }
+      ]
+    },
+    {
+      "id": "introduction",
+      "title": "Introduction",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "npm install zustand"
+        }
+      ]
+    },
+    {
+      "id": "selecting-multiple-state-slices",
+      "title": "Selecting multiple state slices",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "If you want to construct a single object with multiple state-picks inside, similar to redux's mapStateToProps, you can use [useShallow](./docs/guides/prevent-rerenders-with-use-shallow.md) to prevent unnecessary rerenders when the selector output does not change according to shallow equal."
+        },
+        {
+          "label": "Step 2",
+          "code": "For more control over re-rendering, you may provide any custom equality function (this example requires the use of [`createWithEqualityFn`](./docs/migrations/migrating-to-v5.md#using-custom-equality-functions-such-as-shallow))."
+        }
+      ]
+    },
+    {
+      "id": "using-zustand-without-react",
+      "title": "Using zustand without React",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "You can use a vanilla store with `useStore` hook available since v4."
+        }
+      ]
+    },
+    {
+      "id": "can-t-live-without-redux-like-reducers-and-action-types",
+      "title": "Can't live without redux-like reducers and action types?",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "Or, just use our redux-middleware. It wires up your main-reducer, sets the initial state, and adds a dispatch function to the state itself and the vanilla API."
+        }
+      ]
+    },
+    {
+      "id": "redux-devtools",
+      "title": "Redux devtools",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "One redux devtools connection for multiple stores"
+        }
+      ]
+    },
+    {
+      "id": "logging-actions",
+      "title": "Logging Actions",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "You can also log the action's type along with its payload:"
+        },
+        {
+          "label": "Step 2",
+          "code": "If an action type is not provided, it is defaulted to \"anonymous\". You can customize this default value by providing an `anonymousActionType` parameter:"
+        },
+        {
+          "label": "Step 3",
+          "code": "If you wish to disable devtools (on production for instance). You can customize this setting by providing the `enabled` parameter:"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/zustand",
+    "repo_url": "https://github.com/pmndrs/zustand",
+    "docs_url": "",
+    "weekly_downloads": 30660771,
+    "version": "5.0.12",
+    "license": "MIT"
+  }
+}

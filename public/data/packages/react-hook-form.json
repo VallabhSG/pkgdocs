@@ -1,0 +1,80 @@
+{
+  "id": "react-hook-form",
+  "ecosystem": "npm",
+  "name": "react-hook-form",
+  "summary": "Performant, flexible and extensible forms library for React Hooks",
+  "tags": [
+    "react",
+    "hooks",
+    "form",
+    "forms",
+    "form-validation",
+    "validation",
+    "typescript",
+    "react-hooks",
+    "dx",
+    "form-builder"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "[](https://www.npmjs.com/package/react-hook-form)\n[](https://www.npmjs.com/package/react-hook-form)\n[](https://github.com/react-hook-form/react-hook-form/blob/master/LICENSE)\n[](https://discord.gg/yYv7GZ8)\n\n  Get started | \n  API |\n  Form Builder |\n  FAQs |\n  Examples",
+    "mental_model": "- Built with performance, UX and DX in mind\n- Embraces native HTML form validation\n- Out of the box integration with UI libraries\n- Small size and no dependencies\n- Support Yup, Zod, AJV, Superstruct, Joi and others",
+    "when_to_use": "Use react-hook-form when you need performant, flexible and extensible forms library for react hooks.",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "react_hook_form",
+        "type": "module",
+        "label": "react-hook-form",
+        "summary": "Top-level module. Import as `import react_hook_form` or `from react_hook_form import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "package.json",
+        "type": "function",
+        "label": "package.json",
+        "summary": "Function exported from react-hook-form.",
+        "difficulty": 1
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "react_hook_form",
+        "to": "package.json",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install react-hook-form",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install react-hook-form"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'react-hook-form';"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/react-hook-form",
+    "repo_url": "https://github.com/react-hook-form/react-hook-form",
+    "docs_url": "https://react-hook-form.com",
+    "weekly_downloads": 39976482,
+    "version": "7.72.0",
+    "license": "MIT"
+  }
+}

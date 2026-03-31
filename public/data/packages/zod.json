@@ -1,0 +1,196 @@
+{
+  "id": "zod",
+  "ecosystem": "npm",
+  "name": "zod",
+  "summary": "TypeScript-first schema declaration and validation library with static type inference",
+  "tags": [
+    "typescript",
+    "schema",
+    "validation",
+    "type",
+    "inference",
+    "runtime-validation",
+    "schema-validation",
+    "static-types",
+    "type-inference"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "zod is an npm package for typescript-first schema declaration and validation library with static type inference.",
+    "mental_model": "",
+    "when_to_use": "Use zod when you need typescript-first schema declaration and validation library with static type inference.",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "zod",
+        "type": "module",
+        "label": "zod",
+        "summary": "Top-level module. Import as `import zod` or `from zod import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "v3",
+        "type": "function",
+        "label": "v3",
+        "summary": "Function exported from zod.",
+        "difficulty": 1
+      },
+      {
+        "id": "v4",
+        "type": "function",
+        "label": "v4",
+        "summary": "Function exported from zod.",
+        "difficulty": 1
+      },
+      {
+        "id": "mini",
+        "type": "function",
+        "label": "mini",
+        "summary": "Function exported from zod.",
+        "difficulty": 1
+      },
+      {
+        "id": "locales",
+        "type": "function",
+        "label": "locales",
+        "summary": "Function exported from zod.",
+        "difficulty": 2
+      },
+      {
+        "id": "v4-mini",
+        "type": "function",
+        "label": "v4-mini",
+        "summary": "Function exported from zod.",
+        "difficulty": 2
+      },
+      {
+        "id": "v4_core",
+        "type": "function",
+        "label": "v4_core",
+        "summary": "Function exported from zod.",
+        "difficulty": 2
+      },
+      {
+        "id": "v4_mini",
+        "type": "function",
+        "label": "v4_mini",
+        "summary": "Function exported from zod.",
+        "difficulty": 2
+      },
+      {
+        "id": "v4_locales",
+        "type": "function",
+        "label": "v4_locales",
+        "summary": "Function exported from zod.",
+        "difficulty": 3
+      },
+      {
+        "id": "package.json",
+        "type": "function",
+        "label": "package.json",
+        "summary": "Function exported from zod.",
+        "difficulty": 3
+      },
+      {
+        "id": "v4_locales_*",
+        "type": "function",
+        "label": "v4_locales_*",
+        "summary": "Function exported from zod.",
+        "difficulty": 3
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "zod",
+        "to": "v3",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "zod",
+        "to": "v4",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "zod",
+        "to": "mini",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "zod",
+        "to": "locales",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "zod",
+        "to": "v4-mini",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "zod",
+        "to": "v4_core",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "zod",
+        "to": "v4_mini",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "zod",
+        "to": "v4_locales",
+        "label": "contains"
+      },
+      {
+        "id": "e9",
+        "from": "zod",
+        "to": "package.json",
+        "label": "contains"
+      },
+      {
+        "id": "e10",
+        "from": "zod",
+        "to": "v4_locales_*",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install zod",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install zod"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'zod';"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/zod",
+    "repo_url": "https://github.com/colinhacks/zod",
+    "docs_url": "https://zod.dev",
+    "weekly_downloads": 148905280,
+    "version": "4.3.6",
+    "license": "MIT"
+  }
+}

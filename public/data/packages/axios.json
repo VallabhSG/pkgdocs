@@ -1,0 +1,343 @@
+{
+  "id": "axios",
+  "ecosystem": "npm",
+  "name": "axios",
+  "summary": "Promise based HTTP client for the browser and node.js",
+  "tags": [
+    "xhr",
+    "http",
+    "ajax",
+    "promise",
+    "node",
+    "browser",
+    "fetch",
+    "rest",
+    "api",
+    "client"
+  ],
+  "difficulty": 3,
+  "story": {
+    "problem": "🥇 Gold sponsors       We’re bound by one common purpose: to give you the financial tools, resources and information you ne...  www.principal.com \n    Buy real Instagram followers from Twicsy starting at only $2.97. Twicsy has been voted the best site...  twicsy.com \n       Hi, we&#x27;re Descope! We are building something in the authentication space for app developers and...  Website | Docs | Community \n       Best Route Planning And Route Optimization Software  Explore | Free Trial | Contact \n…",
+    "mental_model": "- **Browser Requests:** Make XMLHttpRequests directly from the browser.\n- **Node.js Requests:** Make http requests from Node.js environments.\n- **Promise-based:** Fully supports the Promise API for easier asynchronous code.\n- **Interceptors:** Intercept requests and responses to add custom logic or transform data.\n- **Data Transformation:** Transform request and response data automatically.\n-…",
+    "when_to_use": "``js\nimport axios from \"axios\";\n//const axios = require('axios'); // legacy way\n\ntry {\n  const response = await axios.get(\"/user?ID=12345\");\n  console.log(response);\n} catch (error) {\n  console.error(error);\n}\n\n// Optionally the request above could also be done as\naxios\n  .get(\"/user\", {\n    params: {\n      ID: 12345,\n    },\n  })\n  .then(function…",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "axios",
+        "type": "module",
+        "label": "axios",
+        "summary": "Top-level module. Import as `import axios` or `from axios import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "unsafe_*",
+        "type": "function",
+        "label": "unsafe_*",
+        "summary": "Function exported from axios.",
+        "difficulty": 1
+      },
+      {
+        "id": "package.json",
+        "type": "function",
+        "label": "package.json",
+        "summary": "Function exported from axios.",
+        "difficulty": 1
+      },
+      {
+        "id": "unsafe_utils.js",
+        "type": "function",
+        "label": "unsafe_utils.js",
+        "summary": "Function exported from axios.",
+        "difficulty": 1
+      },
+      {
+        "id": "dist_node_axios.cjs",
+        "type": "function",
+        "label": "dist_node_axios.cjs",
+        "summary": "Function exported from axios.",
+        "difficulty": 2
+      },
+      {
+        "id": "lib_adapters_xhr.js",
+        "type": "function",
+        "label": "lib_adapters_xhr.js",
+        "summary": "Function exported from axios.",
+        "difficulty": 2
+      },
+      {
+        "id": "lib_adapters_http.js",
+        "type": "function",
+        "label": "lib_adapters_http.js",
+        "summary": "Function exported from axios.",
+        "difficulty": 2
+      },
+      {
+        "id": "unsafe_core_settle.js",
+        "type": "function",
+        "label": "unsafe_core_settle.js",
+        "summary": "Function exported from axios.",
+        "difficulty": 2
+      },
+      {
+        "id": "dist_browser_axios.cjs",
+        "type": "function",
+        "label": "dist_browser_axios.cjs",
+        "summary": "Function exported from axios.",
+        "difficulty": 3
+      },
+      {
+        "id": "unsafe_adapters_xhr.js",
+        "type": "function",
+        "label": "unsafe_adapters_xhr.js",
+        "summary": "Function exported from axios.",
+        "difficulty": 3
+      },
+      {
+        "id": "unsafe_adapters_http.js",
+        "type": "function",
+        "label": "unsafe_adapters_http.js",
+        "summary": "Function exported from axios.",
+        "difficulty": 3
+      },
+      {
+        "id": "unsafe_helpers_buildURL.js",
+        "type": "function",
+        "label": "unsafe_helpers_buildURL.js",
+        "summary": "Function exported from axios.",
+        "difficulty": 3
+      },
+      {
+        "id": "unsafe_core_buildFullPath.js",
+        "type": "function",
+        "label": "unsafe_core_buildFullPath.js",
+        "summary": "Function exported from axios.",
+        "difficulty": 3
+      },
+      {
+        "id": "unsafe_helpers_combineURLs.js",
+        "type": "function",
+        "label": "unsafe_helpers_combineURLs.js",
+        "summary": "Function exported from axios.",
+        "difficulty": 3
+      },
+      {
+        "id": "unsafe_helpers_isAbsoluteURL.js",
+        "type": "function",
+        "label": "unsafe_helpers_isAbsoluteURL.js",
+        "summary": "Function exported from axios.",
+        "difficulty": 3
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "axios",
+        "to": "unsafe_*",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "axios",
+        "to": "package.json",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "axios",
+        "to": "unsafe_utils.js",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "axios",
+        "to": "dist_node_axios.cjs",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "axios",
+        "to": "lib_adapters_xhr.js",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "axios",
+        "to": "lib_adapters_http.js",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "axios",
+        "to": "unsafe_core_settle.js",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "axios",
+        "to": "dist_browser_axios.cjs",
+        "label": "contains"
+      },
+      {
+        "id": "e9",
+        "from": "axios",
+        "to": "unsafe_adapters_xhr.js",
+        "label": "contains"
+      },
+      {
+        "id": "e10",
+        "from": "axios",
+        "to": "unsafe_adapters_http.js",
+        "label": "contains"
+      },
+      {
+        "id": "e11",
+        "from": "axios",
+        "to": "unsafe_helpers_buildURL.js",
+        "label": "contains"
+      },
+      {
+        "id": "e12",
+        "from": "axios",
+        "to": "unsafe_core_buildFullPath.js",
+        "label": "contains"
+      },
+      {
+        "id": "e13",
+        "from": "axios",
+        "to": "unsafe_helpers_combineURLs.js",
+        "label": "contains"
+      },
+      {
+        "id": "e14",
+        "from": "axios",
+        "to": "unsafe_helpers_isAbsoluteURL.js",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install axios",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install axios"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'axios';"
+        }
+      ]
+    },
+    {
+      "id": "package-manager",
+      "title": "Package manager",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "$ npm install axios"
+        },
+        {
+          "label": "Install",
+          "code": "$ bower install axios"
+        },
+        {
+          "label": "Step 3",
+          "code": "$ yarn add axios"
+        },
+        {
+          "label": "Step 4",
+          "code": "$ pnpm add axios"
+        }
+      ]
+    },
+    {
+      "id": "cdn",
+      "title": "CDN",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "Using unpkg CDN:"
+        }
+      ]
+    },
+    {
+      "id": "example",
+      "title": "Example",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "> **Note**: `async/await` is part of ECMAScript 2017 and is not supported in Internet\n> Explorer and older browsers, so use with caution.\n\nPerforming a `POST` request"
+        },
+        {
+          "label": "Step 2",
+          "code": "Performing multiple concurrent requests"
+        }
+      ]
+    },
+    {
+      "id": "axios-api",
+      "title": "axios API",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Step 2",
+          "code": "##### axios(url[, config])"
+        }
+      ]
+    },
+    {
+      "id": "response-schema",
+      "title": "Response Schema",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "When using `then`, you will receive the response as follows:"
+        }
+      ]
+    },
+    {
+      "id": "interceptors",
+      "title": "Interceptors",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "If you need to remove an interceptor later you can."
+        },
+        {
+          "label": "Step 2",
+          "code": "You can also clear all interceptors for requests or responses."
+        },
+        {
+          "label": "Step 3",
+          "code": "You can add interceptors to a custom instance of axios."
+        },
+        {
+          "label": "Step 4",
+          "code": "When you add request interceptors, they are presumed to be asynchronous by default. This can cause a delay\nin the execution of your axios request when the main thread is blocked (a promise is created under the hood for\nthe interceptor and your request gets put at the bottom of the call stack). If your request interceptors are synchronous you can add a flag\nto the options object that will tell axios to run the code synchronously and avoid any delays in request execution."
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/axios",
+    "repo_url": "https://github.com/axios/axios",
+    "docs_url": "https://axios-http.com",
+    "weekly_downloads": 101032032,
+    "version": "1.14.0",
+    "license": "MIT"
+  }
+}

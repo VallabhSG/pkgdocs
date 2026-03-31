@@ -1,0 +1,66 @@
+{
+  "id": "react-query",
+  "ecosystem": "npm",
+  "name": "react-query",
+  "summary": "Hooks for managing, caching and syncing asynchronous and remote data in React",
+  "tags": [
+    "react",
+    "typescript",
+    "async",
+    "cache",
+    "data",
+    "fetch",
+    "graphql",
+    "hooks",
+    "query",
+    "rest"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "You're looking at the v3 version of react-query. Starting with v4, react-query is now available as @tanstack/react-query\n\nFind the docs at https://tanstack.com/query/latest",
+    "mental_model": "",
+    "when_to_use": "Use react-query when you need hooks for managing, caching and syncing asynchronous and remote data in react.",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "react_query",
+        "type": "module",
+        "label": "react-query",
+        "summary": "Top-level module. Import as `import react_query` or `from react_query import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      }
+    ],
+    "edges": []
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install react-query",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install react-query"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'react-query';"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/react-query",
+    "repo_url": "https://github.com/tannerlinsley/react-query",
+    "docs_url": "",
+    "weekly_downloads": 1625855,
+    "version": "3.39.3",
+    "license": "MIT"
+  }
+}
