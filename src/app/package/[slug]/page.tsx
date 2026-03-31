@@ -37,7 +37,7 @@ export default function PackagePage({
   const [focusNodeId, setFocusNodeId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`/data/packages/${slug}.json`)
+    fetch(`/api/packages/${slug}`)
       .then((r) => {
         if (!r.ok) throw new Error("Not found");
         return r.json();

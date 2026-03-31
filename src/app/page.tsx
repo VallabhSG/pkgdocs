@@ -2,8 +2,23 @@ import { readdir, readFile } from "fs/promises";
 import path from "path";
 import type { Package } from "@/lib/types";
 import SearchBar from "@/components/SearchBar";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 async function getPackages(): Promise<Package[]> {
+  // Use Supabase if configured
+  if (isSupabaseConfigured() && supabase) {
+    const { data, error } = await supabase
+      .from("packages")
+      .select("data")
+      .order("weekly_downloads", { ascending: false })
+      .limit(200);
+
+    if (!error && data) {
+      return data.map((row) => (row as { data: Package }).data);
+    }
+  }
+
+  // Fallback: static JSON files
   const dir = path.join(process.cwd(), "public", "data", "packages");
   const files = await readdir(dir);
   const packages = await Promise.all(
@@ -22,7 +37,6 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Nav */}
       <header className="border-b border-slate-200 bg-white">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -36,7 +50,6 @@ export default async function HomePage() {
         </div>
       </header>
 
-      {/* Hero */}
       <div className="max-w-5xl mx-auto px-6 py-14 text-center">
         <h1 className="text-5xl font-bold text-slate-900 mb-4 leading-tight">
           Understand any package,
@@ -49,7 +62,6 @@ export default async function HomePage() {
         </p>
       </div>
 
-      {/* Search + grid */}
       <div className="max-w-5xl mx-auto px-6 pb-20">
         <SearchBar packages={packages} />
       </div>
