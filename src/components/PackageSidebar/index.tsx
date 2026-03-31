@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { Package, ViewMode } from "@/lib/types";
 
 interface Props {
@@ -38,8 +39,21 @@ function DifficultyMeter({ level }: { level: 1 | 2 | 3 }) {
 export default function PackageSidebar({ pkg, activeView, onViewChange }: Props) {
   return (
     <aside className="w-64 flex-shrink-0 border-r border-slate-200 h-full flex flex-col bg-white">
+      {/* Back nav */}
+      <div className="px-5 pt-4 pb-2">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-indigo-600 transition-colors"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          All packages
+        </Link>
+      </div>
+
       {/* Package identity */}
-      <div className="px-5 py-5 border-b border-slate-100">
+      <div className="px-5 py-4 border-b border-slate-100">
         <div className="text-xs font-mono text-slate-400 mb-1 uppercase tracking-widest">
           {pkg.ecosystem}
         </div>

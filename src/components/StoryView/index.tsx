@@ -3,6 +3,7 @@
 import { useInView } from "react-intersection-observer";
 import { motion } from "motion/react";
 import type { Package } from "@/lib/types";
+import CopyButton from "@/components/CopyButton";
 
 interface Props {
   pkg: Package;
@@ -104,28 +105,32 @@ export default function StoryView({ pkg, onNodeFocus }: Props) {
         {pkg.tasks
           .filter((t) => t.difficulty === "beginner")
           .slice(0, 1)
-          .map((task) => (
-            <div key={task.id} className="rounded-xl border border-slate-200 overflow-hidden">
-              <div className="bg-slate-800 px-4 py-2 text-xs text-slate-400 font-mono flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-red-500/70" />
-                <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
-                <span className="w-3 h-3 rounded-full bg-green-500/70" />
-                <span className="ml-2">{task.title}</span>
+          .map((task) => {
+            const fullCode = task.steps.map((s) => s.code).join("\n");
+            return (
+              <div key={task.id} className="rounded-xl border border-slate-200 overflow-hidden">
+                <div className="bg-slate-800 px-4 py-2 text-xs text-slate-400 font-mono flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-red-500/70" />
+                  <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
+                  <span className="w-3 h-3 rounded-full bg-green-500/70" />
+                  <span className="ml-2 flex-1">{task.title}</span>
+                  <CopyButton text={fullCode} />
+                </div>
+                <div className="bg-slate-900 px-4 py-4 space-y-1">
+                  {task.steps.map((step, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <span className="text-slate-500 text-xs font-mono mt-1 select-none w-4">
+                        {i + 1}
+                      </span>
+                      <code className="text-sm text-emerald-300 font-mono whitespace-pre leading-6">
+                        {step.code}
+                      </code>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="bg-slate-900 px-4 py-4 space-y-1">
-                {task.steps.map((step, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <span className="text-slate-500 text-xs font-mono mt-1 select-none w-4">
-                      {i + 1}
-                    </span>
-                    <code className="text-sm text-emerald-300 font-mono whitespace-pre leading-6">
-                      {step.code}
-                    </code>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+            );
+          })}
       </StorySection>
 
       {/* When to use / not use */}
@@ -182,7 +187,7 @@ export default function StoryView({ pkg, onNodeFocus }: Props) {
             Ready to go deeper? Explore the full API surface →
           </p>
           <button
-            onClick={() => onNodeFocus?.("requests")}
+            onClick={() => onNodeFocus?.(pkg.id)}
             className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors"
           >
             Open API Map
