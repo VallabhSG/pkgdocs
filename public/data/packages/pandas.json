@@ -1,0 +1,191 @@
+{
+  "id": "pandas",
+  "ecosystem": "pypi",
+  "name": "pandas",
+  "summary": "Fast, flexible data analysis and manipulation for Python",
+  "tags": ["data", "dataframe", "csv", "analysis", "tabular"],
+  "difficulty": 2,
+  "story": {
+    "problem": "Working with tabular data in plain Python means nested lists, manual column tracking, slow loops, and reimplementing group-by, merge, and pivot from scratch every time. Spreadsheets don't scale; SQL requires a database.",
+    "mental_model": "A DataFrame is a spreadsheet in memory — rows are observations, columns are variables. You select, filter, transform, and aggregate using column names instead of indices. Every operation returns a new DataFrame, so transformations chain cleanly.",
+    "when_to_use": "Exploratory data analysis, cleaning CSV/Excel files, joining datasets, computing aggregations, and any time your data fits in RAM (up to a few GB).",
+    "when_not_to_use": "Data larger than RAM — use Polars, Dask, or Spark instead. Real-time streaming — use a message queue. Pure numerical computation — NumPy is faster without the overhead.",
+    "alternatives": [
+      { "name": "polars", "reason": "10-100x faster, lazy evaluation, same mental model, better for large files" },
+      { "name": "dask", "reason": "Pandas API on out-of-core or distributed data" },
+      { "name": "numpy", "reason": "Pure numerical arrays; no column names, but much faster for maths" }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "pandas",
+        "type": "module",
+        "label": "pandas",
+        "summary": "Top-level import. Alias as `pd` by convention.",
+        "difficulty": 1,
+        "tags": ["entry-point"]
+      },
+      {
+        "id": "DataFrame",
+        "type": "class",
+        "label": "DataFrame",
+        "summary": "2D labelled table. The core data structure — rows × columns.",
+        "signature": "DataFrame(data=None, index=None, columns=None)",
+        "difficulty": 1,
+        "tags": ["core", "table"]
+      },
+      {
+        "id": "Series",
+        "type": "class",
+        "label": "Series",
+        "summary": "1D labelled array. A single column or row of a DataFrame.",
+        "signature": "Series(data=None, index=None, name=None)",
+        "difficulty": 1,
+        "tags": ["core", "column"]
+      },
+      {
+        "id": "Index",
+        "type": "class",
+        "label": "Index",
+        "summary": "Row labels. Default is 0,1,2… but can be dates, strings, or multi-level.",
+        "difficulty": 2,
+        "tags": ["indexing"]
+      },
+      {
+        "id": "read_csv",
+        "type": "function",
+        "label": "read_csv()",
+        "summary": "Load a CSV file into a DataFrame. Most common entry point.",
+        "signature": "read_csv(filepath, sep=',', header=0, index_col=None, dtype=None, ...) -> DataFrame",
+        "difficulty": 1,
+        "tags": ["io", "csv"]
+      },
+      {
+        "id": "read_excel",
+        "type": "function",
+        "label": "read_excel()",
+        "summary": "Load an Excel workbook sheet into a DataFrame.",
+        "signature": "read_excel(io, sheet_name=0, ...) -> DataFrame",
+        "difficulty": 1,
+        "tags": ["io", "excel"]
+      },
+      {
+        "id": "groupby",
+        "type": "function",
+        "label": "groupby()",
+        "summary": "Split DataFrame into groups by column value, then aggregate.",
+        "signature": "DataFrame.groupby(by) -> DataFrameGroupBy",
+        "difficulty": 2,
+        "tags": ["aggregation", "split-apply-combine"]
+      },
+      {
+        "id": "merge",
+        "type": "function",
+        "label": "merge()",
+        "summary": "SQL-style join of two DataFrames on a key column.",
+        "signature": "merge(left, right, how='inner', on=None, ...) -> DataFrame",
+        "difficulty": 2,
+        "tags": ["join", "sql"]
+      },
+      {
+        "id": "apply",
+        "type": "function",
+        "label": "apply()",
+        "summary": "Apply a function row-by-row or column-by-column.",
+        "signature": "DataFrame.apply(func, axis=0) -> DataFrame | Series",
+        "difficulty": 2,
+        "tags": ["transform"]
+      },
+      {
+        "id": "pivot_table",
+        "type": "function",
+        "label": "pivot_table()",
+        "summary": "Create a spreadsheet-style pivot table with custom aggregation.",
+        "signature": "pivot_table(data, values, index, columns, aggfunc='mean') -> DataFrame",
+        "difficulty": 3,
+        "tags": ["aggregation", "reshape"]
+      }
+    ],
+    "edges": [
+      { "id": "e1", "from": "pandas", "to": "DataFrame", "label": "contains" },
+      { "id": "e2", "from": "pandas", "to": "Series", "label": "contains" },
+      { "id": "e3", "from": "pandas", "to": "read_csv", "label": "contains" },
+      { "id": "e4", "from": "pandas", "to": "read_excel", "label": "contains" },
+      { "id": "e5", "from": "pandas", "to": "merge", "label": "contains" },
+      { "id": "e6", "from": "pandas", "to": "pivot_table", "label": "contains" },
+      { "id": "e7", "from": "read_csv", "to": "DataFrame", "label": "returns" },
+      { "id": "e8", "from": "read_excel", "to": "DataFrame", "label": "returns" },
+      { "id": "e9", "from": "merge", "to": "DataFrame", "label": "returns" },
+      { "id": "e10", "from": "DataFrame", "to": "Series", "label": "contains" },
+      { "id": "e11", "from": "DataFrame", "to": "Index", "label": "uses" },
+      { "id": "e12", "from": "DataFrame", "to": "groupby", "label": "contains" },
+      { "id": "e13", "from": "DataFrame", "to": "apply", "label": "contains" },
+      { "id": "e14", "from": "groupby", "to": "DataFrame", "label": "returns" },
+      { "id": "e15", "from": "apply", "to": "DataFrame", "label": "returns" }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "load-csv",
+      "title": "Load and inspect a CSV",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Install", "code": "pip install pandas" },
+        { "label": "Import", "code": "import pandas as pd" },
+        { "label": "Load", "code": "df = pd.read_csv('data.csv')" },
+        { "label": "Inspect", "code": "print(df.head())      # first 5 rows\nprint(df.shape)       # (rows, cols)\nprint(df.dtypes)      # column types\nprint(df.describe())  # stats summary" }
+      ]
+    },
+    {
+      "id": "filter-select",
+      "title": "Filter rows and select columns",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Select column", "code": "ages = df['age']           # returns a Series" },
+        { "label": "Select multiple", "code": "subset = df[['name', 'age']]  # returns DataFrame" },
+        { "label": "Filter rows", "code": "adults = df[df['age'] >= 18]" },
+        { "label": "Combine", "code": "result = df[df['age'] >= 18][['name', 'age']]" }
+      ]
+    },
+    {
+      "id": "groupby-agg",
+      "title": "Group and aggregate",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Group by one column", "code": "df.groupby('department')['salary'].mean()" },
+        { "label": "Multiple aggregations", "code": "df.groupby('department').agg(\n  avg_salary=('salary', 'mean'),\n  headcount=('name', 'count'),\n  max_salary=('salary', 'max')\n)" },
+        { "label": "Reset index", "code": "result = (\n  df.groupby('department')['salary']\n  .mean()\n  .reset_index()\n  .rename(columns={'salary': 'avg_salary'})\n)" }
+      ]
+    },
+    {
+      "id": "merge-join",
+      "title": "Join two DataFrames",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Inner join", "code": "result = pd.merge(orders, customers, on='customer_id')", "explanation": "Like SQL INNER JOIN — only rows with a match in both tables." },
+        { "label": "Left join", "code": "result = pd.merge(orders, customers,\n  on='customer_id', how='left')", "explanation": "Keep all orders, even those with no matching customer." },
+        { "label": "Check result", "code": "print(result.shape)\nprint(result.isnull().sum())  # nulls from unmatched rows" }
+      ]
+    },
+    {
+      "id": "clean-missing",
+      "title": "Handle missing values",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Find missing", "code": "df.isnull().sum()           # count NaN per column\ndf[df['age'].isnull()]      # rows where age is missing" },
+        { "label": "Drop rows", "code": "df_clean = df.dropna(subset=['age', 'email'])" },
+        { "label": "Fill with value", "code": "df['score'] = df['score'].fillna(0)" },
+        { "label": "Fill with median", "code": "df['salary'] = df['salary'].fillna(df['salary'].median())" }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://pypi.org/project/pandas/",
+    "repo_url": "https://github.com/pandas-dev/pandas",
+    "docs_url": "https://pandas.pydata.org/docs/",
+    "weekly_downloads": 65000000,
+    "version": "2.2.3",
+    "license": "BSD-3-Clause"
+  }
+}

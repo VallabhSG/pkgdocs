@@ -1,0 +1,204 @@
+{
+  "id": "requests",
+  "ecosystem": "pypi",
+  "name": "requests",
+  "summary": "HTTP for Humans — the most downloaded Python library",
+  "tags": ["http", "networking", "client", "rest", "api"],
+  "difficulty": 1,
+  "story": {
+    "problem": "Python's built-in urllib requires dozens of lines of boilerplate for a simple GET request: manually building URLs, encoding parameters, handling redirects, decoding responses, and managing connections. Every project reimplemented the same plumbing.",
+    "mental_model": "Think of requests like a browser tab in code. You create a Session (the browser), make requests to URLs, and get back Response objects — status, headers, and body all in one place. You never touch raw sockets or HTTP headers unless you want to.",
+    "when_to_use": "Anytime your Python code needs to call an HTTP API, download a file, submit a form, or scrape a page. It's the default choice for synchronous HTTP work.",
+    "when_not_to_use": "If you need async/await support, use httpx instead. If you're making thousands of concurrent requests, consider aiohttp.",
+    "alternatives": [
+      { "name": "httpx", "reason": "Same API, but supports async/await and HTTP/2" },
+      { "name": "aiohttp", "reason": "High-performance async HTTP, larger API surface" },
+      { "name": "urllib3", "reason": "Lower-level; requests itself is built on top of it" }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "requests",
+        "type": "module",
+        "label": "requests",
+        "summary": "Top-level module. Import this to start.",
+        "difficulty": 1,
+        "tags": ["entry-point"]
+      },
+      {
+        "id": "Session",
+        "type": "class",
+        "label": "Session",
+        "summary": "Persists cookies, auth, and headers across multiple requests. Use when talking to the same server repeatedly.",
+        "signature": "Session()",
+        "difficulty": 2,
+        "tags": ["connection", "auth", "cookies"]
+      },
+      {
+        "id": "get",
+        "type": "function",
+        "label": "get()",
+        "summary": "Send a GET request. The most common entry point.",
+        "signature": "get(url, params=None, **kwargs) -> Response",
+        "difficulty": 1,
+        "tags": ["http", "read"]
+      },
+      {
+        "id": "post",
+        "type": "function",
+        "label": "post()",
+        "summary": "Send a POST request with a body — JSON, form data, or file upload.",
+        "signature": "post(url, data=None, json=None, **kwargs) -> Response",
+        "difficulty": 1,
+        "tags": ["http", "write"]
+      },
+      {
+        "id": "put",
+        "type": "function",
+        "label": "put()",
+        "summary": "Replace a resource at the given URL.",
+        "signature": "put(url, data=None, **kwargs) -> Response",
+        "difficulty": 2,
+        "tags": ["http", "write"]
+      },
+      {
+        "id": "delete",
+        "type": "function",
+        "label": "delete()",
+        "summary": "Delete a resource at the given URL.",
+        "signature": "delete(url, **kwargs) -> Response",
+        "difficulty": 2,
+        "tags": ["http", "write"]
+      },
+      {
+        "id": "Response",
+        "type": "class",
+        "label": "Response",
+        "summary": "Holds everything the server sent back: status code, headers, and body.",
+        "difficulty": 1,
+        "tags": ["response", "data"]
+      },
+      {
+        "id": "PreparedRequest",
+        "type": "class",
+        "label": "PreparedRequest",
+        "summary": "A fully-built HTTP request before it's sent. Useful for inspection and custom signing.",
+        "difficulty": 3,
+        "tags": ["advanced", "internals"]
+      },
+      {
+        "id": "HTTPAdapter",
+        "type": "class",
+        "label": "HTTPAdapter",
+        "summary": "Controls how requests are sent: retry logic, SSL, connection pooling.",
+        "signature": "HTTPAdapter(max_retries=0)",
+        "difficulty": 3,
+        "tags": ["advanced", "retry", "ssl"]
+      },
+      {
+        "id": "RequestException",
+        "type": "exception",
+        "label": "RequestException",
+        "summary": "Base class for all requests exceptions. Catch this to handle any network error.",
+        "difficulty": 2,
+        "tags": ["error-handling"]
+      },
+      {
+        "id": "Timeout",
+        "type": "exception",
+        "label": "Timeout",
+        "summary": "Raised when the server doesn't respond within the timeout window.",
+        "difficulty": 2,
+        "tags": ["error-handling"]
+      },
+      {
+        "id": "ConnectionError",
+        "type": "exception",
+        "label": "ConnectionError",
+        "summary": "Raised when no network connection is available or the server refuses.",
+        "difficulty": 2,
+        "tags": ["error-handling"]
+      }
+    ],
+    "edges": [
+      { "id": "e1", "from": "requests", "to": "get", "label": "contains" },
+      { "id": "e2", "from": "requests", "to": "post", "label": "contains" },
+      { "id": "e3", "from": "requests", "to": "put", "label": "contains" },
+      { "id": "e4", "from": "requests", "to": "delete", "label": "contains" },
+      { "id": "e5", "from": "requests", "to": "Session", "label": "contains" },
+      { "id": "e6", "from": "get", "to": "Response", "label": "returns" },
+      { "id": "e7", "from": "post", "to": "Response", "label": "returns" },
+      { "id": "e8", "from": "put", "to": "Response", "label": "returns" },
+      { "id": "e9", "from": "delete", "to": "Response", "label": "returns" },
+      { "id": "e10", "from": "Session", "to": "PreparedRequest", "label": "uses" },
+      { "id": "e11", "from": "Session", "to": "HTTPAdapter", "label": "uses" },
+      { "id": "e12", "from": "Session", "to": "Response", "label": "returns" },
+      { "id": "e13", "from": "Timeout", "to": "RequestException", "label": "inherits" },
+      { "id": "e14", "from": "ConnectionError", "to": "RequestException", "label": "inherits" }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "fetch-webpage",
+      "title": "Fetch a webpage",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Install", "code": "pip install requests" },
+        { "label": "Import", "code": "import requests" },
+        { "label": "GET request", "code": "r = requests.get('https://httpbin.org/get')" },
+        { "label": "Check status", "code": "print(r.status_code)  # 200" },
+        { "label": "Read body", "code": "print(r.text)" }
+      ]
+    },
+    {
+      "id": "call-json-api",
+      "title": "Call a JSON API",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "GET with params", "code": "r = requests.get(\n  'https://api.github.com/users/psf',\n  headers={'Accept': 'application/json'}\n)" },
+        { "label": "Parse JSON", "code": "data = r.json()\nprint(data['public_repos'])" },
+        { "label": "Handle errors", "code": "r.raise_for_status()  # raises on 4xx/5xx" }
+      ]
+    },
+    {
+      "id": "post-json",
+      "title": "POST JSON data",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "POST with json=", "code": "r = requests.post(\n  'https://httpbin.org/post',\n  json={'name': 'Alice', 'score': 42}\n)", "explanation": "Pass json= and requests sets Content-Type automatically." },
+        { "label": "Read response", "code": "print(r.json()['json'])  # echoes your payload" }
+      ]
+    },
+    {
+      "id": "session-auth",
+      "title": "Authenticate with a Session",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Create session", "code": "s = requests.Session()" },
+        { "label": "Set auth header", "code": "s.headers.update({'Authorization': 'Bearer YOUR_TOKEN'})" },
+        { "label": "Reuse across requests", "code": "r1 = s.get('https://api.example.com/profile')\nr2 = s.get('https://api.example.com/feed')", "explanation": "The session reuses the TCP connection and sends your header on every call." },
+        { "label": "Close when done", "code": "s.close()" }
+      ]
+    },
+    {
+      "id": "retry-with-adapter",
+      "title": "Auto-retry on failure",
+      "difficulty": "advanced",
+      "steps": [
+        { "label": "Import", "code": "from requests.adapters import HTTPAdapter\nfrom urllib3.util.retry import Retry" },
+        { "label": "Build retry policy", "code": "retry = Retry(\n  total=3,\n  backoff_factor=0.5,\n  status_forcelist=[500, 502, 503]\n)" },
+        { "label": "Mount adapter", "code": "s = requests.Session()\ns.mount('https://', HTTPAdapter(max_retries=retry))" },
+        { "label": "Make request", "code": "r = s.get('https://api.example.com/data')", "explanation": "If the server returns 500/502/503, requests waits and retries up to 3 times automatically." }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://pypi.org/project/requests/",
+    "repo_url": "https://github.com/psf/requests",
+    "docs_url": "https://docs.python-requests.org/",
+    "weekly_downloads": 120000000,
+    "version": "2.32.3",
+    "license": "Apache-2.0"
+  }
+}

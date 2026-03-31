@@ -1,0 +1,160 @@
+{
+  "id": "httpx",
+  "ecosystem": "pypi",
+  "name": "httpx",
+  "summary": "A next-generation HTTP client — sync and async, HTTP/2 ready",
+  "tags": ["http", "networking", "async", "client", "http2"],
+  "difficulty": 2,
+  "story": {
+    "problem": "requests is synchronous — it blocks your thread while waiting for the server. In an async app (FastAPI, asyncio), blocking calls stall the entire event loop. httpx offers the same clean API but with full async/await support and HTTP/2.",
+    "mental_model": "httpx is requests with two modes: drop-in synchronous (same API you already know) and an async client you use with `async with`. The same Response object, the same method names, the same .json() — but now it won't block your event loop.",
+    "when_to_use": "Async Python apps (FastAPI, Starlette, asyncio scripts) that make outbound HTTP calls. Also a good default replacement for requests in new projects — it has a stricter, more modern design.",
+    "when_not_to_use": "If your codebase is already fully synchronous and uses requests everywhere, the migration cost may not be worth it. For extremely high concurrency (thousands of simultaneous connections), consider aiohttp which has lower overhead.",
+    "alternatives": [
+      { "name": "requests", "reason": "Synchronous only, but simpler and has a larger ecosystem of adapters/plugins" },
+      { "name": "aiohttp", "reason": "Async-first, higher performance at scale, but more complex API" },
+      { "name": "urllib3", "reason": "Lower-level; what requests and httpx are both built on" }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "httpx",
+        "type": "module",
+        "label": "httpx",
+        "summary": "Top-level module. Exports both sync and async clients.",
+        "difficulty": 1,
+        "tags": ["entry-point"]
+      },
+      {
+        "id": "Client",
+        "type": "class",
+        "label": "Client",
+        "summary": "Synchronous HTTP client. Use as a context manager for connection pooling.",
+        "signature": "Client(headers=None, timeout=5.0, follow_redirects=True, ...)",
+        "difficulty": 1,
+        "tags": ["sync", "connection"]
+      },
+      {
+        "id": "AsyncClient",
+        "type": "class",
+        "label": "AsyncClient",
+        "summary": "Async HTTP client. Use with `async with` in async functions.",
+        "signature": "AsyncClient(headers=None, timeout=5.0, ...)",
+        "difficulty": 2,
+        "tags": ["async", "connection"]
+      },
+      {
+        "id": "get",
+        "type": "function",
+        "label": "get() / post() / put() / delete()",
+        "summary": "Top-level convenience functions for one-off requests (no session reuse).",
+        "signature": "get(url, params=None, headers=None, ...) -> Response",
+        "difficulty": 1,
+        "tags": ["http", "shorthand"]
+      },
+      {
+        "id": "Response",
+        "type": "class",
+        "label": "Response",
+        "summary": "Identical API to requests.Response. Status, headers, .json(), .text, .raise_for_status().",
+        "difficulty": 1,
+        "tags": ["response", "data"]
+      },
+      {
+        "id": "Timeout",
+        "type": "class",
+        "label": "Timeout",
+        "summary": "Fine-grained timeout control: connect, read, write, and pool timeouts separately.",
+        "signature": "Timeout(5.0, connect=2.0)",
+        "difficulty": 2,
+        "tags": ["config", "timeout"]
+      },
+      {
+        "id": "Auth",
+        "type": "class",
+        "label": "Auth (base class)",
+        "summary": "Subclass to implement custom auth flows (OAuth, HMAC signing, etc.).",
+        "difficulty": 3,
+        "tags": ["auth", "advanced"]
+      },
+      {
+        "id": "HTTPStatusError",
+        "type": "exception",
+        "label": "HTTPStatusError",
+        "summary": "Raised by response.raise_for_status() on 4xx/5xx. Carries .request and .response.",
+        "difficulty": 2,
+        "tags": ["error-handling"]
+      },
+      {
+        "id": "TimeoutException",
+        "type": "exception",
+        "label": "TimeoutException",
+        "summary": "Raised when the request exceeds any configured timeout.",
+        "difficulty": 2,
+        "tags": ["error-handling"]
+      }
+    ],
+    "edges": [
+      { "id": "e1", "from": "httpx", "to": "Client", "label": "contains" },
+      { "id": "e2", "from": "httpx", "to": "AsyncClient", "label": "contains" },
+      { "id": "e3", "from": "httpx", "to": "get", "label": "contains" },
+      { "id": "e4", "from": "Client", "to": "Response", "label": "returns" },
+      { "id": "e5", "from": "AsyncClient", "to": "Response", "label": "returns" },
+      { "id": "e6", "from": "get", "to": "Response", "label": "returns" },
+      { "id": "e7", "from": "Client", "to": "Timeout", "label": "uses" },
+      { "id": "e8", "from": "Client", "to": "Auth", "label": "uses" },
+      { "id": "e9", "from": "AsyncClient", "to": "Timeout", "label": "uses" },
+      { "id": "e10", "from": "Response", "to": "HTTPStatusError", "label": "uses" },
+      { "id": "e11", "from": "Client", "to": "TimeoutException", "label": "uses" }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "sync-get",
+      "title": "Synchronous GET request",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Install", "code": "pip install httpx" },
+        { "label": "One-off request", "code": "import httpx\n\nr = httpx.get('https://httpbin.org/get')\nprint(r.status_code)\nprint(r.json())" },
+        { "label": "With session (recommended)", "code": "with httpx.Client() as client:\n    r = client.get('https://api.example.com/users')\n    r.raise_for_status()\n    return r.json()", "explanation": "Using a Client reuses the connection pool across multiple requests — faster and fewer sockets." }
+      ]
+    },
+    {
+      "id": "async-get",
+      "title": "Async GET in an async function",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Import", "code": "import httpx\nimport asyncio" },
+        { "label": "Async function", "code": "async def fetch_user(user_id: int):\n    async with httpx.AsyncClient() as client:\n        r = await client.get(\n            f'https://api.example.com/users/{user_id}'\n        )\n        r.raise_for_status()\n        return r.json()" },
+        { "label": "Run", "code": "asyncio.run(fetch_user(42))", "explanation": "In FastAPI, you'd just call await client.get(...) directly — no asyncio.run() needed." }
+      ]
+    },
+    {
+      "id": "parallel-requests",
+      "title": "Fetch multiple URLs concurrently",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Define fetch", "code": "async def fetch_all(urls: list[str]):\n    async with httpx.AsyncClient() as client:\n        tasks = [client.get(url) for url in urls]\n        responses = await asyncio.gather(*tasks)\n    return [r.json() for r in responses]" },
+        { "label": "Run", "code": "urls = [\n  'https://api.example.com/users/1',\n  'https://api.example.com/users/2',\n  'https://api.example.com/users/3',\n]\nresults = asyncio.run(fetch_all(urls))", "explanation": "All three requests fire simultaneously. Total time ≈ slowest single request, not the sum." }
+      ]
+    },
+    {
+      "id": "timeout-retry",
+      "title": "Fine-grained timeouts",
+      "difficulty": "advanced",
+      "steps": [
+        { "label": "Custom timeout", "code": "timeout = httpx.Timeout(\n    5.0,        # default for all\n    connect=2.0 # stricter connect timeout\n)" },
+        { "label": "Apply to client", "code": "with httpx.Client(timeout=timeout) as client:\n    try:\n        r = client.get('https://slow.example.com')\n    except httpx.TimeoutException:\n        print('Request timed out')" }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://pypi.org/project/httpx/",
+    "repo_url": "https://github.com/encode/httpx",
+    "docs_url": "https://www.python-httpx.org/",
+    "weekly_downloads": 18000000,
+    "version": "0.28.1",
+    "license": "BSD-3-Clause"
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "id": "fastapi",
+  "ecosystem": "pypi",
+  "name": "fastapi",
+  "summary": "Modern, fast web framework for building APIs with Python type hints",
+  "tags": ["web", "api", "rest", "async", "openapi"],
+  "difficulty": 2,
+  "story": {
+    "problem": "Building REST APIs in Python traditionally meant Flask (no async, manual validation, no auto-docs) or Django REST Framework (heavy, complex configuration). Developers spent more time wiring boilerplate than writing business logic.",
+    "mental_model": "FastAPI is a router + validator + doc generator in one. You declare route functions with Python type hints — FastAPI reads those hints to validate requests, serialize responses, and generate a live Swagger UI automatically. Think of it as: write a typed function, get an API endpoint.",
+    "when_to_use": "Building REST or async APIs in Python, microservices, ML model serving, or any backend where you want automatic request validation and OpenAPI docs out of the box.",
+    "when_not_to_use": "Full-stack apps with server-rendered HTML — use Django instead. Very simple scripts that just need one endpoint — Flask is lighter. If your team is unfamiliar with Python type hints, the learning curve increases.",
+    "alternatives": [
+      { "name": "flask", "reason": "Simpler, synchronous, larger ecosystem of extensions, no type hints required" },
+      { "name": "django", "reason": "Full-stack framework with ORM, admin UI, auth — for bigger apps" },
+      { "name": "starlette", "reason": "The async foundation FastAPI is built on — use directly for lower-level control" },
+      { "name": "litestar", "reason": "Similar type-hint-driven approach, opinionated but powerful" }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "FastAPI",
+        "type": "class",
+        "label": "FastAPI",
+        "summary": "The application. Create one instance, mount routers, add middleware.",
+        "signature": "FastAPI(title='', version='0.1.0', ...)",
+        "difficulty": 1,
+        "tags": ["core", "app"]
+      },
+      {
+        "id": "APIRouter",
+        "type": "class",
+        "label": "APIRouter",
+        "summary": "Group related endpoints. Include in the main app with a prefix.",
+        "signature": "APIRouter(prefix='', tags=[])",
+        "difficulty": 2,
+        "tags": ["routing", "organization"]
+      },
+      {
+        "id": "Request",
+        "type": "class",
+        "label": "Request",
+        "summary": "Raw incoming HTTP request. Access headers, body, query params directly.",
+        "difficulty": 2,
+        "tags": ["http", "request"]
+      },
+      {
+        "id": "Response",
+        "type": "class",
+        "label": "Response",
+        "summary": "Low-level HTTP response. Usually you return a dict/Pydantic model instead.",
+        "difficulty": 2,
+        "tags": ["http", "response"]
+      },
+      {
+        "id": "Depends",
+        "type": "function",
+        "label": "Depends()",
+        "summary": "Dependency injection. Declare shared logic (auth, DB sessions) once, reuse everywhere.",
+        "signature": "Depends(dependency=None, use_cache=True)",
+        "difficulty": 2,
+        "tags": ["di", "auth"]
+      },
+      {
+        "id": "Body",
+        "type": "function",
+        "label": "Body() / Query() / Path()",
+        "summary": "Declare where a parameter comes from and add validation constraints.",
+        "signature": "Body(..., embed=False) | Query(..., min_length=1) | Path(..., ge=0)",
+        "difficulty": 2,
+        "tags": ["params", "validation"]
+      },
+      {
+        "id": "HTTPException",
+        "type": "exception",
+        "label": "HTTPException",
+        "summary": "Raise to return a specific HTTP error status with a JSON detail message.",
+        "signature": "HTTPException(status_code, detail=None, headers=None)",
+        "difficulty": 1,
+        "tags": ["error-handling"]
+      },
+      {
+        "id": "BackgroundTasks",
+        "type": "class",
+        "label": "BackgroundTasks",
+        "summary": "Run work after the response is sent — emails, logging, cache invalidation.",
+        "difficulty": 3,
+        "tags": ["async", "background"]
+      },
+      {
+        "id": "BaseModel",
+        "type": "class",
+        "label": "BaseModel (Pydantic)",
+        "summary": "Define request/response schemas with type hints. FastAPI validates automatically.",
+        "signature": "class Item(BaseModel): name: str; price: float",
+        "difficulty": 1,
+        "tags": ["schema", "validation", "pydantic"]
+      }
+    ],
+    "edges": [
+      { "id": "e1", "from": "FastAPI", "to": "APIRouter", "label": "contains" },
+      { "id": "e2", "from": "FastAPI", "to": "Request", "label": "uses" },
+      { "id": "e3", "from": "FastAPI", "to": "Response", "label": "returns" },
+      { "id": "e4", "from": "FastAPI", "to": "HTTPException", "label": "uses" },
+      { "id": "e5", "from": "FastAPI", "to": "Depends", "label": "uses" },
+      { "id": "e6", "from": "FastAPI", "to": "BackgroundTasks", "label": "uses" },
+      { "id": "e7", "from": "APIRouter", "to": "Depends", "label": "uses" },
+      { "id": "e8", "from": "APIRouter", "to": "Body", "label": "uses" },
+      { "id": "e9", "from": "BaseModel", "to": "Body", "label": "uses" },
+      { "id": "e10", "from": "APIRouter", "to": "HTTPException", "label": "uses" }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "hello-world-api",
+      "title": "Build a minimal API",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Install", "code": "pip install fastapi uvicorn" },
+        { "label": "Create app", "code": "from fastapi import FastAPI\n\napp = FastAPI()" },
+        { "label": "Add route", "code": "@app.get('/')\ndef root():\n    return {'message': 'Hello, world'}" },
+        { "label": "Run", "code": "uvicorn main:app --reload", "explanation": "--reload restarts on file save. Visit http://localhost:8000/docs for the auto-generated Swagger UI." }
+      ]
+    },
+    {
+      "id": "request-body",
+      "title": "Accept and validate a request body",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Define schema", "code": "from pydantic import BaseModel\n\nclass Item(BaseModel):\n    name: str\n    price: float\n    in_stock: bool = True" },
+        { "label": "POST endpoint", "code": "@app.post('/items', status_code=201)\ndef create_item(item: Item):\n    return item", "explanation": "FastAPI reads the type hint, validates the JSON body, and gives you a typed Item object. Invalid input returns 422 automatically." },
+        { "label": "Test", "code": "# FastAPI generates a /docs UI — test directly in browser" }
+      ]
+    },
+    {
+      "id": "path-query-params",
+      "title": "Path and query parameters",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Path param", "code": "@app.get('/items/{item_id}')\ndef get_item(item_id: int):\n    return {'id': item_id}", "explanation": "The {item_id} in the path is extracted and cast to int automatically." },
+        { "label": "Query param", "code": "@app.get('/items')\ndef list_items(skip: int = 0, limit: int = 10):\n    return {'skip': skip, 'limit': limit}", "explanation": "Parameters not in the path are treated as query string params: /items?skip=5&limit=20" }
+      ]
+    },
+    {
+      "id": "dependency-injection",
+      "title": "Share auth logic with Depends()",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Define dependency", "code": "from fastapi import Depends, HTTPException, Header\n\ndef verify_token(x_token: str = Header()):\n    if x_token != 'secret':\n        raise HTTPException(403, 'Bad token')\n    return x_token" },
+        { "label": "Inject into routes", "code": "@app.get('/protected')\ndef protected_route(token: str = Depends(verify_token)):\n    return {'token': token}", "explanation": "FastAPI calls verify_token before the route handler. Reuse it across any number of routes without repeating the check." }
+      ]
+    },
+    {
+      "id": "background-tasks",
+      "title": "Run work after responding",
+      "difficulty": "advanced",
+      "steps": [
+        { "label": "Define task", "code": "def send_welcome_email(email: str):\n    # slow operation — doesn't block the response\n    print(f'Sending email to {email}')" },
+        { "label": "Inject BackgroundTasks", "code": "from fastapi import BackgroundTasks\n\n@app.post('/register')\ndef register(email: str, background: BackgroundTasks):\n    background.add_task(send_welcome_email, email)\n    return {'status': 'registered'}", "explanation": "The response returns immediately. send_welcome_email runs after the client receives the 200." }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://pypi.org/project/fastapi/",
+    "repo_url": "https://github.com/fastapi/fastapi",
+    "docs_url": "https://fastapi.tiangolo.com/",
+    "weekly_downloads": 30000000,
+    "version": "0.115.6",
+    "license": "MIT"
+  }
+}
