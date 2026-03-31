@@ -1,0 +1,137 @@
+{
+  "id": "aiohttp",
+  "ecosystem": "pypi",
+  "name": "aiohttp",
+  "summary": "Async HTTP client/server framework built on asyncio",
+  "tags": ["http", "async", "client", "server", "websocket"],
+  "difficulty": 3,
+  "story": {
+    "problem": "When you need to make thousands of HTTP requests concurrently — scraping, bulk API calls, microservice fan-out — synchronous clients create one OS thread per request or block the event loop. Neither scales. You need native async I/O.",
+    "mental_model": "aiohttp runs inside asyncio's event loop. The client sends requests without blocking — the event loop handles thousands of in-flight connections, switching between them as responses arrive. No threads, no blocking. The server side works the same way: a single-process server handles many concurrent connections using coroutines.",
+    "when_to_use": "High-throughput HTTP workloads: scraping hundreds of URLs, building an async API gateway, WebSocket servers, or any asyncio app making many outbound HTTP calls. Also doubles as a lightweight async web server.",
+    "when_not_to_use": "Synchronous codebases — use requests instead. Simple async apps making a handful of API calls — httpx AsyncClient has a cleaner API with HTTP/2 support. Small web APIs — FastAPI is better for REST services.",
+    "alternatives": [
+      { "name": "httpx", "reason": "Cleaner async API, HTTP/2 support, same performance for moderate concurrency" },
+      { "name": "tornado", "reason": "Older async HTTP framework with its own event loop, less used today" },
+      { "name": "starlette", "reason": "ASGI web framework — better for building APIs than aiohttp's server side" }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "ClientSession",
+        "type": "class",
+        "label": "ClientSession",
+        "summary": "Async HTTP client. Always use as `async with` — manages connection pool and cleanup.",
+        "signature": "ClientSession(headers=None, timeout=ClientTimeout(total=30))",
+        "difficulty": 1,
+        "tags": ["client", "connection"]
+      },
+      {
+        "id": "get",
+        "type": "function",
+        "label": "session.get() / post() / ...",
+        "summary": "Make an async HTTP request. Must be awaited inside an async function.",
+        "signature": "await session.get(url, params=None, headers=None)",
+        "difficulty": 1,
+        "tags": ["http", "client"]
+      },
+      {
+        "id": "ClientResponse",
+        "type": "class",
+        "label": "ClientResponse",
+        "summary": "The response object. Awaitable .json(), .text(), .read() methods.",
+        "difficulty": 1,
+        "tags": ["response"]
+      },
+      {
+        "id": "web",
+        "type": "module",
+        "label": "web (server)",
+        "summary": "Server-side module. Application, RouteTableDef, Request, Response classes.",
+        "difficulty": 2,
+        "tags": ["server"]
+      },
+      {
+        "id": "Application",
+        "type": "class",
+        "label": "web.Application",
+        "summary": "The server app object. Add routes and run with web.run_app().",
+        "difficulty": 2,
+        "tags": ["server", "app"]
+      },
+      {
+        "id": "ClientTimeout",
+        "type": "class",
+        "label": "ClientTimeout",
+        "summary": "Fine-grained timeout: total, connect, and socket read timeouts.",
+        "signature": "ClientTimeout(total=30, connect=5)",
+        "difficulty": 2,
+        "tags": ["config", "timeout"]
+      },
+      {
+        "id": "ClientError",
+        "type": "exception",
+        "label": "ClientError",
+        "summary": "Base exception for all client-side errors: connection, timeout, response issues.",
+        "difficulty": 2,
+        "tags": ["error-handling"]
+      }
+    ],
+    "edges": [
+      { "id": "e1", "from": "ClientSession", "to": "get", "label": "contains" },
+      { "id": "e2", "from": "get", "to": "ClientResponse", "label": "returns" },
+      { "id": "e3", "from": "ClientSession", "to": "ClientTimeout", "label": "uses" },
+      { "id": "e4", "from": "ClientSession", "to": "ClientError", "label": "uses" },
+      { "id": "e5", "from": "web", "to": "Application", "label": "contains" }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "async-get",
+      "title": "Async GET request",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Install", "code": "pip install aiohttp" },
+        { "label": "Write async function", "code": "import aiohttp\nimport asyncio\n\nasync def fetch(url: str):\n    async with aiohttp.ClientSession() as session:\n        async with session.get(url) as response:\n            return await response.json()" },
+        { "label": "Run", "code": "result = asyncio.run(fetch('https://httpbin.org/get'))\nprint(result)" }
+      ]
+    },
+    {
+      "id": "concurrent-fetch",
+      "title": "Fetch 100 URLs concurrently",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Define fetcher", "code": "async def fetch_all(urls: list[str]):\n    async with aiohttp.ClientSession() as session:\n        tasks = [fetch_one(session, url) for url in urls]\n        return await asyncio.gather(*tasks)\n\nasync def fetch_one(session, url):\n    async with session.get(url) as r:\n        return await r.text()" },
+        { "label": "Run", "code": "urls = [f'https://httpbin.org/get?i={i}' for i in range(100)]\nresults = asyncio.run(fetch_all(urls))", "explanation": "All 100 requests fire at the same time. Total time ≈ slowest single request." }
+      ]
+    },
+    {
+      "id": "timeout-error",
+      "title": "Timeouts and error handling",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Set timeout", "code": "timeout = aiohttp.ClientTimeout(total=5, connect=2)\nasync with aiohttp.ClientSession(timeout=timeout) as session:" },
+        { "label": "Handle errors", "code": "    try:\n        async with session.get(url) as r:\n            r.raise_for_status()\n            return await r.json()\n    except aiohttp.ClientResponseError as e:\n        print(f'HTTP {e.status}: {e.message}')\n    except aiohttp.ClientConnectionError:\n        print('Connection failed')\n    except asyncio.TimeoutError:\n        print('Request timed out')" }
+      ]
+    },
+    {
+      "id": "simple-server",
+      "title": "Simple async HTTP server",
+      "difficulty": "advanced",
+      "steps": [
+        { "label": "Define handler", "code": "from aiohttp import web\n\nasync def handle(request):\n    name = request.match_info.get('name', 'World')\n    return web.json_response({'hello': name})" },
+        { "label": "Create app", "code": "app = web.Application()\napp.router.add_get('/', handle)\napp.router.add_get('/{name}', handle)" },
+        { "label": "Run", "code": "web.run_app(app, port=8080)" }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://pypi.org/project/aiohttp/",
+    "repo_url": "https://github.com/aio-libs/aiohttp",
+    "docs_url": "https://docs.aiohttp.org/",
+    "weekly_downloads": 15000000,
+    "version": "3.11.11",
+    "license": "Apache-2.0"
+  }
+}

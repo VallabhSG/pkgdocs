@@ -1,0 +1,175 @@
+{
+  "id": "numpy",
+  "ecosystem": "pypi",
+  "name": "numpy",
+  "summary": "The fundamental package for numerical computing in Python",
+  "tags": ["numerical", "array", "math", "science", "matrix"],
+  "difficulty": 2,
+  "story": {
+    "problem": "Python lists are slow for maths — they store arbitrary objects, require loops, and can't do vectorised operations. Computing the mean of a million numbers with a list loop is orders of magnitude slower than it needs to be.",
+    "mental_model": "An ndarray is a typed, fixed-shape grid of numbers stored in a contiguous block of memory. Operations apply to the entire array at once (vectorisation) without Python loops — the looping happens in optimised C. Think of it as a spreadsheet column that can do maths on itself in one line.",
+    "when_to_use": "Any numerical computation: linear algebra, statistics, signal processing, image manipulation, or as the backbone of pandas/scipy/matplotlib. If your data is numbers and performance matters, numpy is the default.",
+    "when_not_to_use": "Tabular data with mixed types and column names — use pandas. If you need automatic differentiation for ML — use PyTorch or JAX, which have numpy-compatible APIs.",
+    "alternatives": [
+      { "name": "torch", "reason": "GPU acceleration and autograd for deep learning; numpy-like API" },
+      { "name": "jax", "reason": "numpy API with JIT compilation and autograd — research ML" },
+      { "name": "scipy", "reason": "Built on numpy; adds higher-level scientific algorithms (FFT, optimization, stats)" }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "numpy",
+        "type": "module",
+        "label": "numpy",
+        "summary": "Top-level import. Alias as `np` by convention.",
+        "difficulty": 1,
+        "tags": ["entry-point"]
+      },
+      {
+        "id": "ndarray",
+        "type": "class",
+        "label": "ndarray",
+        "summary": "N-dimensional typed array. The core data structure.",
+        "signature": "ndarray(shape, dtype=float64)",
+        "difficulty": 1,
+        "tags": ["core", "array"]
+      },
+      {
+        "id": "array",
+        "type": "function",
+        "label": "array()",
+        "summary": "Create an ndarray from a Python list or nested lists.",
+        "signature": "array(object, dtype=None) -> ndarray",
+        "difficulty": 1,
+        "tags": ["creation"]
+      },
+      {
+        "id": "zeros",
+        "type": "function",
+        "label": "zeros() / ones() / full()",
+        "summary": "Create arrays pre-filled with 0, 1, or a constant value.",
+        "signature": "zeros(shape, dtype=float64) -> ndarray",
+        "difficulty": 1,
+        "tags": ["creation"]
+      },
+      {
+        "id": "arange",
+        "type": "function",
+        "label": "arange() / linspace()",
+        "summary": "Create evenly-spaced sequences. arange uses step size, linspace uses count.",
+        "signature": "arange(start, stop, step) -> ndarray",
+        "difficulty": 1,
+        "tags": ["creation"]
+      },
+      {
+        "id": "reshape",
+        "type": "function",
+        "label": "reshape()",
+        "summary": "Change array shape without copying data. Total elements must stay the same.",
+        "signature": "ndarray.reshape(newshape) -> ndarray",
+        "difficulty": 2,
+        "tags": ["shape"]
+      },
+      {
+        "id": "dot",
+        "type": "function",
+        "label": "dot() / matmul() / @",
+        "summary": "Matrix multiplication. Use @ operator for readability.",
+        "signature": "dot(a, b) -> ndarray",
+        "difficulty": 2,
+        "tags": ["linalg"]
+      },
+      {
+        "id": "linalg",
+        "type": "module",
+        "label": "linalg",
+        "summary": "Linear algebra: inverse, determinant, eigenvalues, SVD, solve linear systems.",
+        "difficulty": 3,
+        "tags": ["linalg", "advanced"]
+      },
+      {
+        "id": "random",
+        "type": "module",
+        "label": "random",
+        "summary": "Random number generation: uniform, normal, integers, shuffling, seeding.",
+        "difficulty": 2,
+        "tags": ["random", "stats"]
+      }
+    ],
+    "edges": [
+      { "id": "e1", "from": "numpy", "to": "ndarray", "label": "contains" },
+      { "id": "e2", "from": "numpy", "to": "array", "label": "contains" },
+      { "id": "e3", "from": "numpy", "to": "zeros", "label": "contains" },
+      { "id": "e4", "from": "numpy", "to": "arange", "label": "contains" },
+      { "id": "e5", "from": "numpy", "to": "dot", "label": "contains" },
+      { "id": "e6", "from": "numpy", "to": "linalg", "label": "contains" },
+      { "id": "e7", "from": "numpy", "to": "random", "label": "contains" },
+      { "id": "e8", "from": "array", "to": "ndarray", "label": "returns" },
+      { "id": "e9", "from": "zeros", "to": "ndarray", "label": "returns" },
+      { "id": "e10", "from": "arange", "to": "ndarray", "label": "returns" },
+      { "id": "e11", "from": "ndarray", "to": "reshape", "label": "contains" },
+      { "id": "e12", "from": "dot", "to": "ndarray", "label": "returns" }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "create-array",
+      "title": "Create and inspect arrays",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Install", "code": "pip install numpy" },
+        { "label": "Import", "code": "import numpy as np" },
+        { "label": "From list", "code": "a = np.array([1, 2, 3, 4, 5])\nprint(a.shape)   # (5,)\nprint(a.dtype)   # int64" },
+        { "label": "2D array", "code": "m = np.array([[1, 2], [3, 4]])\nprint(m.shape)   # (2, 2)" },
+        { "label": "Zeros / ones", "code": "np.zeros((3, 4))   # 3×4 matrix of 0.0\nnp.ones((2, 2))    # 2×2 matrix of 1.0\nnp.eye(3)          # 3×3 identity matrix" }
+      ]
+    },
+    {
+      "id": "vectorised-ops",
+      "title": "Vectorised arithmetic",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Element-wise ops", "code": "a = np.array([1, 2, 3])\nprint(a * 2)      # [2 4 6]\nprint(a ** 2)     # [1 4 9]\nprint(a + a)      # [2 4 6]" },
+        { "label": "Aggregate", "code": "print(a.sum())    # 6\nprint(a.mean())   # 2.0\nprint(a.max())    # 3\nprint(a.std())    # 0.816..." },
+        { "label": "Boolean mask", "code": "a = np.array([1, 5, 3, 8, 2])\nprint(a[a > 3])   # [5 8] — filter without a loop" }
+      ]
+    },
+    {
+      "id": "reshape-slice",
+      "title": "Reshape and slice",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Reshape", "code": "a = np.arange(12)         # [0..11]\nm = a.reshape(3, 4)       # 3 rows, 4 cols\nm2 = a.reshape(3, -1)     # -1 = infer dim" },
+        { "label": "Slice rows/cols", "code": "m[0]        # first row\nm[:, 1]     # second column\nm[1:, :2]   # rows 1+, first 2 cols" }
+      ]
+    },
+    {
+      "id": "matrix-multiply",
+      "title": "Matrix multiplication",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Matrix multiply", "code": "A = np.array([[1, 2], [3, 4]])\nB = np.array([[5, 6], [7, 8]])\nC = A @ B          # preferred syntax\n# or: np.matmul(A, B)" },
+        { "label": "Element-wise vs matrix", "code": "A * B   # element-wise (Hadamard)\nA @ B   # true matrix multiply" }
+      ]
+    },
+    {
+      "id": "random-stats",
+      "title": "Random arrays and statistics",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Seed for reproducibility", "code": "rng = np.random.default_rng(seed=42)" },
+        { "label": "Generate data", "code": "data = rng.normal(loc=0, scale=1, size=1000)  # 1000 samples, μ=0 σ=1" },
+        { "label": "Stats", "code": "print(data.mean())         # ≈ 0\nprint(data.std())          # ≈ 1\nprint(np.percentile(data, [25, 50, 75]))" }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://pypi.org/project/numpy/",
+    "repo_url": "https://github.com/numpy/numpy",
+    "docs_url": "https://numpy.org/doc/stable/",
+    "weekly_downloads": 85000000,
+    "version": "2.2.0",
+    "license": "BSD-3-Clause"
+  }
+}

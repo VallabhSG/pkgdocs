@@ -1,0 +1,143 @@
+{
+  "id": "typer",
+  "ecosystem": "pypi",
+  "name": "typer",
+  "summary": "Build great CLIs with Python type hints — built on Click",
+  "tags": ["cli", "commands", "type-hints", "arguments", "terminal"],
+  "difficulty": 1,
+  "story": {
+    "problem": "Click is powerful but requires you to duplicate information: write type annotations for your function, then add @click.option decorators with the same type information again. Typer eliminates that duplication by reading Python type hints directly.",
+    "mental_model": "Typer is Click without the decorators. Annotate a function with Python types and Typer infers the CLI arguments automatically: str → text argument, int → integer option, bool → flag, Optional[str] → optional. The function signature is the CLI interface.",
+    "when_to_use": "New Python CLI tools where you want minimal boilerplate. If your team knows Python type hints, typer CLIs are instantly readable. Works especially well with Pydantic models and FastAPI (same author, same philosophy).",
+    "when_not_to_use": "If you're maintaining an existing Click-based CLI — just use Click directly. For very complex CLIs with custom Click types or plugins, the Click layer gives more control.",
+    "alternatives": [
+      { "name": "click", "reason": "More explicit, larger ecosystem, better for complex custom CLI behaviour" },
+      { "name": "argparse", "reason": "Standard library, zero dependencies, sufficient for simple scripts" },
+      { "name": "fire", "reason": "Even less boilerplate — turns any function/class into a CLI automatically" }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "Typer",
+        "type": "class",
+        "label": "Typer (app)",
+        "summary": "The app instance. Add commands to it and call app() as entry point.",
+        "signature": "app = typer.Typer()",
+        "difficulty": 1,
+        "tags": ["core", "app"]
+      },
+      {
+        "id": "command",
+        "type": "function",
+        "label": "@app.command()",
+        "summary": "Register a function as a CLI command. Type hints define the arguments and options.",
+        "signature": "@app.command(name=None, help=None)",
+        "difficulty": 1,
+        "tags": ["routing", "decorator"]
+      },
+      {
+        "id": "Argument",
+        "type": "function",
+        "label": "Argument()",
+        "summary": "Annotate a positional argument with metadata: help text, default, validation.",
+        "signature": "Annotated[str, typer.Argument(help='...')]",
+        "difficulty": 2,
+        "tags": ["arguments"]
+      },
+      {
+        "id": "Option",
+        "type": "function",
+        "label": "Option()",
+        "summary": "Annotate a named option (--flag) with metadata: help, prompt, envvar.",
+        "signature": "Annotated[str, typer.Option(help='...', envvar='MY_VAR')]",
+        "difficulty": 2,
+        "tags": ["options"]
+      },
+      {
+        "id": "echo",
+        "type": "function",
+        "label": "typer.echo()",
+        "summary": "Print output. Wraps click.echo — prefers this over print() for CLI output.",
+        "signature": "typer.echo(message, err=False)",
+        "difficulty": 1,
+        "tags": ["output"]
+      },
+      {
+        "id": "secho",
+        "type": "function",
+        "label": "typer.secho()",
+        "summary": "Print with ANSI colour/style. Short for styled echo.",
+        "signature": "typer.secho(message, fg=typer.colors.GREEN, bold=False)",
+        "difficulty": 1,
+        "tags": ["output", "color"]
+      },
+      {
+        "id": "Exit",
+        "type": "exception",
+        "label": "typer.Exit()",
+        "summary": "Raise to exit with a specific return code without an error message.",
+        "signature": "raise typer.Exit(code=1)",
+        "difficulty": 2,
+        "tags": ["error-handling"]
+      }
+    ],
+    "edges": [
+      { "id": "e1", "from": "Typer", "to": "command", "label": "contains" },
+      { "id": "e2", "from": "command", "to": "Argument", "label": "uses" },
+      { "id": "e3", "from": "command", "to": "Option", "label": "uses" },
+      { "id": "e4", "from": "command", "to": "echo", "label": "uses" },
+      { "id": "e5", "from": "command", "to": "secho", "label": "uses" },
+      { "id": "e6", "from": "command", "to": "Exit", "label": "uses" }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "hello-typer",
+      "title": "Minimal Typer CLI",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Install", "code": "pip install typer" },
+        { "label": "Write app", "code": "import typer\n\napp = typer.Typer()\n\n@app.command()\ndef greet(name: str):\n    typer.echo(f'Hello {name}')\n\nif __name__ == '__main__':\n    app()" },
+        { "label": "Run", "code": "python greet.py Alice\n# Hello Alice\n\npython greet.py --help\n# auto-generated help showing: NAME  [required]" }
+      ]
+    },
+    {
+      "id": "options-flags",
+      "title": "Options and boolean flags",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Optional with default", "code": "@app.command()\ndef greet(name: str, greeting: str = 'Hello'):\n    typer.echo(f'{greeting} {name}')" },
+        { "label": "Boolean flag", "code": "@app.command()\ndef process(verbose: bool = False):\n    if verbose:\n        typer.echo('Verbose mode on')" },
+        { "label": "Run", "code": "python app.py process --verbose\npython app.py greet Alice --greeting Hi" }
+      ]
+    },
+    {
+      "id": "subcommands",
+      "title": "Multi-command app",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Create app", "code": "import typer\napp = typer.Typer()" },
+        { "label": "Add commands", "code": "@app.command()\ndef build(target: str):\n    typer.secho(f'Building {target}', fg=typer.colors.CYAN)\n\n@app.command()\ndef deploy(env: str = 'prod'):\n    typer.secho(f'Deploying to {env}', fg=typer.colors.GREEN)\n\nif __name__ == '__main__':\n    app()" },
+        { "label": "Run", "code": "python tool.py build myapp\npython tool.py deploy --env staging\npython tool.py --help  # lists both commands" }
+      ]
+    },
+    {
+      "id": "rich-integration",
+      "title": "Combine with Rich for beautiful output",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Install both", "code": "pip install typer rich" },
+        { "label": "Use rich in commands", "code": "import typer\nfrom rich.console import Console\nfrom rich.table import Table\n\napp = typer.Typer()\nconsole = Console()\n\n@app.command()\ndef list_packages():\n    table = Table('Package', 'Version')\n    table.add_row('requests', '2.32.3')\n    table.add_row('numpy', '2.2.0')\n    console.print(table)" }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://pypi.org/project/typer/",
+    "repo_url": "https://github.com/fastapi-cli/typer",
+    "docs_url": "https://typer.tiangolo.com/",
+    "weekly_downloads": 10000000,
+    "version": "0.15.1",
+    "license": "MIT"
+  }
+}

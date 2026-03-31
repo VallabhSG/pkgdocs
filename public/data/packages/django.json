@@ -1,0 +1,149 @@
+{
+  "id": "django",
+  "ecosystem": "pypi",
+  "name": "django",
+  "summary": "The web framework for perfectionists with deadlines — batteries included",
+  "tags": ["web", "framework", "orm", "admin", "fullstack", "templates"],
+  "difficulty": 3,
+  "story": {
+    "problem": "Building a full-stack web app from scratch means wiring together a router, ORM, auth system, admin interface, form handling, CSRF protection, migrations, and templating engine — dozens of decisions and thousands of lines before you write business logic.",
+    "mental_model": "Django follows MTV (Model-Template-View): Models describe your data and Django generates the SQL; Templates are HTML files with a simple tag language; Views are functions or classes that receive a request and return a response. The admin panel, auth system, and migration engine come free. Convention over configuration — there's a right way to do everything.",
+    "when_to_use": "Full-stack web apps, content management systems, apps that need user auth and admin UI out of the box, large teams where consistency matters, or any project where you want decisions made for you.",
+    "when_not_to_use": "Pure JSON APIs without a frontend — FastAPI is lighter and faster. Tiny microservices where Django's size is overhead. Real-time async apps — though Django has async views, it's not designed around it.",
+    "alternatives": [
+      { "name": "fastapi", "reason": "Async, type-hint driven — better for API-only backends" },
+      { "name": "flask", "reason": "Lighter, more flexible — better when you want to choose your own components" },
+      { "name": "wagtail", "reason": "CMS built on Django — for content-heavy sites" }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "Model",
+        "type": "class",
+        "label": "Model",
+        "summary": "Define a database table. Field types map to columns; Django generates migrations.",
+        "signature": "class Post(models.Model): title = models.CharField(max_length=200)",
+        "difficulty": 1,
+        "tags": ["orm", "database"]
+      },
+      {
+        "id": "View",
+        "type": "concept",
+        "label": "Views (FBV / CBV)",
+        "summary": "A function or class that takes an HttpRequest and returns an HttpResponse.",
+        "difficulty": 1,
+        "tags": ["routing", "request"]
+      },
+      {
+        "id": "urls",
+        "type": "concept",
+        "label": "urls.py",
+        "summary": "URL routing config. Maps URL patterns to views using path() or re_path().",
+        "difficulty": 1,
+        "tags": ["routing"]
+      },
+      {
+        "id": "QuerySet",
+        "type": "class",
+        "label": "QuerySet",
+        "summary": "Lazy database query result. Chain .filter(), .exclude(), .order_by() before evaluating.",
+        "difficulty": 2,
+        "tags": ["orm", "query"]
+      },
+      {
+        "id": "Admin",
+        "type": "concept",
+        "label": "Admin site",
+        "summary": "Auto-generated admin interface at /admin/. Register models to CRUD them instantly.",
+        "difficulty": 1,
+        "tags": ["admin", "ui"]
+      },
+      {
+        "id": "Form",
+        "type": "class",
+        "label": "Form / ModelForm",
+        "summary": "Declarative HTML forms with validation. ModelForm generates from a Model automatically.",
+        "difficulty": 2,
+        "tags": ["forms", "validation"]
+      },
+      {
+        "id": "Middleware",
+        "type": "concept",
+        "label": "Middleware",
+        "summary": "Hooks that process every request/response: auth, CSRF, sessions, security headers.",
+        "difficulty": 3,
+        "tags": ["middleware", "advanced"]
+      },
+      {
+        "id": "settings",
+        "type": "concept",
+        "label": "settings.py",
+        "summary": "Central config: INSTALLED_APPS, DATABASES, MIDDLEWARE, TEMPLATES, SECRET_KEY.",
+        "difficulty": 1,
+        "tags": ["config"]
+      }
+    ],
+    "edges": [
+      { "id": "e1", "from": "Model", "to": "QuerySet", "label": "returns" },
+      { "id": "e2", "from": "Model", "to": "Admin", "label": "uses" },
+      { "id": "e3", "from": "Model", "to": "Form", "label": "uses" },
+      { "id": "e4", "from": "View", "to": "Model", "label": "uses" },
+      { "id": "e5", "from": "View", "to": "Form", "label": "uses" },
+      { "id": "e6", "from": "urls", "to": "View", "label": "uses" },
+      { "id": "e7", "from": "Middleware", "to": "View", "label": "uses" },
+      { "id": "e8", "from": "settings", "to": "Middleware", "label": "contains" }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "new-project",
+      "title": "Create a new Django project",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Install", "code": "pip install django" },
+        { "label": "Create project", "code": "django-admin startproject mysite\ncd mysite" },
+        { "label": "Create app", "code": "python manage.py startapp blog" },
+        { "label": "Run server", "code": "python manage.py runserver\n# → http://127.0.0.1:8000/" }
+      ]
+    },
+    {
+      "id": "define-model",
+      "title": "Define a model and run migrations",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Define model", "code": "# blog/models.py\nfrom django.db import models\n\nclass Post(models.Model):\n    title = models.CharField(max_length=200)\n    body = models.TextField()\n    published = models.BooleanField(default=False)\n    created_at = models.DateTimeField(auto_now_add=True)\n\n    def __str__(self):\n        return self.title" },
+        { "label": "Register app", "code": "# mysite/settings.py\nINSTALLED_APPS = [\n    ...\n    'blog',  # add this\n]" },
+        { "label": "Migrate", "code": "python manage.py makemigrations\npython manage.py migrate" }
+      ]
+    },
+    {
+      "id": "views-urls",
+      "title": "Write a view and wire a URL",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "View function", "code": "# blog/views.py\nfrom django.http import JsonResponse\nfrom .models import Post\n\ndef post_list(request):\n    posts = Post.objects.filter(published=True).values('id', 'title')\n    return JsonResponse(list(posts), safe=False)" },
+        { "label": "URL config", "code": "# blog/urls.py\nfrom django.urls import path\nfrom . import views\n\nurlpatterns = [\n    path('posts/', views.post_list),\n]" },
+        { "label": "Include in project", "code": "# mysite/urls.py\nfrom django.urls import path, include\n\nurlpatterns = [\n    path('admin/', admin.site.urls),\n    path('api/', include('blog.urls')),\n]" }
+      ]
+    },
+    {
+      "id": "admin",
+      "title": "Register models in the admin",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Register", "code": "# blog/admin.py\nfrom django.contrib import admin\nfrom .models import Post\n\n@admin.register(Post)\nclass PostAdmin(admin.ModelAdmin):\n    list_display = ['title', 'published', 'created_at']\n    list_filter = ['published']\n    search_fields = ['title', 'body']" },
+        { "label": "Create superuser", "code": "python manage.py createsuperuser" },
+        { "label": "Login", "code": "# Visit http://127.0.0.1:8000/admin/\n# Full CRUD UI for Post — no extra code needed" }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://pypi.org/project/django/",
+    "repo_url": "https://github.com/django/django",
+    "docs_url": "https://docs.djangoproject.com/",
+    "weekly_downloads": 12000000,
+    "version": "5.1.4",
+    "license": "BSD-3-Clause"
+  }
+}

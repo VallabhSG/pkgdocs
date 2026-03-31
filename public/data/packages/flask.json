@@ -1,0 +1,171 @@
+{
+  "id": "flask",
+  "ecosystem": "pypi",
+  "name": "flask",
+  "summary": "A lightweight WSGI web framework — micro but extensible",
+  "tags": ["web", "framework", "wsgi", "routing", "templating"],
+  "difficulty": 1,
+  "story": {
+    "problem": "Django is powerful but brings an ORM, admin panel, and auth system whether you need them or not. Sometimes you just need a few routes, some templates, and a running server — without reading a book first.",
+    "mental_model": "Flask is a thin layer over Python's WSGI interface. You create an app, decorate functions with routes, and return strings or rendered templates. Everything else — database, auth, forms — is opt-in via extensions. It stays out of your way.",
+    "when_to_use": "Small-to-medium web apps, REST APIs where you want full control, prototypes, internal tools, and projects where Django's conventions would be overhead. Great first web framework to learn.",
+    "when_not_to_use": "Large teams where Django's conventions reduce bikeshedding. Apps that need built-in admin, ORM, and auth from day one. Async-heavy services — use FastAPI instead.",
+    "alternatives": [
+      { "name": "fastapi", "reason": "Async, type-hint driven, auto OpenAPI docs — better for APIs" },
+      { "name": "django", "reason": "Full-stack with batteries included — better for large apps" },
+      { "name": "bottle", "reason": "Even smaller single-file framework, zero dependencies" }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "Flask",
+        "type": "class",
+        "label": "Flask",
+        "summary": "The application object. Create one per app, register routes and extensions on it.",
+        "signature": "Flask(__name__)",
+        "difficulty": 1,
+        "tags": ["core", "app"]
+      },
+      {
+        "id": "route",
+        "type": "function",
+        "label": "@route()",
+        "summary": "Register a URL rule. Decorator that maps a URL pattern to a view function.",
+        "signature": "@app.route('/path', methods=['GET', 'POST'])",
+        "difficulty": 1,
+        "tags": ["routing", "decorator"]
+      },
+      {
+        "id": "Blueprint",
+        "type": "class",
+        "label": "Blueprint",
+        "summary": "Group related routes and register them on the app with a prefix. Like a mini-app.",
+        "signature": "Blueprint('name', __name__, url_prefix='/api')",
+        "difficulty": 2,
+        "tags": ["routing", "organisation"]
+      },
+      {
+        "id": "request",
+        "type": "concept",
+        "label": "request (global)",
+        "summary": "Thread-local proxy to the current HTTP request. Access form data, JSON, args, headers.",
+        "difficulty": 1,
+        "tags": ["request", "context"]
+      },
+      {
+        "id": "jsonify",
+        "type": "function",
+        "label": "jsonify()",
+        "summary": "Serialize a dict to a JSON Response with correct Content-Type header.",
+        "signature": "jsonify(data) -> Response",
+        "difficulty": 1,
+        "tags": ["response", "json"]
+      },
+      {
+        "id": "render_template",
+        "type": "function",
+        "label": "render_template()",
+        "summary": "Render a Jinja2 template from the templates/ folder.",
+        "signature": "render_template('index.html', **context) -> str",
+        "difficulty": 1,
+        "tags": ["templating", "html"]
+      },
+      {
+        "id": "abort",
+        "type": "function",
+        "label": "abort()",
+        "summary": "Immediately raise an HTTP error response (e.g. abort(404), abort(403)).",
+        "signature": "abort(status_code)",
+        "difficulty": 1,
+        "tags": ["error-handling"]
+      },
+      {
+        "id": "g",
+        "type": "concept",
+        "label": "g (app context global)",
+        "summary": "A namespace for storing data during a request — e.g. a DB connection.",
+        "difficulty": 2,
+        "tags": ["context", "state"]
+      },
+      {
+        "id": "before_request",
+        "type": "function",
+        "label": "@before_request",
+        "summary": "Run a function before every request — auth checks, DB setup.",
+        "difficulty": 2,
+        "tags": ["middleware", "hooks"]
+      }
+    ],
+    "edges": [
+      { "id": "e1", "from": "Flask", "to": "route", "label": "contains" },
+      { "id": "e2", "from": "Flask", "to": "Blueprint", "label": "uses" },
+      { "id": "e3", "from": "Flask", "to": "before_request", "label": "contains" },
+      { "id": "e4", "from": "route", "to": "request", "label": "uses" },
+      { "id": "e5", "from": "route", "to": "jsonify", "label": "returns" },
+      { "id": "e6", "from": "route", "to": "render_template", "label": "returns" },
+      { "id": "e7", "from": "route", "to": "abort", "label": "uses" },
+      { "id": "e8", "from": "before_request", "to": "g", "label": "uses" },
+      { "id": "e9", "from": "Blueprint", "to": "route", "label": "contains" }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "hello-flask",
+      "title": "Minimal web server",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "Install", "code": "pip install flask" },
+        { "label": "Create app", "code": "from flask import Flask\napp = Flask(__name__)" },
+        { "label": "Add route", "code": "@app.route('/')\ndef index():\n    return 'Hello, World!'" },
+        { "label": "Run", "code": "flask run\n# or: python -m flask run --debug", "explanation": "Visit http://localhost:5000. --debug enables auto-reload and the interactive debugger." }
+      ]
+    },
+    {
+      "id": "json-api",
+      "title": "Build a JSON REST endpoint",
+      "difficulty": "beginner",
+      "steps": [
+        { "label": "GET endpoint", "code": "from flask import Flask, jsonify\napp = Flask(__name__)\n\n@app.route('/api/users')\ndef list_users():\n    return jsonify([{'id': 1, 'name': 'Alice'}])" },
+        { "label": "POST endpoint", "code": "from flask import request\n\n@app.route('/api/users', methods=['POST'])\ndef create_user():\n    data = request.get_json()\n    return jsonify({'created': data}), 201" }
+      ]
+    },
+    {
+      "id": "blueprints",
+      "title": "Organise with Blueprints",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Define blueprint", "code": "# users.py\nfrom flask import Blueprint, jsonify\n\nusers_bp = Blueprint('users', __name__, url_prefix='/users')\n\n@users_bp.route('/')\ndef list_users():\n    return jsonify([])" },
+        { "label": "Register on app", "code": "# app.py\nfrom flask import Flask\nfrom users import users_bp\n\napp = Flask(__name__)\napp.register_blueprint(users_bp)" },
+        { "label": "Result", "code": "# GET /users/ → calls list_users()" }
+      ]
+    },
+    {
+      "id": "error-handlers",
+      "title": "Custom error pages",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "404 handler", "code": "@app.errorhandler(404)\ndef not_found(e):\n    return jsonify({'error': 'not found'}), 404" },
+        { "label": "500 handler", "code": "@app.errorhandler(500)\ndef server_error(e):\n    return jsonify({'error': 'internal error'}), 500" },
+        { "label": "Trigger 404", "code": "from flask import abort\n\n@app.route('/items/<int:id>')\ndef get_item(id):\n    item = db.get(id)\n    if not item:\n        abort(404)" }
+      ]
+    },
+    {
+      "id": "before-request",
+      "title": "Auth check on every request",
+      "difficulty": "intermediate",
+      "steps": [
+        { "label": "Use before_request", "code": "from flask import request, g, abort\n\n@app.before_request\ndef check_auth():\n    token = request.headers.get('Authorization')\n    if not token or token != 'Bearer secret':\n        abort(401)" },
+        { "label": "Store user in g", "code": "@app.before_request\ndef load_user():\n    token = request.headers.get('Authorization')\n    g.user = verify_token(token)  # your function", "explanation": "g lives for one request. Access g.user in any route handler called after this." }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://pypi.org/project/flask/",
+    "repo_url": "https://github.com/pallets/flask",
+    "docs_url": "https://flask.palletsprojects.com/",
+    "weekly_downloads": 28000000,
+    "version": "3.1.0",
+    "license": "BSD-3-Clause"
+  }
+}
