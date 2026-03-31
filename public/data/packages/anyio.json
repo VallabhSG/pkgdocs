@@ -1,0 +1,55 @@
+{
+  "id": "anyio",
+  "ecosystem": "pypi",
+  "name": "anyio",
+  "summary": "High-level concurrency and networking framework on top of asyncio or Trio",
+  "tags": [],
+  "difficulty": 1,
+  "story": {
+    "problem": "anyio is a Python library for high-level concurrency and networking framework on top of asyncio or trio.",
+    "mental_model": "",
+    "when_to_use": "Use anyio when you need high-level concurrency and networking framework on top of asyncio or trio.",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "anyio",
+        "type": "module",
+        "label": "anyio",
+        "summary": "Top-level module. Import as `import anyio` or `from anyio import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      }
+    ],
+    "edges": []
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install anyio",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via pip",
+          "code": "pip install anyio"
+        },
+        {
+          "label": "Import",
+          "code": "import anyio"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://pypi.org/project/anyio/",
+    "repo_url": "",
+    "docs_url": "https://anyio.readthedocs.io/en/latest/",
+    "weekly_downloads": 0,
+    "version": "4.13.0",
+    "license": ""
+  }
+}
