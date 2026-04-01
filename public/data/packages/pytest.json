@@ -2,19 +2,19 @@
   "id": "pytest",
   "ecosystem": "pypi",
   "name": "pytest",
-  "summary": "The most popular Python testing framework — simple, powerful, extensible",
-  "tags": ["testing", "unit-test", "fixtures", "assertions", "tdd"],
+  "summary": "pytest: simple powerful testing with Python",
+  "tags": [
+    "libraries",
+    "testing",
+    "utilities"
+  ],
   "difficulty": 1,
   "story": {
-    "problem": "Python's built-in unittest requires verbose boilerplate: test classes that inherit TestCase, self.assertEqual() calls, setUp/tearDown methods. Writing tests feels like work rather than just writing functions.",
-    "mental_model": "A pytest test is just a function whose name starts with test_. Use plain assert statements — pytest rewrites them to show exactly what values didn't match on failure. Fixtures are functions that provide test data or resources, declared as parameters.",
-    "when_to_use": "All Python testing: unit tests, integration tests, API tests, parametrized test suites. The de facto standard for Python projects of any size.",
-    "when_not_to_use": "Rarely a reason not to use it. unittest is fine for tiny scripts. For browser automation, combine pytest with playwright or selenium.",
-    "alternatives": [
-      { "name": "unittest", "reason": "Standard library, no install needed, but more verbose" },
-      { "name": "hypothesis", "reason": "Property-based testing — combines with pytest to generate test cases automatically" },
-      { "name": "ward", "reason": "Modern pytest alternative with a cleaner output format" }
-    ]
+    "problem": "pytest is a Python library for pytest: simple powerful testing with python.",
+    "mental_model": "",
+    "when_to_use": "Use pytest when you need pytest: simple powerful testing with python.",
+    "when_not_to_use": "",
+    "alternatives": []
   },
   "graph": {
     "nodes": [
@@ -22,132 +22,38 @@
         "id": "pytest",
         "type": "module",
         "label": "pytest",
-        "summary": "CLI runner and test discovery engine. Run `pytest` to discover and run all tests.",
+        "summary": "Top-level module. Import as `import pytest` or `from pytest import ...`",
         "difficulty": 1,
-        "tags": ["entry-point"]
-      },
-      {
-        "id": "fixture",
-        "type": "function",
-        "label": "@pytest.fixture",
-        "summary": "Declare reusable setup/teardown. Request by name as a test function parameter.",
-        "signature": "@pytest.fixture(scope='function')",
-        "difficulty": 1,
-        "tags": ["fixtures", "setup"]
-      },
-      {
-        "id": "mark",
-        "type": "concept",
-        "label": "@pytest.mark.*",
-        "summary": "Tag tests: skip, xfail, parametrize, or custom marks for filtering.",
-        "difficulty": 2,
-        "tags": ["marks", "filtering"]
-      },
-      {
-        "id": "parametrize",
-        "type": "function",
-        "label": "@pytest.mark.parametrize",
-        "summary": "Run the same test with multiple input/output pairs. One decorator, many test cases.",
-        "signature": "@pytest.mark.parametrize('arg', [val1, val2, ...])",
-        "difficulty": 2,
-        "tags": ["parametrize", "data-driven"]
-      },
-      {
-        "id": "raises",
-        "type": "function",
-        "label": "pytest.raises()",
-        "summary": "Assert that a block of code raises a specific exception.",
-        "signature": "with pytest.raises(ExceptionType):",
-        "difficulty": 1,
-        "tags": ["assertions", "exceptions"]
-      },
-      {
-        "id": "monkeypatch",
-        "type": "class",
-        "label": "monkeypatch (fixture)",
-        "summary": "Temporarily replace attributes, env vars, or functions for a single test.",
-        "difficulty": 2,
-        "tags": ["mocking", "patching"]
-      },
-      {
-        "id": "conftest",
-        "type": "concept",
-        "label": "conftest.py",
-        "summary": "Special file where shared fixtures are defined. Automatically discovered by pytest.",
-        "difficulty": 2,
-        "tags": ["fixtures", "configuration"]
-      },
-      {
-        "id": "tmp_path",
-        "type": "class",
-        "label": "tmp_path (fixture)",
-        "summary": "Built-in fixture providing a temporary directory unique to the test invocation.",
-        "difficulty": 1,
-        "tags": ["fixtures", "filesystem"]
+        "tags": [
+          "entry-point"
+        ]
       }
     ],
-    "edges": [
-      { "id": "e1", "from": "pytest", "to": "fixture", "label": "contains" },
-      { "id": "e2", "from": "pytest", "to": "mark", "label": "contains" },
-      { "id": "e3", "from": "pytest", "to": "raises", "label": "contains" },
-      { "id": "e4", "from": "mark", "to": "parametrize", "label": "contains" },
-      { "id": "e5", "from": "fixture", "to": "monkeypatch", "label": "contains" },
-      { "id": "e6", "from": "fixture", "to": "tmp_path", "label": "contains" },
-      { "id": "e7", "from": "conftest", "to": "fixture", "label": "contains" }
-    ]
+    "edges": []
   },
   "tasks": [
     {
-      "id": "first-test",
-      "title": "Write and run your first test",
+      "id": "install",
+      "title": "Install pytest",
       "difficulty": "beginner",
       "steps": [
-        { "label": "Install", "code": "pip install pytest" },
-        { "label": "Write test file", "code": "# test_math.py\ndef add(a, b):\n    return a + b\n\ndef test_add():\n    assert add(2, 3) == 5\n\ndef test_add_negative():\n    assert add(-1, 1) == 0" },
-        { "label": "Run", "code": "pytest\n# or: pytest test_math.py -v", "explanation": "pytest discovers files matching test_*.py and functions matching test_*. -v shows each test name." }
-      ]
-    },
-    {
-      "id": "fixtures",
-      "title": "Share setup with fixtures",
-      "difficulty": "beginner",
-      "steps": [
-        { "label": "Define fixture", "code": "import pytest\n\n@pytest.fixture\ndef sample_user():\n    return {'name': 'Alice', 'age': 30}" },
-        { "label": "Use in test", "code": "def test_user_name(sample_user):\n    assert sample_user['name'] == 'Alice'\n\ndef test_user_age(sample_user):\n    assert sample_user['age'] == 30", "explanation": "pytest injects the fixture by matching the parameter name. The fixture runs fresh for each test by default." }
-      ]
-    },
-    {
-      "id": "parametrize",
-      "title": "Data-driven tests with parametrize",
-      "difficulty": "intermediate",
-      "steps": [
-        { "label": "Parametrize", "code": "import pytest\n\n@pytest.mark.parametrize('a,b,expected', [\n    (1, 2, 3),\n    (0, 0, 0),\n    (-1, 1, 0),\n    (100, -50, 50),\n])\ndef test_add(a, b, expected):\n    assert add(a, b) == expected", "explanation": "This generates 4 separate test cases. Each shows individually in output." }
-      ]
-    },
-    {
-      "id": "exceptions",
-      "title": "Test that exceptions are raised",
-      "difficulty": "beginner",
-      "steps": [
-        { "label": "raises context", "code": "import pytest\n\ndef divide(a, b):\n    if b == 0:\n        raise ValueError('Cannot divide by zero')\n    return a / b\n\ndef test_divide_by_zero():\n    with pytest.raises(ValueError, match='divide by zero'):\n        divide(10, 0)" }
-      ]
-    },
-    {
-      "id": "monkeypatch",
-      "title": "Mock environment variables and functions",
-      "difficulty": "intermediate",
-      "steps": [
-        { "label": "Patch env var", "code": "def get_env_mode():\n    import os\n    return os.environ.get('MODE', 'production')\n\ndef test_dev_mode(monkeypatch):\n    monkeypatch.setenv('MODE', 'development')\n    assert get_env_mode() == 'development'" },
-        { "label": "Patch a function", "code": "def test_no_network(monkeypatch):\n    monkeypatch.setattr('requests.get',\n        lambda url, **kw: FakeResponse())\n    result = fetch_data('https://api.example.com')\n    assert result is not None", "explanation": "monkeypatch reverts all changes after the test automatically — no cleanup needed." }
+        {
+          "label": "Install via pip",
+          "code": "pip install pytest"
+        },
+        {
+          "label": "Import",
+          "code": "import pytest"
+        }
       ]
     }
   ],
   "meta": {
     "pypi_url": "https://pypi.org/project/pytest/",
     "repo_url": "https://github.com/pytest-dev/pytest",
-    "docs_url": "https://docs.pytest.org/",
-    "weekly_downloads": 40000000,
-    "version": "8.3.4",
-    "license": "MIT"
+    "docs_url": "https://docs.pytest.org/en/latest/",
+    "weekly_downloads": 0,
+    "version": "9.0.2",
+    "license": ""
   }
 }

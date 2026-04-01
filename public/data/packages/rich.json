@@ -2,159 +2,54 @@
   "id": "rich",
   "ecosystem": "pypi",
   "name": "rich",
-  "summary": "Beautiful terminal output — colours, tables, progress bars, markdown, and more",
-  "tags": ["terminal", "cli", "colors", "tables", "logging", "output"],
+  "summary": "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal",
+  "tags": [],
   "difficulty": 1,
   "story": {
-    "problem": "Python's print() outputs plain text. Debugging scripts with walls of monochrome output, manually formatting tables with ljust(), and implementing your own progress bar is tedious and the result always looks amateur.",
-    "mental_model": "Rich gives you a Console object that understands markup like [bold red]error[/] and renders it as styled terminal text. Everything — tracebacks, logs, JSON, tables, trees, progress bars — is a renderable object you pass to console.print(). No configuration needed to start.",
-    "when_to_use": "Any CLI tool, script, or server where terminal output is read by humans. Progress bars for long-running tasks, pretty-printed data structures, coloured log output, nicely formatted error messages.",
-    "when_not_to_use": "Output that's piped to another program or parsed by a script — the ANSI codes will break parsers. Use rich's no-colour mode or redirect to a file in those cases.",
-    "alternatives": [
-      { "name": "colorama", "reason": "Lightweight ANSI colour support, cross-platform — but much more basic" },
-      { "name": "blessed", "reason": "Full terminal control (cursor positioning, etc.) for TUI-style apps" },
-      { "name": "textual", "reason": "Full TUI framework built by the Rich author — for interactive terminal apps" }
-    ]
+    "problem": "rich is a Python library for render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal.",
+    "mental_model": "",
+    "when_to_use": "Use rich when you need render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal.",
+    "when_not_to_use": "",
+    "alternatives": []
   },
   "graph": {
     "nodes": [
       {
-        "id": "Console",
-        "type": "class",
-        "label": "Console",
-        "summary": "The main output object. Create one, call .print() on it everywhere.",
-        "signature": "Console(stderr=False, no_color=False, width=None)",
+        "id": "rich",
+        "type": "module",
+        "label": "rich",
+        "summary": "Top-level module. Import as `import rich` or `from rich import ...`",
         "difficulty": 1,
-        "tags": ["core", "output"]
-      },
-      {
-        "id": "print",
-        "type": "function",
-        "label": "console.print()",
-        "summary": "Rich-aware print. Supports markup, syntax highlighting, and any Rich renderable.",
-        "signature": "console.print(*objects, style=None, highlight=True)",
-        "difficulty": 1,
-        "tags": ["output", "markup"]
-      },
-      {
-        "id": "Table",
-        "type": "class",
-        "label": "Table",
-        "summary": "Render data as a styled grid with column headers, borders, and alignment.",
-        "signature": "Table(title=None, show_header=True, box=box.ROUNDED)",
-        "difficulty": 1,
-        "tags": ["tables", "data"]
-      },
-      {
-        "id": "Progress",
-        "type": "class",
-        "label": "Progress",
-        "summary": "Multi-task progress bars with speed, ETA, and custom columns.",
-        "signature": "Progress(*columns, transient=False)",
-        "difficulty": 2,
-        "tags": ["progress", "async"]
-      },
-      {
-        "id": "track",
-        "type": "function",
-        "label": "track()",
-        "summary": "Wrap any iterable with a progress bar. The simplest way to add a progress indicator.",
-        "signature": "track(sequence, description='Working...')",
-        "difficulty": 1,
-        "tags": ["progress", "iterable"]
-      },
-      {
-        "id": "Syntax",
-        "type": "class",
-        "label": "Syntax",
-        "summary": "Syntax-highlighted code block using Pygments. Supports 500+ languages.",
-        "signature": "Syntax(code, 'python', theme='monokai', line_numbers=True)",
-        "difficulty": 1,
-        "tags": ["code", "highlight"]
-      },
-      {
-        "id": "Markdown",
-        "type": "class",
-        "label": "Markdown",
-        "summary": "Render Markdown text in the terminal with headings, lists, code blocks.",
-        "signature": "Markdown(markup_text)",
-        "difficulty": 1,
-        "tags": ["markdown", "text"]
-      },
-      {
-        "id": "logging",
-        "type": "concept",
-        "label": "RichHandler",
-        "summary": "Drop into Python's logging module for coloured, structured log output.",
-        "signature": "logging.basicConfig(handlers=[RichHandler()])",
-        "difficulty": 2,
-        "tags": ["logging"]
+        "tags": [
+          "entry-point"
+        ]
       }
     ],
-    "edges": [
-      { "id": "e1", "from": "Console", "to": "print", "label": "contains" },
-      { "id": "e2", "from": "Console", "to": "Table", "label": "uses" },
-      { "id": "e3", "from": "Console", "to": "Syntax", "label": "uses" },
-      { "id": "e4", "from": "Console", "to": "Markdown", "label": "uses" },
-      { "id": "e5", "from": "Progress", "to": "Console", "label": "uses" },
-      { "id": "e6", "from": "track", "to": "Progress", "label": "uses" },
-      { "id": "e7", "from": "logging", "to": "Console", "label": "uses" }
-    ]
+    "edges": []
   },
   "tasks": [
     {
-      "id": "coloured-print",
-      "title": "Coloured and styled output",
+      "id": "install",
+      "title": "Install rich",
       "difficulty": "beginner",
       "steps": [
-        { "label": "Install", "code": "pip install rich" },
-        { "label": "Basic markup", "code": "from rich import print\nprint('[bold green]Success![/] File saved.')\nprint('[red]Error:[/] File not found.')\nprint('[bold blue underline]Title[/]')", "explanation": "Import rich's print to replace the built-in. Markup uses [style]text[/] syntax." },
-        { "label": "With Console", "code": "from rich.console import Console\nconsole = Console()\nconsole.print('Hello', style='bold magenta')" }
-      ]
-    },
-    {
-      "id": "tables",
-      "title": "Print a table",
-      "difficulty": "beginner",
-      "steps": [
-        { "label": "Create table", "code": "from rich.console import Console\nfrom rich.table import Table\n\nconsole = Console()\ntable = Table(title='Python Packages')" },
-        { "label": "Add columns", "code": "table.add_column('Name', style='cyan', no_wrap=True)\ntable.add_column('Version', style='magenta')\ntable.add_column('Downloads', justify='right', style='green')" },
-        { "label": "Add rows", "code": "table.add_row('requests', '2.32.3', '120M/wk')\ntable.add_row('pandas', '2.2.3', '65M/wk')\nconsole.print(table)" }
-      ]
-    },
-    {
-      "id": "progress-bar",
-      "title": "Progress bar for a loop",
-      "difficulty": "beginner",
-      "steps": [
-        { "label": "track() — simplest", "code": "from rich.progress import track\nimport time\n\nfor item in track(range(100), description='Processing...'):\n    time.sleep(0.02)" },
-        { "label": "Progress — multi-task", "code": "from rich.progress import Progress\n\nwith Progress() as progress:\n    task1 = progress.add_task('Downloading...', total=100)\n    task2 = progress.add_task('Processing...', total=50)\n    while not progress.finished:\n        progress.update(task1, advance=1)\n        progress.update(task2, advance=0.5)\n        time.sleep(0.05)" }
-      ]
-    },
-    {
-      "id": "syntax-highlight",
-      "title": "Display syntax-highlighted code",
-      "difficulty": "beginner",
-      "steps": [
-        { "label": "Highlight code", "code": "from rich.syntax import Syntax\nfrom rich.console import Console\n\nconsole = Console()\ncode = \"\"\"\ndef greet(name: str) -> str:\n    return f'Hello, {name}!'\n\"\"\"\nconsole.print(Syntax(code, 'python', theme='monokai', line_numbers=True))" }
-      ]
-    },
-    {
-      "id": "logging",
-      "title": "Rich logging handler",
-      "difficulty": "intermediate",
-      "steps": [
-        { "label": "Setup", "code": "import logging\nfrom rich.logging import RichHandler\n\nlogging.basicConfig(\n    level=logging.DEBUG,\n    format='%(message)s',\n    handlers=[RichHandler(rich_tracebacks=True)]\n)\nlog = logging.getLogger('myapp')" },
-        { "label": "Use", "code": "log.info('Starting up')\nlog.warning('Disk space low')\nlog.error('Connection failed')", "explanation": "rich_tracebacks=True renders exceptions with syntax highlighting and local variable values." }
+        {
+          "label": "Install via pip",
+          "code": "pip install rich"
+        },
+        {
+          "label": "Import",
+          "code": "import rich"
+        }
       ]
     }
   ],
   "meta": {
     "pypi_url": "https://pypi.org/project/rich/",
-    "repo_url": "https://github.com/Textualize/rich",
-    "docs_url": "https://rich.readthedocs.io/",
-    "weekly_downloads": 30000000,
-    "version": "13.9.4",
+    "repo_url": "",
+    "docs_url": "https://rich.readthedocs.io/en/latest/",
+    "weekly_downloads": 0,
+    "version": "14.3.3",
     "license": "MIT"
   }
 }

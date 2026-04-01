@@ -2,19 +2,20 @@
   "id": "click",
   "ecosystem": "pypi",
   "name": "click",
-  "summary": "Composable command line interfaces with as little code as possible",
-  "tags": ["cli", "commands", "arguments", "options", "terminal"],
+  "summary": "Composable command line interface toolkit",
+  "tags": [
+    "cli",
+    "click",
+    "pallets",
+    "python"
+  ],
   "difficulty": 1,
   "story": {
-    "problem": "Python's built-in argparse is verbose: you define arguments imperatively, separately from the functions they belong to, and error messages are inconsistent. sys.argv parsing is even worse. Every CLI tool reimplements help text, type conversion, and subcommand routing.",
-    "mental_model": "Click is decorator-driven. You decorate a Python function with @click.command() and @click.option(), and Click handles parsing, help text, type validation, and error messages automatically. Your function just receives typed Python arguments — no parsing code needed.",
-    "when_to_use": "Any Python script you want to invoke from the terminal with options and arguments. Especially good for tools with multiple subcommands (like git-style CLIs). Flask uses it internally.",
-    "when_not_to_use": "Extremely simple one-argument scripts where argparse is fine. If you need rich terminal output (colours, tables, progress bars) alongside your CLI, combine with rich or use typer (which wraps click + adds type hints).",
-    "alternatives": [
-      { "name": "typer", "reason": "Built on click, but uses Python type hints instead of decorators — less boilerplate" },
-      { "name": "argparse", "reason": "Standard library, no dependencies, but significantly more verbose" },
-      { "name": "rich-click", "reason": "Drop-in replacement that makes click's help output beautiful using rich" }
-    ]
+    "problem": "Click is a Python package for creating beautiful command line interfaces\nin a composable way with as little code as necessary. It's the \"Command\nLine Interface Creation Kit\". It's highly configurable but comes with\nsensible defaults out of the box.\n\nIt aims to make the process of writing command line tools quick and fun\nwhile also preventing any frustration caused by the inability to\nimplement an intended CLI API.\n\nClick in three points:\n\n-   Arbitrary nesting of commands\n-   Automatic help…",
+    "mental_model": "",
+    "when_to_use": "``python\nimport click\n\n@click.command()\n@click.option(\"--count\", default=1, help=\"Number of greetings.\")\n@click.option(\"--name\", prompt=\"Your name\", help=\"The person to greet.\")\ndef hello(count, name):\n    \"\"\"Simple program that greets NAME for a total of COUNT times.\"\"\"\n    for _ in range(count):\n        click.echo(f\"Hello, {name}!\")\n\nif __name__…",
+    "when_not_to_use": "",
+    "alternatives": []
   },
   "graph": {
     "nodes": [
@@ -22,166 +23,53 @@
         "id": "click",
         "type": "module",
         "label": "click",
-        "summary": "Top-level module. Import to access all decorators and utilities.",
+        "summary": "Top-level module. Import as `import click` or `from click import ...`",
         "difficulty": 1,
-        "tags": ["entry-point"]
-      },
-      {
-        "id": "command",
-        "type": "function",
-        "label": "@command()",
-        "summary": "Turns a function into a CLI command. The entry point of every click CLI.",
-        "signature": "@click.command(name=None, help=None)",
-        "difficulty": 1,
-        "tags": ["core", "decorator"]
-      },
-      {
-        "id": "group",
-        "type": "function",
-        "label": "@group()",
-        "summary": "Creates a command group — a parent command that has subcommands (like `git`).",
-        "signature": "@click.group(name=None, invoke_without_command=False)",
-        "difficulty": 2,
-        "tags": ["subcommands", "decorator"]
-      },
-      {
-        "id": "option",
-        "type": "function",
-        "label": "@option()",
-        "summary": "Adds a named flag/option to a command. e.g. --verbose, --output file.txt",
-        "signature": "@click.option('--name', default='World', help='Who to greet')",
-        "difficulty": 1,
-        "tags": ["arguments", "decorator"]
-      },
-      {
-        "id": "argument",
-        "type": "function",
-        "label": "@argument()",
-        "summary": "Adds a positional argument. Unlike options, arguments are required by default.",
-        "signature": "@click.argument('filename')",
-        "difficulty": 1,
-        "tags": ["arguments", "decorator"]
-      },
-      {
-        "id": "pass_context",
-        "type": "function",
-        "label": "@pass_context",
-        "summary": "Injects the Click Context object — use to share state between grouped commands.",
-        "signature": "@click.pass_context",
-        "difficulty": 2,
-        "tags": ["context", "state"]
-      },
-      {
-        "id": "echo",
-        "type": "function",
-        "label": "echo()",
-        "summary": "Print to stdout (or stderr). Prefer over print() — handles encoding correctly.",
-        "signature": "echo(message=None, file=None, err=False, color=None)",
-        "difficulty": 1,
-        "tags": ["output", "print"]
-      },
-      {
-        "id": "style",
-        "type": "function",
-        "label": "style() / secho()",
-        "summary": "Add ANSI colour and styling to terminal output. secho() = style() + echo().",
-        "signature": "secho(message, fg='green', bold=False, ...)",
-        "difficulty": 1,
-        "tags": ["output", "color"]
-      },
-      {
-        "id": "ClickException",
-        "type": "exception",
-        "label": "ClickException",
-        "summary": "Raise to exit with a formatted error message and non-zero exit code.",
-        "signature": "ClickException(message)",
-        "difficulty": 2,
-        "tags": ["error-handling"]
-      },
-      {
-        "id": "BadParameter",
-        "type": "exception",
-        "label": "BadParameter",
-        "summary": "Signals that a specific option/argument value was invalid.",
-        "difficulty": 2,
-        "tags": ["error-handling", "validation"]
+        "tags": [
+          "entry-point"
+        ]
       }
     ],
-    "edges": [
-      { "id": "e1", "from": "click", "to": "command", "label": "contains" },
-      { "id": "e2", "from": "click", "to": "group", "label": "contains" },
-      { "id": "e3", "from": "click", "to": "option", "label": "contains" },
-      { "id": "e4", "from": "click", "to": "argument", "label": "contains" },
-      { "id": "e5", "from": "click", "to": "echo", "label": "contains" },
-      { "id": "e6", "from": "click", "to": "style", "label": "contains" },
-      { "id": "e7", "from": "group", "to": "command", "label": "contains" },
-      { "id": "e8", "from": "command", "to": "option", "label": "uses" },
-      { "id": "e9", "from": "command", "to": "argument", "label": "uses" },
-      { "id": "e10", "from": "command", "to": "pass_context", "label": "uses" },
-      { "id": "e11", "from": "ClickException", "to": "BadParameter", "label": "inherits" },
-      { "id": "e12", "from": "command", "to": "ClickException", "label": "uses" }
-    ]
+    "edges": []
   },
   "tasks": [
     {
-      "id": "hello-cli",
-      "title": "Build a hello-world CLI",
+      "id": "install",
+      "title": "Install click",
       "difficulty": "beginner",
       "steps": [
-        { "label": "Install", "code": "pip install click" },
-        { "label": "Write command", "code": "import click\n\n@click.command()\n@click.option('--name', default='World', help='Who to greet')\ndef greet(name):\n    click.echo(f'Hello, {name}!')\n\nif __name__ == '__main__':\n    greet()" },
-        { "label": "Run", "code": "python greet.py --name Alice\n# Hello, Alice!\n\npython greet.py --help\n# auto-generated help text" }
+        {
+          "label": "Install via pip",
+          "code": "pip install click"
+        },
+        {
+          "label": "Import",
+          "code": "import click"
+        }
       ]
     },
     {
-      "id": "typed-options",
-      "title": "Add typed options and flags",
+      "id": "a-simple-example",
+      "title": "A Simple Example",
       "difficulty": "beginner",
       "steps": [
-        { "label": "Integer option", "code": "@click.option('--count', type=int, default=1)" },
-        { "label": "Boolean flag", "code": "@click.option('--verbose', is_flag=True, default=False)" },
-        { "label": "File path", "code": "@click.option('--output', type=click.Path(), default='out.txt')" },
-        { "label": "Choices", "code": "@click.option('--format',\n  type=click.Choice(['json', 'csv', 'txt']),\n  default='json'\n)", "explanation": "Click validates the value against the allowed choices and shows them in --help." }
-      ]
-    },
-    {
-      "id": "subcommands",
-      "title": "Git-style subcommands",
-      "difficulty": "intermediate",
-      "steps": [
-        { "label": "Define group", "code": "import click\n\n@click.group()\ndef cli():\n    pass" },
-        { "label": "Add subcommands", "code": "@cli.command()\n@click.argument('filename')\ndef build(filename):\n    click.echo(f'Building {filename}')\n\n@cli.command()\ndef deploy():\n    click.echo('Deploying...')" },
-        { "label": "Entry point", "code": "if __name__ == '__main__':\n    cli()" },
-        { "label": "Usage", "code": "python tool.py build main.py\npython tool.py deploy\npython tool.py --help" }
-      ]
-    },
-    {
-      "id": "context-sharing",
-      "title": "Share config across subcommands",
-      "difficulty": "intermediate",
-      "steps": [
-        { "label": "Group with context", "code": "@click.group()\n@click.option('--env', default='prod')\n@click.pass_context\ndef cli(ctx, env):\n    ctx.ensure_object(dict)\n    ctx.obj['env'] = env" },
-        { "label": "Subcommand reads context", "code": "@cli.command()\n@click.pass_context\ndef status(ctx):\n    env = ctx.obj['env']\n    click.echo(f'Checking {env} status...')" },
-        { "label": "Usage", "code": "python tool.py --env staging status\n# Checking staging status..." }
-      ]
-    },
-    {
-      "id": "progress-prompt",
-      "title": "Progress bars and prompts",
-      "difficulty": "intermediate",
-      "steps": [
-        { "label": "Prompt user", "code": "name = click.prompt('Enter your name')\npassword = click.prompt('Password', hide_input=True)" },
-        { "label": "Confirm action", "code": "if click.confirm('Delete everything?'):\n    do_delete()" },
-        { "label": "Progress bar", "code": "items = list(range(100))\nwith click.progressbar(items, label='Processing') as bar:\n    for item in bar:\n        process(item)" }
+        {
+          "label": "Import",
+          "code": "import click\n\n@click.command()\n@click.option(\"--count\", default=1, help=\"Number of greetings.\")\n@click.option(\"--name\", prompt=\"Your name\", help=\"The person to greet.\")\ndef hello(count, name):\n    \"\"\"Simple program that greets NAME for a total of COUNT times.\"\"\"\n    for _ in range(count):\n        click.echo(f\"Hello, {name}!\")\n\nif __name__ == '__main__':\n    hello()"
+        },
+        {
+          "label": "Step 2",
+          "code": "$ python hello.py --count=3\nYour name: Click\nHello, Click!\nHello, Click!\nHello, Click!"
+        }
       ]
     }
   ],
   "meta": {
     "pypi_url": "https://pypi.org/project/click/",
-    "repo_url": "https://github.com/pallets/click",
+    "repo_url": "https://github.com/pallets/click/",
     "docs_url": "https://click.palletsprojects.com/",
-    "weekly_downloads": 55000000,
-    "version": "8.1.8",
-    "license": "BSD-3-Clause"
+    "weekly_downloads": 0,
+    "version": "8.3.1",
+    "license": ""
   }
 }

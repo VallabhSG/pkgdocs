@@ -2,171 +2,272 @@
   "id": "pydantic",
   "ecosystem": "pypi",
   "name": "pydantic",
-  "summary": "Data validation using Python type hints — fast, ergonomic, ubiquitous",
-  "tags": ["validation", "types", "schema", "serialization", "models"],
-  "difficulty": 1,
+  "summary": "Data validation using Python type hints",
+  "tags": [
+    "python-modules",
+    "hints",
+    "json-schema",
+    "parsing",
+    "pydantic",
+    "python",
+    "python310",
+    "python311",
+    "python312",
+    "python313"
+  ],
+  "difficulty": 2,
   "story": {
-    "problem": "Python dicts have no enforced structure. You pass a dict around, access keys, and find out at runtime that a field is missing, the wrong type, or mis-spelled. Writing manual validation is repetitive and error-prone.",
-    "mental_model": "Define a class that inherits from BaseModel and annotate fields with types. Pydantic reads those annotations at instantiation time — if the data doesn't match, you get a clear validation error immediately, not a KeyError three functions deep. Think of it as a typed, self-validating dict.",
-    "when_to_use": "Any time you receive data from outside your system: HTTP requests, config files, JSON payloads, CLI arguments. FastAPI uses Pydantic internally for all request/response models — if you use FastAPI, you're already using it.",
-    "when_not_to_use": "Pure internal data structures where you control all inputs. Extremely performance-sensitive code that creates millions of objects per second (though Pydantic v2 with Rust core is very fast).",
-    "alternatives": [
-      { "name": "attrs", "reason": "Lightweight, no validation by default, great for internal data classes" },
-      { "name": "marshmallow", "reason": "Older serialization/validation library, more explicit schema definition" },
-      { "name": "dataclasses", "reason": "Standard library, no validation, but works with pydantic as a base" }
-    ]
+    "problem": "[](https://github.com/pydantic/pydantic/actions?query=event%3Apush+branch%3Amain+workflow%3ACI)\n[](https://coverage-badge.samuelcolvin.workers.dev/redirect/pydantic/pydantic)\n[](https://pypi.python.org/pypi/pydantic)\n[](https://anaconda.org/conda-forge/pydantic)\n[](https://pepy.tech/project/pydantic)\n[](https://github.com/pydantic/pydantic)\n[](https://github.com/pydantic/pydantic/blob/main/LICENSE)\n[](https://docs.pydantic.dev/latest/contributing/#badges)\n[](https://docs.pydantic.dev/latest/llms…",
+    "mental_model": "",
+    "when_to_use": "``python\nfrom datetime import datetime\nfrom typing import Optional\nfrom pydantic import BaseModel\n\nclass User(BaseModel):\n    id: int\n    name: str = 'John Doe'\n    signup_ts: Optional[datetime] = None\n    friends: list[int] = []\n\nexternal_data = {'id': '123', 'signup_ts': '2017-06-01 12:22', 'friends': [1, '2', b'3']}\nuser =…",
+    "when_not_to_use": "",
+    "alternatives": []
   },
   "graph": {
     "nodes": [
       {
-        "id": "BaseModel",
+        "id": "pydantic",
+        "type": "module",
+        "label": "pydantic",
+        "summary": "Top-level module. Import as `import pydantic` or `from pydantic import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "import_module",
+        "type": "function",
+        "label": "import_module",
+        "summary": "Function exported from pydantic.",
+        "difficulty": 1
+      },
+      {
+        "id": "warn",
+        "type": "function",
+        "label": "warn",
+        "summary": "Function exported from pydantic.",
+        "difficulty": 1
+      },
+      {
+        "id": "getattr_migration",
+        "type": "function",
+        "label": "getattr_migration",
+        "summary": "Function exported from pydantic.",
+        "difficulty": 1
+      },
+      {
+        "id": "VERSION",
         "type": "class",
-        "label": "BaseModel",
-        "summary": "Inherit from this to define a validated data model. The core building block.",
-        "signature": "class MyModel(BaseModel): field: type",
-        "difficulty": 1,
-        "tags": ["core", "model"]
+        "label": "VERSION",
+        "summary": "Class exported from pydantic.",
+        "difficulty": 2
       },
       {
-        "id": "Field",
+        "id": "dataclasses",
         "type": "function",
-        "label": "Field()",
-        "summary": "Add metadata to a field: default, alias, min/max length, description, examples.",
-        "signature": "Field(default=..., alias=None, gt=None, lt=None, description='')",
-        "difficulty": 2,
-        "tags": ["validation", "metadata"]
+        "label": "dataclasses",
+        "summary": "Function exported from pydantic.",
+        "difficulty": 2
       },
       {
-        "id": "model_validate",
-        "type": "function",
-        "label": "model_validate()",
-        "summary": "Parse and validate a dict (or object) into a model instance. Replaces v1's parse_obj().",
-        "signature": "MyModel.model_validate(obj: dict) -> MyModel",
-        "difficulty": 1,
-        "tags": ["parsing", "deserialize"]
+        "id": "AliasChoices",
+        "type": "class",
+        "label": "AliasChoices",
+        "summary": "Class exported from pydantic.",
+        "difficulty": 2
       },
       {
-        "id": "model_dump",
-        "type": "function",
-        "label": "model_dump()",
-        "summary": "Serialize model to a dict. Replaces v1's .dict().",
-        "signature": "instance.model_dump(mode='python', exclude_none=False) -> dict",
-        "difficulty": 1,
-        "tags": ["serialization"]
+        "id": "AliasGenerator",
+        "type": "class",
+        "label": "AliasGenerator",
+        "summary": "Class exported from pydantic.",
+        "difficulty": 2
       },
       {
-        "id": "model_json_schema",
-        "type": "function",
-        "label": "model_json_schema()",
-        "summary": "Generate a JSON Schema (OpenAPI-compatible) from the model definition.",
-        "signature": "MyModel.model_json_schema() -> dict",
-        "difficulty": 2,
-        "tags": ["schema", "openapi"]
+        "id": "AliasPath",
+        "type": "class",
+        "label": "AliasPath",
+        "summary": "Class exported from pydantic.",
+        "difficulty": 3
       },
       {
-        "id": "ValidationError",
-        "type": "exception",
-        "label": "ValidationError",
-        "summary": "Raised when input data fails validation. Contains structured errors per field.",
-        "difficulty": 1,
-        "tags": ["error-handling"]
+        "id": "GetCoreSchemaHandler",
+        "type": "class",
+        "label": "GetCoreSchemaHandler",
+        "summary": "Class exported from pydantic.",
+        "difficulty": 3
       },
       {
-        "id": "validator",
-        "type": "function",
-        "label": "@field_validator()",
-        "summary": "Custom validation logic for a specific field. Runs after type coercion.",
-        "signature": "@field_validator('field_name')",
-        "difficulty": 2,
-        "tags": ["validation", "custom"]
-      },
-      {
-        "id": "model_validator",
-        "type": "function",
-        "label": "@model_validator()",
-        "summary": "Validate across multiple fields at once — cross-field constraints.",
-        "signature": "@model_validator(mode='after')",
-        "difficulty": 3,
-        "tags": ["validation", "advanced"]
+        "id": "GetJsonSchemaHandler",
+        "type": "class",
+        "label": "GetJsonSchemaHandler",
+        "summary": "Class exported from pydantic.",
+        "difficulty": 3
       },
       {
         "id": "ConfigDict",
         "type": "class",
         "label": "ConfigDict",
-        "summary": "Model-level settings: strict mode, extra fields policy, populate by alias, etc.",
-        "difficulty": 2,
-        "tags": ["config"]
+        "summary": "Class exported from pydantic.",
+        "difficulty": 3
+      },
+      {
+        "id": "with_config",
+        "type": "function",
+        "label": "with_config",
+        "summary": "Function exported from pydantic.",
+        "difficulty": 3
+      },
+      {
+        "id": "Field",
+        "type": "class",
+        "label": "Field",
+        "summary": "Class exported from pydantic.",
+        "difficulty": 3
+      },
+      {
+        "id": "PrivateAttr",
+        "type": "class",
+        "label": "PrivateAttr",
+        "summary": "Class exported from pydantic.",
+        "difficulty": 3
+      },
+      {
+        "id": "computed_field",
+        "type": "function",
+        "label": "computed_field",
+        "summary": "Function exported from pydantic.",
+        "difficulty": 3
       }
     ],
     "edges": [
-      { "id": "e1", "from": "BaseModel", "to": "Field", "label": "uses" },
-      { "id": "e2", "from": "BaseModel", "to": "model_validate", "label": "contains" },
-      { "id": "e3", "from": "BaseModel", "to": "model_dump", "label": "contains" },
-      { "id": "e4", "from": "BaseModel", "to": "model_json_schema", "label": "contains" },
-      { "id": "e5", "from": "BaseModel", "to": "validator", "label": "uses" },
-      { "id": "e6", "from": "BaseModel", "to": "model_validator", "label": "uses" },
-      { "id": "e7", "from": "BaseModel", "to": "ConfigDict", "label": "uses" },
-      { "id": "e8", "from": "model_validate", "to": "ValidationError", "label": "uses" }
+      {
+        "id": "e1",
+        "from": "pydantic",
+        "to": "import_module",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "pydantic",
+        "to": "warn",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "pydantic",
+        "to": "getattr_migration",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "pydantic",
+        "to": "VERSION",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "pydantic",
+        "to": "dataclasses",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "pydantic",
+        "to": "AliasChoices",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "pydantic",
+        "to": "AliasGenerator",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "pydantic",
+        "to": "AliasPath",
+        "label": "contains"
+      },
+      {
+        "id": "e9",
+        "from": "pydantic",
+        "to": "GetCoreSchemaHandler",
+        "label": "contains"
+      },
+      {
+        "id": "e10",
+        "from": "pydantic",
+        "to": "GetJsonSchemaHandler",
+        "label": "contains"
+      },
+      {
+        "id": "e11",
+        "from": "pydantic",
+        "to": "ConfigDict",
+        "label": "contains"
+      },
+      {
+        "id": "e12",
+        "from": "pydantic",
+        "to": "with_config",
+        "label": "contains"
+      },
+      {
+        "id": "e13",
+        "from": "pydantic",
+        "to": "Field",
+        "label": "contains"
+      },
+      {
+        "id": "e14",
+        "from": "pydantic",
+        "to": "PrivateAttr",
+        "label": "contains"
+      },
+      {
+        "id": "e15",
+        "from": "pydantic",
+        "to": "computed_field",
+        "label": "contains"
+      }
     ]
   },
   "tasks": [
     {
-      "id": "basic-model",
-      "title": "Define and validate a model",
+      "id": "install",
+      "title": "Install pydantic",
       "difficulty": "beginner",
       "steps": [
-        { "label": "Install", "code": "pip install pydantic" },
-        { "label": "Define model", "code": "from pydantic import BaseModel\n\nclass User(BaseModel):\n    name: str\n    age: int\n    email: str" },
-        { "label": "Validate", "code": "user = User(name='Alice', age=30, email='alice@example.com')\nprint(user.name)   # Alice\nprint(user.age)    # 30" },
-        { "label": "Catch errors", "code": "from pydantic import ValidationError\n\ntry:\n    User(name='Alice', age='not-a-number', email='x')\nexcept ValidationError as e:\n    print(e)  # detailed per-field errors" }
+        {
+          "label": "Install via pip",
+          "code": "pip install pydantic"
+        },
+        {
+          "label": "Import",
+          "code": "import pydantic"
+        }
       ]
     },
     {
-      "id": "field-validation",
-      "title": "Add constraints with Field()",
+      "id": "a-simple-example",
+      "title": "A Simple Example",
       "difficulty": "beginner",
       "steps": [
-        { "label": "Import Field", "code": "from pydantic import BaseModel, Field" },
-        { "label": "Add constraints", "code": "class Product(BaseModel):\n    name: str = Field(min_length=1, max_length=100)\n    price: float = Field(gt=0, description='Must be positive')\n    tags: list[str] = Field(default_factory=list)" },
-        { "label": "Test", "code": "Product(name='Widget', price=9.99)  # ok\nProduct(name='', price=9.99)        # ValidationError: min_length\nProduct(name='Widget', price=-1)    # ValidationError: gt" }
-      ]
-    },
-    {
-      "id": "parse-json",
-      "title": "Parse JSON from an API",
-      "difficulty": "intermediate",
-      "steps": [
-        { "label": "Define nested model", "code": "class Address(BaseModel):\n    street: str\n    city: str\n\nclass User(BaseModel):\n    id: int\n    name: str\n    address: Address" },
-        { "label": "Parse from dict", "code": "data = {\n  'id': 1,\n  'name': 'Alice',\n  'address': {'street': '123 Main St', 'city': 'NYC'}\n}\nuser = User.model_validate(data)\nprint(user.address.city)  # NYC" },
-        { "label": "Serialize back", "code": "user.model_dump()         # nested dict\nuser.model_dump_json()    # JSON string" }
-      ]
-    },
-    {
-      "id": "custom-validator",
-      "title": "Custom field validation",
-      "difficulty": "intermediate",
-      "steps": [
-        { "label": "field_validator", "code": "from pydantic import BaseModel, field_validator\n\nclass User(BaseModel):\n    username: str\n\n    @field_validator('username')\n    @classmethod\n    def no_spaces(cls, v: str) -> str:\n        if ' ' in v:\n            raise ValueError('username cannot contain spaces')\n        return v.lower()" },
-        { "label": "Test", "code": "User(username='Alice')      # ok → username='alice'\nUser(username='Alice Bob')  # ValidationError" }
-      ]
-    },
-    {
-      "id": "settings-config",
-      "title": "Load config from environment",
-      "difficulty": "advanced",
-      "steps": [
-        { "label": "Install extras", "code": "pip install pydantic-settings" },
-        { "label": "Define settings", "code": "from pydantic_settings import BaseSettings\n\nclass Settings(BaseSettings):\n    database_url: str\n    secret_key: str\n    debug: bool = False\n\n    class Config:\n        env_file = '.env'" },
-        { "label": "Use", "code": "settings = Settings()\nprint(settings.database_url)  # read from env or .env file", "explanation": "Pydantic-settings reads from environment variables automatically, with type coercion and validation." }
+        {
+          "label": "Import",
+          "code": "from datetime import datetime\nfrom typing import Optional\nfrom pydantic import BaseModel\n\nclass User(BaseModel):\n    id: int\n    name: str = 'John Doe'\n    signup_ts: Optional[datetime] = None\n    friends: list[int] = []\n\nexternal_data = {'id': '123', 'signup_ts': '2017-06-01 12:22', 'friends': [1, '2', b'3']}\nuser = User(**external_data)\nprint(user)\n#> User id=123 name='John Doe' signup_ts=datetime.datetime(2017, 6, 1, 12, 22) friends=[1, 2, 3]\nprint(user.id)\n#> 123"
+        }
       ]
     }
   ],
   "meta": {
     "pypi_url": "https://pypi.org/project/pydantic/",
     "repo_url": "https://github.com/pydantic/pydantic",
-    "docs_url": "https://docs.pydantic.dev/",
-    "weekly_downloads": 55000000,
-    "version": "2.10.4",
-    "license": "MIT"
+    "docs_url": "https://docs.pydantic.dev",
+    "weekly_downloads": 0,
+    "version": "2.12.5",
+    "license": ""
   }
 }

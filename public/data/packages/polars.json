@@ -2,19 +2,25 @@
   "id": "polars",
   "ecosystem": "pypi",
   "name": "polars",
-  "summary": "Blazingly fast DataFrames — a modern pandas alternative written in Rust",
-  "tags": ["data", "dataframe", "csv", "analysis", "rust", "performance"],
-  "difficulty": 2,
+  "summary": "Blazingly fast DataFrame library",
+  "tags": [
+    "scientific/engineering",
+    "arrow",
+    "dataframe",
+    "dataframe-library",
+    "dataframes",
+    "out-of-core",
+    "polars",
+    "python",
+    "rust"
+  ],
+  "difficulty": 1,
   "story": {
-    "problem": "Pandas is slow on large files, uses too much memory, and its API accumulates footguns (SettingWithCopyWarning, implicit index, chained assignment). Processing a 1GB CSV in pandas can take minutes; polars does it in seconds.",
-    "mental_model": "Polars uses a lazy evaluation model: you chain expressions that describe what you want, and polars figures out the optimal execution plan before touching any data. It processes data in parallel, column-by-column, using Rust under the hood. The API is stricter and more consistent than pandas — no index, no implicit behaviours.",
-    "when_to_use": "Large datasets (hundreds of MB to GB), performance-critical ETL pipelines, or any new project where you don't have a pandas dependency. If you find yourself waiting on pandas operations, polars will usually be 10-100x faster.",
-    "when_not_to_use": "If your codebase is deep in the pandas ecosystem (matplotlib, seaborn, sklearn all expect pandas). When the dataset is small and pandas is fast enough — switching has a learning curve.",
-    "alternatives": [
-      { "name": "pandas", "reason": "Larger ecosystem, more tutorials, integrates with everything — use for smaller data" },
-      { "name": "dask", "reason": "Pandas API for out-of-core and distributed data — fits into existing pandas code" },
-      { "name": "duckdb", "reason": "SQL over DataFrames and files — great for ad-hoc analysis without a database" }
-    ]
+    "problem": "Documentation:\n  Python\n  -\n  Rust\n  -\n  Node.js\n  -\n  R\n  |\n  StackOverflow:\n  Python\n  -\n  Rust\n  -\n  Node.js\n  -\n  R\n  |\n  User guide\n  |\n  Discord",
+    "mental_model": "",
+    "when_to_use": "Use polars when you need blazingly fast dataframe library.",
+    "when_not_to_use": "",
+    "alternatives": []
   },
   "graph": {
     "nodes": [
@@ -22,136 +28,53 @@
         "id": "polars",
         "type": "module",
         "label": "polars",
-        "summary": "Top-level import. Alias as `pl` by convention.",
+        "summary": "Top-level module. Import as `import polars` or `from polars import ...`",
         "difficulty": 1,
-        "tags": ["entry-point"]
-      },
-      {
-        "id": "DataFrame",
-        "type": "class",
-        "label": "DataFrame",
-        "summary": "Eager 2D data structure. Data is loaded and operations execute immediately.",
-        "signature": "DataFrame(data: dict | list)",
-        "difficulty": 1,
-        "tags": ["core", "eager"]
-      },
-      {
-        "id": "LazyFrame",
-        "type": "class",
-        "label": "LazyFrame",
-        "summary": "Lazy query plan. Chain operations and call .collect() to execute — enables query optimisation.",
-        "signature": "df.lazy() -> LazyFrame",
-        "difficulty": 2,
-        "tags": ["core", "lazy", "performance"]
-      },
-      {
-        "id": "Expr",
-        "type": "class",
-        "label": "Expr (expressions)",
-        "summary": "The building block of polars queries. pl.col('name'), pl.lit(1), pl.sum('col'), etc.",
-        "difficulty": 2,
-        "tags": ["expressions", "query"]
-      },
-      {
-        "id": "read_csv",
-        "type": "function",
-        "label": "read_csv()",
-        "summary": "Load a CSV file. Significantly faster than pandas.read_csv for large files.",
-        "signature": "read_csv(source, has_header=True, dtypes=None) -> DataFrame",
-        "difficulty": 1,
-        "tags": ["io", "csv"]
-      },
-      {
-        "id": "scan_csv",
-        "type": "function",
-        "label": "scan_csv()",
-        "summary": "Lazy version of read_csv. Nothing is read until .collect() — compose queries first.",
-        "signature": "scan_csv(source) -> LazyFrame",
-        "difficulty": 2,
-        "tags": ["io", "lazy"]
-      },
-      {
-        "id": "group_by",
-        "type": "function",
-        "label": "group_by()",
-        "summary": "Group rows and apply aggregations. Uses parallel execution automatically.",
-        "signature": "df.group_by('col').agg([...])",
-        "difficulty": 2,
-        "tags": ["aggregation"]
-      },
-      {
-        "id": "join",
-        "type": "function",
-        "label": "join()",
-        "summary": "SQL-style join of two DataFrames. Faster than pandas merge.",
-        "signature": "df.join(other, on='key', how='inner')",
-        "difficulty": 2,
-        "tags": ["join"]
+        "tags": [
+          "entry-point"
+        ]
       }
     ],
-    "edges": [
-      { "id": "e1", "from": "polars", "to": "DataFrame", "label": "contains" },
-      { "id": "e2", "from": "polars", "to": "LazyFrame", "label": "contains" },
-      { "id": "e3", "from": "polars", "to": "read_csv", "label": "contains" },
-      { "id": "e4", "from": "polars", "to": "scan_csv", "label": "contains" },
-      { "id": "e5", "from": "read_csv", "to": "DataFrame", "label": "returns" },
-      { "id": "e6", "from": "scan_csv", "to": "LazyFrame", "label": "returns" },
-      { "id": "e7", "from": "DataFrame", "to": "LazyFrame", "label": "uses" },
-      { "id": "e8", "from": "DataFrame", "to": "group_by", "label": "contains" },
-      { "id": "e9", "from": "DataFrame", "to": "join", "label": "contains" },
-      { "id": "e10", "from": "LazyFrame", "to": "Expr", "label": "uses" },
-      { "id": "e11", "from": "LazyFrame", "to": "DataFrame", "label": "returns" }
-    ]
+    "edges": []
   },
   "tasks": [
     {
-      "id": "load-inspect",
-      "title": "Load and inspect a CSV",
+      "id": "install",
+      "title": "Install polars",
       "difficulty": "beginner",
       "steps": [
-        { "label": "Install", "code": "pip install polars" },
-        { "label": "Import", "code": "import polars as pl" },
-        { "label": "Load", "code": "df = pl.read_csv('data.csv')\nprint(df.head())\nprint(df.shape)\nprint(df.dtypes)" },
-        { "label": "Summary stats", "code": "print(df.describe())" }
+        {
+          "label": "Install via pip",
+          "code": "pip install polars"
+        },
+        {
+          "label": "Import",
+          "code": "import polars"
+        }
       ]
     },
     {
-      "id": "filter-select",
-      "title": "Filter and select with expressions",
+      "id": "python",
+      "title": "Python",
       "difficulty": "beginner",
       "steps": [
-        { "label": "Select columns", "code": "df.select(['name', 'age'])" },
-        { "label": "Filter rows", "code": "df.filter(pl.col('age') >= 18)" },
-        { "label": "Chain", "code": "df.filter(pl.col('age') >= 18).select(['name', 'age'])" },
-        { "label": "Add column", "code": "df.with_columns(\n    (pl.col('price') * 1.1).alias('price_with_tax')\n)", "explanation": "Expressions are composable — pl.col() returns an Expr you can chain methods on." }
-      ]
-    },
-    {
-      "id": "lazy-pipeline",
-      "title": "Lazy query for large files",
-      "difficulty": "intermediate",
-      "steps": [
-        { "label": "Scan (lazy)", "code": "lf = pl.scan_csv('large_file.csv')", "explanation": "Nothing is read yet — this just registers the source." },
-        { "label": "Build query", "code": "result = (\n    lf\n    .filter(pl.col('country') == 'US')\n    .group_by('category')\n    .agg(pl.sum('revenue').alias('total'))\n    .sort('total', descending=True)\n)" },
-        { "label": "Execute", "code": "df = result.collect()", "explanation": "Only now does polars read the file, optimise the query plan, and execute in parallel." }
-      ]
-    },
-    {
-      "id": "group-agg",
-      "title": "Group and aggregate",
-      "difficulty": "intermediate",
-      "steps": [
-        { "label": "Single agg", "code": "df.group_by('department').agg(\n    pl.col('salary').mean().alias('avg_salary')\n)" },
-        { "label": "Multiple aggs", "code": "df.group_by('department').agg([\n    pl.col('salary').mean().alias('avg_salary'),\n    pl.col('name').count().alias('headcount'),\n    pl.col('salary').max().alias('max_salary'),\n])" }
+        {
+          "label": "Install",
+          "code": "pip install polars"
+        },
+        {
+          "label": "Step 2",
+          "code": "pl.show_versions()"
+        }
       ]
     }
   ],
   "meta": {
     "pypi_url": "https://pypi.org/project/polars/",
     "repo_url": "https://github.com/pola-rs/polars",
-    "docs_url": "https://docs.pola.rs/",
-    "weekly_downloads": 8000000,
-    "version": "1.19.0",
-    "license": "MIT"
+    "docs_url": "https://docs.pola.rs/api/python/stable/reference/index.html",
+    "weekly_downloads": 0,
+    "version": "1.39.3",
+    "license": "Copyright (c) 2025 Ritchie Vink\n        Copyright (c) 2024 (Some portions) NVIDIA CORPORATION & AFFILIATES. All rights reserved.\n        \n        Permission is hereby granted, free of charge, to any person obtaining a copy\n        of this software and associated documentation files (the \"Software\"), to deal\n        in the Software without restriction, including without limitation the rights\n        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n        copies of the Software, and to permit persons to whom the Software is\n        furnished to do so, subject to the following conditions:\n        \n        The above copyright notice and this permission notice shall be included in all\n        copies or substantial portions of the Software.\n        \n        THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n        SOFTWARE.\n        "
   }
 }

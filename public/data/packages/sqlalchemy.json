@@ -2,133 +2,56 @@
   "id": "sqlalchemy",
   "ecosystem": "pypi",
   "name": "sqlalchemy",
-  "summary": "The Python SQL toolkit and Object Relational Mapper",
-  "tags": ["database", "orm", "sql", "postgres", "sqlite", "mysql"],
-  "difficulty": 3,
+  "summary": "Database Abstraction Library",
+  "tags": [
+    "front-ends"
+  ],
+  "difficulty": 1,
   "story": {
-    "problem": "Writing raw SQL strings in Python is fragile: string formatting opens SQL injection vulnerabilities, different databases have different dialects, and mapping query results to Python objects is repetitive boilerplate every team reimplements.",
-    "mental_model": "SQLAlchemy has two layers. The Core is a SQL expression language — you build SQL programmatically using Python objects instead of strings. The ORM maps database rows to Python classes, so you think in objects while SQLAlchemy generates the SQL. Use Core for complex queries; ORM for CRUD on models.",
-    "when_to_use": "Any Python app that talks to a relational database: Flask/FastAPI backends, data pipelines, ETL scripts. Works with SQLite, PostgreSQL, MySQL, Oracle, and more through a unified API.",
-    "when_not_to_use": "If you only need SQLite for local storage, the stdlib sqlite3 module is sufficient. NoSQL databases have their own clients. For simple async apps, consider databases or SQLModel (built on SQLAlchemy 2 + Pydantic).",
-    "alternatives": [
-      { "name": "tortoise-orm", "reason": "Async-first ORM with Django-inspired API — great for FastAPI" },
-      { "name": "peewee", "reason": "Lightweight ORM with a simple API — fewer features, less complexity" },
-      { "name": "django ORM", "reason": "Tightly integrated with Django — only use if you're in the Django ecosystem" }
-    ]
+    "problem": "sqlalchemy is a Python library for database abstraction library.",
+    "mental_model": "",
+    "when_to_use": "Use sqlalchemy when you need database abstraction library.",
+    "when_not_to_use": "",
+    "alternatives": []
   },
   "graph": {
     "nodes": [
       {
-        "id": "create_engine",
-        "type": "function",
-        "label": "create_engine()",
-        "summary": "Create a database connection pool. The starting point for all SQLAlchemy usage.",
-        "signature": "create_engine('postgresql+psycopg2://user:pass@host/db')",
+        "id": "sqlalchemy",
+        "type": "module",
+        "label": "sqlalchemy",
+        "summary": "Top-level module. Import as `import sqlalchemy` or `from sqlalchemy import ...`",
         "difficulty": 1,
-        "tags": ["connection", "core"]
-      },
-      {
-        "id": "Session",
-        "type": "class",
-        "label": "Session",
-        "summary": "Unit of work for ORM operations. Add, query, and commit changes within a session.",
-        "signature": "Session(bind=engine)",
-        "difficulty": 2,
-        "tags": ["orm", "transaction"]
-      },
-      {
-        "id": "DeclarativeBase",
-        "type": "class",
-        "label": "DeclarativeBase",
-        "summary": "Base class for ORM models. Subclass it to define a mapped table.",
-        "signature": "class Base(DeclarativeBase): pass",
-        "difficulty": 2,
-        "tags": ["orm", "models"]
-      },
-      {
-        "id": "Column",
-        "type": "class",
-        "label": "Column / mapped_column()",
-        "summary": "Define a column in an ORM model. Specify type, constraints, defaults.",
-        "signature": "id: Mapped[int] = mapped_column(primary_key=True)",
-        "difficulty": 2,
-        "tags": ["orm", "schema"]
-      },
-      {
-        "id": "select",
-        "type": "function",
-        "label": "select()",
-        "summary": "Build a SELECT query using the Core expression language. Use with session.execute().",
-        "signature": "select(Model).where(Model.name == 'Alice')",
-        "difficulty": 2,
-        "tags": ["query", "core"]
-      },
-      {
-        "id": "relationship",
-        "type": "function",
-        "label": "relationship()",
-        "summary": "Define a foreign-key relationship between models. Enables obj.children access.",
-        "signature": "children: Mapped[list['Child']] = relationship(back_populates='parent')",
-        "difficulty": 3,
-        "tags": ["orm", "relations"]
-      },
-      {
-        "id": "Mapped",
-        "type": "class",
-        "label": "Mapped[T]",
-        "summary": "Type annotation for ORM columns in SQLAlchemy 2.x. Replaces Column() for type safety.",
-        "difficulty": 2,
-        "tags": ["orm", "types"]
+        "tags": [
+          "entry-point"
+        ]
       }
     ],
-    "edges": [
-      { "id": "e1", "from": "create_engine", "to": "Session", "label": "uses" },
-      { "id": "e2", "from": "Session", "to": "select", "label": "uses" },
-      { "id": "e3", "from": "Session", "to": "DeclarativeBase", "label": "uses" },
-      { "id": "e4", "from": "DeclarativeBase", "to": "Column", "label": "contains" },
-      { "id": "e5", "from": "DeclarativeBase", "to": "relationship", "label": "contains" },
-      { "id": "e6", "from": "DeclarativeBase", "to": "Mapped", "label": "uses" }
-    ]
+    "edges": []
   },
   "tasks": [
     {
-      "id": "connect-sqlite",
-      "title": "Connect to SQLite and create a table",
+      "id": "install",
+      "title": "Install sqlalchemy",
       "difficulty": "beginner",
       "steps": [
-        { "label": "Install", "code": "pip install sqlalchemy" },
-        { "label": "Define model", "code": "from sqlalchemy import create_engine\nfrom sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column\n\nengine = create_engine('sqlite:///app.db')\n\nclass Base(DeclarativeBase):\n    pass\n\nclass User(Base):\n    __tablename__ = 'users'\n    id: Mapped[int] = mapped_column(primary_key=True)\n    name: Mapped[str]\n    email: Mapped[str]" },
-        { "label": "Create tables", "code": "Base.metadata.create_all(engine)" }
-      ]
-    },
-    {
-      "id": "crud",
-      "title": "CRUD operations",
-      "difficulty": "intermediate",
-      "steps": [
-        { "label": "Session setup", "code": "from sqlalchemy.orm import Session\n\nwith Session(engine) as session:" },
-        { "label": "Create", "code": "    user = User(name='Alice', email='alice@example.com')\n    session.add(user)\n    session.commit()" },
-        { "label": "Read", "code": "    from sqlalchemy import select\n    stmt = select(User).where(User.name == 'Alice')\n    user = session.scalars(stmt).first()" },
-        { "label": "Update", "code": "    user.email = 'new@example.com'\n    session.commit()" },
-        { "label": "Delete", "code": "    session.delete(user)\n    session.commit()" }
-      ]
-    },
-    {
-      "id": "relationships",
-      "title": "One-to-many relationship",
-      "difficulty": "advanced",
-      "steps": [
-        { "label": "Define models", "code": "from sqlalchemy import ForeignKey\nfrom sqlalchemy.orm import relationship\n\nclass Post(Base):\n    __tablename__ = 'posts'\n    id: Mapped[int] = mapped_column(primary_key=True)\n    title: Mapped[str]\n    author_id: Mapped[int] = mapped_column(ForeignKey('users.id'))\n    author: Mapped['User'] = relationship(back_populates='posts')\n\nclass User(Base):\n    __tablename__ = 'users'\n    id: Mapped[int] = mapped_column(primary_key=True)\n    name: Mapped[str]\n    posts: Mapped[list['Post']] = relationship(back_populates='author')" },
-        { "label": "Query with join", "code": "with Session(engine) as session:\n    user = session.get(User, 1)\n    print(user.posts)  # SQLAlchemy lazy-loads the posts" }
+        {
+          "label": "Install via pip",
+          "code": "pip install sqlalchemy"
+        },
+        {
+          "label": "Import",
+          "code": "import sqlalchemy"
+        }
       ]
     }
   ],
   "meta": {
     "pypi_url": "https://pypi.org/project/sqlalchemy/",
-    "repo_url": "https://github.com/sqlalchemy/sqlalchemy",
-    "docs_url": "https://docs.sqlalchemy.org/",
-    "weekly_downloads": 22000000,
-    "version": "2.0.36",
+    "repo_url": "https://www.sqlalchemy.org",
+    "docs_url": "https://docs.sqlalchemy.org",
+    "weekly_downloads": 0,
+    "version": "2.0.48",
     "license": "MIT"
   }
 }
