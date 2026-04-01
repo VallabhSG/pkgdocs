@@ -62,6 +62,21 @@ Rules:
 - when_not_to_use: be honest about real limitations, not generic disclaimers"""
 
 
+def _clean_readme(text: str, max_chars: int = 3000) -> str:
+    """Strip badge lines and leading blank lines, then truncate."""
+    badge_re = re.compile(r"^\s*\[!?\[.*?\]\(.*?\)\]\(.*?\)\s*$|^\s*\[!\[.*?\]\(.*?\)\s*$")
+    lines = []
+    for line in text.splitlines():
+        if badge_re.match(line):
+            continue
+        # Also drop bare image/link-only lines like [](url)
+        if re.match(r"^\s*\[.*?\]\(.*?\)\s*$", line) and len(line.strip()) < 120:
+            continue
+        lines.append(line)
+    cleaned = "\n".join(lines).strip()
+    return cleaned[:max_chars]
+
+
 def enrich(pkg: Package, readme_text: str, verbose: bool = False) -> Package:
     """
     Call Claude to enrich story fields and node summaries.
@@ -77,7 +92,7 @@ def enrich(pkg: Package, readme_text: str, verbose: bool = False) -> Package:
     client = anthropic.Anthropic(api_key=api_key)
 
     node_ids = [n.id for n in pkg.graph_nodes if n.id != pkg.id]
-    readme_excerpt = readme_text[:3000] if readme_text else "(no README available)"
+    readme_excerpt = _clean_readme(readme_text) if readme_text else "(no README available)"
 
     user_msg = USER_TEMPLATE.format(
         name=pkg.name,

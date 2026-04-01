@@ -10,7 +10,8 @@ interface Props {
 }
 
 const views: { id: ViewMode; label: string; icon: string; hint: string }[] = [
-  { id: "story", label: "Story", icon: "📖", hint: "Big picture" },
+  { id: "story", label: "Story",   icon: "📖", hint: "Big picture" },
+  { id: "demo",  label: "Demo",    icon: "▶",  hint: "Interactive" },
   { id: "graph", label: "API Map", icon: "🗺", hint: "Graph" },
   { id: "tasks", label: "Recipes", icon: "⚡", hint: "Copy-paste" },
 ];
@@ -95,6 +96,12 @@ export default function PackageSidebar({ pkg, activeView, onViewChange }: Props)
             className="w-full text-left text-xs px-3 py-2 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-700 transition-colors"
           >
             🔍 <span className="font-medium">Already using it?</span> Explore API map
+          </button>
+          <button
+            onClick={() => onViewChange("demo")}
+            className="w-full text-left text-xs px-3 py-2 rounded-lg hover:bg-indigo-50 text-slate-600 hover:text-indigo-700 transition-colors"
+          >
+            ▶ <span className="font-medium">Want to try it?</span> Open the demo
           </button>
           <button
             onClick={() => onViewChange("tasks")}

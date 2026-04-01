@@ -10,6 +10,7 @@ import TaskFlowView from "@/components/TaskFlowView";
 import dynamic from "next/dynamic";
 
 const ApiMapView = dynamic(() => import("@/components/ApiMapView"), { ssr: false });
+const DemoView   = dynamic(() => import("@/components/DemoView"),   { ssr: false });
 
 const viewVariants = {
   enter: (dir: number) => ({ opacity: 0, x: dir * 40 }),
@@ -17,10 +18,11 @@ const viewVariants = {
   exit: (dir: number) => ({ opacity: 0, x: dir * -40 }),
 };
 
-const viewOrder: ViewMode[] = ["story", "graph", "tasks"];
+const viewOrder: ViewMode[] = ["story", "demo", "graph", "tasks"];
 
 const mobileViewConfig: { id: ViewMode; label: string; icon: string }[] = [
-  { id: "story", label: "Story", icon: "📖" },
+  { id: "story", label: "Story",   icon: "📖" },
+  { id: "demo",  label: "Demo",    icon: "▶" },
   { id: "graph", label: "API Map", icon: "🗺" },
   { id: "tasks", label: "Recipes", icon: "⚡" },
 ];
@@ -165,6 +167,7 @@ export default function PackagePage({
               </>
             )}
 
+            {activeView === "demo"  && <DemoView pkg={pkg} />}
             {activeView === "tasks" && <TaskFlowView pkg={pkg} />}
           </motion.div>
         </AnimatePresence>

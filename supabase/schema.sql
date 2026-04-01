@@ -23,17 +23,6 @@ CREATE INDEX IF NOT EXISTS packages_downloads_idx
 CREATE INDEX IF NOT EXISTS packages_tags_idx
   ON packages USING gin (tags);
 
--- Full-text search over name + summary + tags
--- Cast config to regconfig so the expression is IMMUTABLE (required for GIN index)
-CREATE INDEX IF NOT EXISTS packages_fts_idx
-  ON packages
-  USING gin (
-    to_tsvector(
-      'english'::regconfig,
-      name || ' ' || COALESCE(summary, '') || ' ' || array_to_string(tags, ' ')
-    )
-  );
-
 -- Auto-update updated_at
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$

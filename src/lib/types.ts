@@ -1,6 +1,6 @@
 export type Ecosystem = "pypi" | "npm";
 export type Difficulty = 1 | 2 | 3; // 1=beginner, 2=intermediate, 3=advanced
-export type ViewMode = "story" | "graph" | "tasks";
+export type ViewMode = "story" | "graph" | "tasks" | "demo";
 
 // ─── Graph ───────────────────────────────────────────────────────────────────
 
