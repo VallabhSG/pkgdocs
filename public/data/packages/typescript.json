@@ -1,0 +1,61 @@
+{
+  "id": "typescript",
+  "ecosystem": "npm",
+  "name": "typescript",
+  "summary": "TypeScript is a language for application scale JavaScript development",
+  "tags": [
+    "typescript",
+    "microsoft",
+    "compiler",
+    "language",
+    "javascript"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "typescript is an npm package for typescript is a language for application scale javascript development.",
+    "mental_model": "",
+    "when_to_use": "Use typescript when you need typescript is a language for application scale javascript development.",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "typescript",
+        "type": "module",
+        "label": "typescript",
+        "summary": "Top-level module. Import as `import typescript` or `from typescript import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      }
+    ],
+    "edges": []
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install typescript",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install typescript"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'typescript';"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/typescript",
+    "repo_url": "https://github.com/microsoft/TypeScrip",
+    "docs_url": "https://www.typescriptlang.org/",
+    "weekly_downloads": 176384666,
+    "version": "6.0.2",
+    "license": "Apache-2.0"
+  }
+}

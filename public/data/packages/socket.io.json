@@ -1,0 +1,98 @@
+{
+  "id": "socket.io",
+  "ecosystem": "npm",
+  "name": "socket.io",
+  "summary": "node.js realtime framework server",
+  "tags": [
+    "realtime",
+    "framework",
+    "websocket",
+    "tcp",
+    "events",
+    "socket",
+    "io",
+    "javascript",
+    "nodejs",
+    "socket-io"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "[](https://replit.com/@socketio/socketio-minimal-example)\n[](#backers) [](#sponsors)\n[](https://github.com/socketio/socket.io/actions)\n[](https://www.npmjs.com/package/socket.io)\n\n[](https://slackin-socketio.now.sh)",
+    "mental_model": "Socket.IO enables real-time bidirectional event-based communication. It consists of:\n\n- a Node.js server (this repository)\n- a Javascript client library for the browser (or a Node.js client)\n\nSome implementations in other languages are also available:\n\n- Java\n- C++\n- Swift\n- Dart\n- Python\n- .NET\n- Rust\n- PHP\n\nIts main features are:",
+    "when_to_use": "The following example attaches socket.io to a plain Node.JS\nHTTP server listening on port 3000.\n\n``js\nconst server = require('http').createServer();\nconst io = require('socket.io')(server);\nio.on('connection', client => {\n  client.on('event', data => { /* … */ });\n  client.on('disconnect', () => { /* … */ });\n});\nserver.listen(3000);\n``",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "socket.io",
+        "type": "module",
+        "label": "socket.io",
+        "summary": "Top-level module. Import as `import socket.io` or `from socket.io import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "package.json",
+        "type": "function",
+        "label": "package.json",
+        "summary": "Function exported from socket.io.",
+        "difficulty": 1
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "socket.io",
+        "to": "package.json",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "installation",
+      "title": "Installation",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "// with npm\nnpm install socket.io\n\n// with yarn\nyarn add socket.io"
+        }
+      ]
+    },
+    {
+      "id": "debug-logging",
+      "title": "Debug / logging",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "DEBUG=socket.io* node myapp"
+        }
+      ]
+    },
+    {
+      "id": "testing",
+      "title": "Testing",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import",
+          "code": "npm test"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/socket.io",
+    "repo_url": "https://github.com/socketio/socket.io",
+    "docs_url": "",
+    "weekly_downloads": 12501065,
+    "version": "4.8.3",
+    "license": "MIT"
+  }
+}

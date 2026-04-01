@@ -1,0 +1,256 @@
+{
+  "id": "vitest",
+  "ecosystem": "npm",
+  "name": "vitest",
+  "summary": "Next generation testing framework powered by Vite",
+  "tags": [
+    "vite",
+    "vitest",
+    "test",
+    "jest"
+  ],
+  "difficulty": 3,
+  "story": {
+    "problem": "[](https://npmx.dev/package/vitest)\n\nNext generation testing framework powered by Vite.\n\nGitHub | Documentation",
+    "mental_model": "",
+    "when_to_use": "Use vitest when you need next generation testing framework powered by vite.",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "vitest",
+        "type": "module",
+        "label": "vitest",
+        "summary": "Top-level module. Import as `import vitest` or `from vitest import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "browser",
+        "type": "function",
+        "label": "browser",
+        "summary": "Function exported from vitest.",
+        "difficulty": 1
+      },
+      {
+        "id": "package.json",
+        "type": "function",
+        "label": "package.json",
+        "summary": "Function exported from vitest.",
+        "difficulty": 1
+      },
+      {
+        "id": "optional-types.js",
+        "type": "function",
+        "label": "optional-types.js",
+        "summary": "Function exported from vitest.",
+        "difficulty": 1
+      },
+      {
+        "id": "optional-runtime-types.js",
+        "type": "function",
+        "label": "optional-runtime-types.js",
+        "summary": "Function exported from vitest.",
+        "difficulty": 2
+      },
+      {
+        "id": "src_*",
+        "type": "function",
+        "label": "src_*",
+        "summary": "Function exported from vitest.",
+        "difficulty": 2
+      },
+      {
+        "id": "globals",
+        "type": "function",
+        "label": "globals",
+        "summary": "Function exported from vitest.",
+        "difficulty": 2
+      },
+      {
+        "id": "jsdom",
+        "type": "function",
+        "label": "jsdom",
+        "summary": "Function exported from vitest.",
+        "difficulty": 2
+      },
+      {
+        "id": "importMeta",
+        "type": "function",
+        "label": "importMeta",
+        "summary": "Function exported from vitest.",
+        "difficulty": 3
+      },
+      {
+        "id": "import-meta",
+        "type": "function",
+        "label": "import-meta",
+        "summary": "Function exported from vitest.",
+        "difficulty": 3
+      },
+      {
+        "id": "node",
+        "type": "function",
+        "label": "node",
+        "summary": "Function exported from vitest.",
+        "difficulty": 3
+      },
+      {
+        "id": "internal_browser",
+        "type": "function",
+        "label": "internal_browser",
+        "summary": "Function exported from vitest.",
+        "difficulty": 3
+      },
+      {
+        "id": "runners",
+        "type": "function",
+        "label": "runners",
+        "summary": "Function exported from vitest.",
+        "difficulty": 3
+      },
+      {
+        "id": "suite",
+        "type": "function",
+        "label": "suite",
+        "summary": "Function exported from vitest.",
+        "difficulty": 3
+      },
+      {
+        "id": "environments",
+        "type": "function",
+        "label": "environments",
+        "summary": "Function exported from vitest.",
+        "difficulty": 3
+      },
+      {
+        "id": "config",
+        "type": "function",
+        "label": "config",
+        "summary": "Function exported from vitest.",
+        "difficulty": 3
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "vitest",
+        "to": "browser",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "vitest",
+        "to": "package.json",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "vitest",
+        "to": "optional-types.js",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "vitest",
+        "to": "optional-runtime-types.js",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "vitest",
+        "to": "src_*",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "vitest",
+        "to": "globals",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "vitest",
+        "to": "jsdom",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "vitest",
+        "to": "importMeta",
+        "label": "contains"
+      },
+      {
+        "id": "e9",
+        "from": "vitest",
+        "to": "import-meta",
+        "label": "contains"
+      },
+      {
+        "id": "e10",
+        "from": "vitest",
+        "to": "node",
+        "label": "contains"
+      },
+      {
+        "id": "e11",
+        "from": "vitest",
+        "to": "internal_browser",
+        "label": "contains"
+      },
+      {
+        "id": "e12",
+        "from": "vitest",
+        "to": "runners",
+        "label": "contains"
+      },
+      {
+        "id": "e13",
+        "from": "vitest",
+        "to": "suite",
+        "label": "contains"
+      },
+      {
+        "id": "e14",
+        "from": "vitest",
+        "to": "environments",
+        "label": "contains"
+      },
+      {
+        "id": "e15",
+        "from": "vitest",
+        "to": "config",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install vitest",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install vitest"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'vitest';"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/vitest",
+    "repo_url": "https://github.com/vitest-dev/vites",
+    "docs_url": "https://vitest.dev",
+    "weekly_downloads": 44504756,
+    "version": "4.1.2",
+    "license": "MIT"
+  }
+}

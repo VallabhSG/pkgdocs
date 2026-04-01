@@ -1,0 +1,77 @@
+{
+  "id": "sharp",
+  "ecosystem": "npm",
+  "name": "sharp",
+  "summary": "High performance Node.js image processing, the fastest module to resize JPEG, PNG, WebP, GIF, AVIF and TIFF images",
+  "tags": [
+    "jpeg",
+    "png",
+    "webp",
+    "avif",
+    "tiff",
+    "gif",
+    "svg",
+    "jp2",
+    "dzi",
+    "image"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "The typical use case for this high speed Node-API module\nis to convert large images in common formats to\nsmaller, web-friendly JPEG, PNG, WebP, GIF and AVIF images of varying dimensions.\n\nIt can be used with all JavaScript runtimes\nthat provide support for Node-API v9, including\nNode.js (^18.17.0 or >= 20.3.0), Deno and Bun.\n\nResizing an image is typically 4x-5x faster than using the\nquickest ImageMagick and GraphicsMagick settings\ndue to its use of libvips.\n\nColour spaces, embedded ICC…",
+    "mental_model": "",
+    "when_to_use": "``sh\nnpm install sharp\n`\n\n`javascript\nconst sharp = require('sharp');\n``",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "sharp",
+        "type": "module",
+        "label": "sharp",
+        "summary": "Top-level module. Import as `import sharp` or `from sharp import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      }
+    ],
+    "edges": []
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install sharp",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install sharp"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'sharp';"
+        }
+      ]
+    },
+    {
+      "id": "examples",
+      "title": "Examples",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "npm install sharp"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/sharp",
+    "repo_url": "https://github.com/lovell/sharp",
+    "docs_url": "https://sharp.pixelplumbing.com",
+    "weekly_downloads": 55818849,
+    "version": "0.34.5",
+    "license": "Apache-2.0"
+  }
+}

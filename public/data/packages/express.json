@@ -1,0 +1,66 @@
+{
+  "id": "express",
+  "ecosystem": "npm",
+  "name": "express",
+  "summary": "Fast, unopinionated, minimalist web framework",
+  "tags": [
+    "express",
+    "framework",
+    "sinatra",
+    "web",
+    "http",
+    "rest",
+    "restful",
+    "router",
+    "app",
+    "api"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "express is an npm package for fast, unopinionated, minimalist web framework.",
+    "mental_model": "",
+    "when_to_use": "Use express when you need fast, unopinionated, minimalist web framework.",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "express",
+        "type": "module",
+        "label": "express",
+        "summary": "Top-level module. Import as `import express` or `from express import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      }
+    ],
+    "edges": []
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install express",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install express"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'express';"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/express",
+    "repo_url": "https://github.com/expressjs/express",
+    "docs_url": "https://expressjs.com/",
+    "weekly_downloads": 95756500,
+    "version": "5.2.1",
+    "license": "MIT"
+  }
+}

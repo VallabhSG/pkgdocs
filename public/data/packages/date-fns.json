@@ -1,0 +1,272 @@
+{
+  "id": "date-fns",
+  "ecosystem": "npm",
+  "name": "date-fns",
+  "summary": "Modern JavaScript date utility library",
+  "tags": [
+    "typescript",
+    "date",
+    "date-fns",
+    "hacktoberfest",
+    "javascript",
+    "modules",
+    "nodejs",
+    "time",
+    "utilities"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "🔥️ **NEW**: date-fns v4.0 with first-class time zone support is out!\n\ndate-fns provides the most comprehensive, yet simple and consistent toolset for manipulating JavaScript dates in a browser & Node.js\n\n👉 Documentation\n\n👉 Blog\n\nIt's like Lodash for dates\n\n- It has **200+ functions** for all occasions.\n- **Modular**: Pick what you need. Works with webpack, Browserify, or Rollup and also supports tree-shaking.\n- **Native dates**: Uses existing native type. It doesn't extend core objects for…",
+    "mental_model": "",
+    "when_to_use": "Use date-fns when you need modern javascript date utility library.",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "date_fns",
+        "type": "module",
+        "label": "date-fns",
+        "summary": "Top-level module. Import as `import date_fns` or `from date_fns import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "fp",
+        "type": "function",
+        "label": "fp",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 1
+      },
+      {
+        "id": "add",
+        "type": "function",
+        "label": "add",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 1
+      },
+      {
+        "id": "max",
+        "type": "function",
+        "label": "max",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 1
+      },
+      {
+        "id": "min",
+        "type": "function",
+        "label": "min",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 2
+      },
+      {
+        "id": "set",
+        "type": "function",
+        "label": "set",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 2
+      },
+      {
+        "id": "sub",
+        "type": "function",
+        "label": "sub",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 2
+      },
+      {
+        "id": "clamp",
+        "type": "function",
+        "label": "clamp",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 2
+      },
+      {
+        "id": "parse",
+        "type": "function",
+        "label": "parse",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 3
+      },
+      {
+        "id": "format",
+        "type": "function",
+        "label": "format",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 3
+      },
+      {
+        "id": "fp_add",
+        "type": "function",
+        "label": "fp_add",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 3
+      },
+      {
+        "id": "fp_max",
+        "type": "function",
+        "label": "fp_max",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 3
+      },
+      {
+        "id": "fp_min",
+        "type": "function",
+        "label": "fp_min",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 3
+      },
+      {
+        "id": "fp_set",
+        "type": "function",
+        "label": "fp_set",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 3
+      },
+      {
+        "id": "fp_sub",
+        "type": "function",
+        "label": "fp_sub",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 3
+      },
+      {
+        "id": "getDay",
+        "type": "function",
+        "label": "getDay",
+        "summary": "Function exported from date-fns.",
+        "difficulty": 3
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "date_fns",
+        "to": "fp",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "date_fns",
+        "to": "add",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "date_fns",
+        "to": "max",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "date_fns",
+        "to": "min",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "date_fns",
+        "to": "set",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "date_fns",
+        "to": "sub",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "date_fns",
+        "to": "clamp",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "date_fns",
+        "to": "parse",
+        "label": "contains"
+      },
+      {
+        "id": "e9",
+        "from": "date_fns",
+        "to": "format",
+        "label": "contains"
+      },
+      {
+        "id": "e10",
+        "from": "date_fns",
+        "to": "fp_add",
+        "label": "contains"
+      },
+      {
+        "id": "e11",
+        "from": "date_fns",
+        "to": "fp_max",
+        "label": "contains"
+      },
+      {
+        "id": "e12",
+        "from": "date_fns",
+        "to": "fp_min",
+        "label": "contains"
+      },
+      {
+        "id": "e13",
+        "from": "date_fns",
+        "to": "fp_set",
+        "label": "contains"
+      },
+      {
+        "id": "e14",
+        "from": "date_fns",
+        "to": "fp_sub",
+        "label": "contains"
+      },
+      {
+        "id": "e15",
+        "from": "date_fns",
+        "to": "getDay",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install date-fns",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install date-fns"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'date-fns';"
+        }
+      ]
+    },
+    {
+      "id": "introduction",
+      "title": "Introduction",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "The library is available as an [npm package](https://www.npmjs.com/package/date-fns).\nTo install the package run:"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/date-fns",
+    "repo_url": "https://github.com/date-fns/date-fns",
+    "docs_url": "",
+    "weekly_downloads": 71402200,
+    "version": "4.1.0",
+    "license": "MIT"
+  }
+}

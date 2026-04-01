@@ -1,0 +1,154 @@
+{
+  "id": "vite",
+  "ecosystem": "npm",
+  "name": "vite",
+  "summary": "Native-ESM powered web dev build tool",
+  "tags": [
+    "frontend",
+    "framework",
+    "hmr",
+    "dev-server",
+    "build-tool",
+    "vite"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "> Next Generation Frontend Tooling\n\n- 💡 Instant Server Start\n- ⚡️ Lightning Fast HMR\n- 🛠️ Rich Features\n- 📦 Optimized Build\n- 🔩 Universal Plugin Interface\n- 🔑 Fully Typed APIs\n\nVite (French word for \"fast\", pronounced /viːt/) is a new breed of frontend build tool that significantly improves the frontend development experience. It consists of two major parts:\n\n- A dev server that serves your source files over native ES modules, with rich built-in features and astonishingly fast Hot Module…",
+    "mental_model": "",
+    "when_to_use": "Use vite when you need native-esm powered web dev build tool.",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "vite",
+        "type": "module",
+        "label": "vite",
+        "summary": "Top-level module. Import as `import vite` or `from vite import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "client",
+        "type": "function",
+        "label": "client",
+        "summary": "Function exported from vite.",
+        "difficulty": 1
+      },
+      {
+        "id": "module-runner",
+        "type": "function",
+        "label": "module-runner",
+        "summary": "Function exported from vite.",
+        "difficulty": 1
+      },
+      {
+        "id": "internal",
+        "type": "function",
+        "label": "internal",
+        "summary": "Function exported from vite.",
+        "difficulty": 1
+      },
+      {
+        "id": "dist_client_*",
+        "type": "function",
+        "label": "dist_client_*",
+        "summary": "Function exported from vite.",
+        "difficulty": 2
+      },
+      {
+        "id": "types_*",
+        "type": "function",
+        "label": "types_*",
+        "summary": "Function exported from vite.",
+        "difficulty": 2
+      },
+      {
+        "id": "types_internal_*",
+        "type": "function",
+        "label": "types_internal_*",
+        "summary": "Function exported from vite.",
+        "difficulty": 2
+      },
+      {
+        "id": "package.json",
+        "type": "function",
+        "label": "package.json",
+        "summary": "Function exported from vite.",
+        "difficulty": 2
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "vite",
+        "to": "client",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "vite",
+        "to": "module-runner",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "vite",
+        "to": "internal",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "vite",
+        "to": "dist_client_*",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "vite",
+        "to": "types_*",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "vite",
+        "to": "types_internal_*",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "vite",
+        "to": "package.json",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install vite",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install vite"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'vite';"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/vite",
+    "repo_url": "https://github.com/vitejs/vite",
+    "docs_url": "https://vite.dev",
+    "weekly_downloads": 94102672,
+    "version": "8.0.3",
+    "license": "MIT"
+  }
+}

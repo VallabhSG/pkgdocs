@@ -1,0 +1,66 @@
+{
+  "id": "ky",
+  "ecosystem": "npm",
+  "name": "ky",
+  "summary": "Tiny and elegant HTTP client based on the Fetch API",
+  "tags": [
+    "fetch",
+    "request",
+    "requests",
+    "http",
+    "https",
+    "fetching",
+    "get",
+    "url",
+    "curl",
+    "wget"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "ky is an npm package for tiny and elegant http client based on the fetch api.",
+    "mental_model": "",
+    "when_to_use": "Use ky when you need tiny and elegant http client based on the fetch api.",
+    "when_not_to_use": "",
+    "alternatives": []
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "ky",
+        "type": "module",
+        "label": "ky",
+        "summary": "Top-level module. Import as `import ky` or `from ky import ...`",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      }
+    ],
+    "edges": []
+  },
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install ky",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install ky"
+        },
+        {
+          "label": "Import (ESM)",
+          "code": "import { } from 'ky';"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/ky",
+    "repo_url": "https://github.com/sindresorhus/ky",
+    "docs_url": "",
+    "weekly_downloads": 5582416,
+    "version": "1.14.3",
+    "license": "MIT"
+  }
+}
