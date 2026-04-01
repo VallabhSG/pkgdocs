@@ -34,9 +34,24 @@ interface Props {
   packages: Package[];
 }
 
+const ecosystemLabel: Record<string, string> = {
+  pypi: "Python",
+  npm: "npm",
+};
+const ecosystemColor: Record<string, { active: string; idle: string; dot: string }> = {
+  pypi:  { active: "bg-blue-600 text-white", idle: "bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-blue-700", dot: "bg-blue-400" },
+  npm:   { active: "bg-rose-500 text-white",  idle: "bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-600",  dot: "bg-rose-400"  },
+};
+
 export default function SearchBar({ packages }: Props) {
   const [query, setQuery] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [activeEcosystem, setActiveEcosystem] = useState<string | null>(null);
+
+  const ecosystems = useMemo(
+    () => [...new Set(packages.map((p) => p.ecosystem))].sort(),
+    [packages],
+  );
 
   const allTags = useMemo(() => {
     const counts = new Map<string, number>();
@@ -54,6 +69,10 @@ export default function SearchBar({ packages }: Props) {
   const filtered = useMemo(() => {
     let result = packages;
 
+    if (activeEcosystem) {
+      result = result.filter((p) => p.ecosystem === activeEcosystem);
+    }
+
     if (activeTag) {
       result = result.filter((p) => p.tags.includes(activeTag));
     }
@@ -65,7 +84,7 @@ export default function SearchBar({ packages }: Props) {
       .filter((x) => x.score > 0)
       .sort((a, b) => b.score - a.score)
       .map((x) => x.pkg);
-  }, [packages, query, activeTag]);
+  }, [packages, query, activeTag, activeEcosystem]);
 
   return (
     <div>
@@ -101,6 +120,26 @@ export default function SearchBar({ packages }: Props) {
         )}
       </div>
 
+      {/* Ecosystem toggle */}
+      {ecosystems.length > 1 && (
+        <div className="flex gap-2 mb-4">
+          {ecosystems.map((eco) => {
+            const colors = ecosystemColor[eco] ?? { active: "bg-slate-700 text-white", idle: "bg-slate-100 text-slate-600 hover:bg-slate-200", dot: "bg-slate-400" };
+            const isActive = activeEcosystem === eco;
+            return (
+              <button
+                key={eco}
+                onClick={() => setActiveEcosystem(isActive ? null : eco)}
+                className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium transition-all ${isActive ? colors.active : colors.idle}`}
+              >
+                <span className={`w-1.5 h-1.5 rounded-full ${isActive ? "bg-white/70" : colors.dot}`} />
+                {ecosystemLabel[eco] ?? eco}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Tag pills */}
       <div className="flex flex-wrap gap-2 mb-6">
         <button
@@ -135,9 +174,9 @@ export default function SearchBar({ packages }: Props) {
             ? `${packages.length} packages`
             : `${filtered.length} of ${packages.length} packages`}
         </span>
-        {(query || activeTag) && (
+        {(query || activeTag || activeEcosystem) && (
           <button
-            onClick={() => { setQuery(""); setActiveTag(null); }}
+            onClick={() => { setQuery(""); setActiveTag(null); setActiveEcosystem(null); }}
             className="text-xs text-indigo-500 hover:text-indigo-700"
           >
             Clear filters
@@ -164,7 +203,15 @@ export default function SearchBar({ packages }: Props) {
                 <span className="font-bold font-mono text-slate-900 group-hover:text-indigo-700 transition-colors">
                   {p.name}
                 </span>
-                <span className="text-xs text-slate-400 font-mono">{p.ecosystem}</span>
+                <span
+                  className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
+                    p.ecosystem === "npm"
+                      ? "bg-rose-50 text-rose-500"
+                      : "bg-blue-50 text-blue-500"
+                  }`}
+                >
+                  {ecosystemLabel[p.ecosystem] ?? p.ecosystem}
+                </span>
               </div>
               <p className="text-sm text-slate-600 mb-4 leading-snug">{p.summary}</p>
               <div className="flex items-center justify-between">
