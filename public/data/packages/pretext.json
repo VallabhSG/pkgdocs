@@ -1,0 +1,221 @@
+{
+  "id": "pretext",
+  "ecosystem": "npm",
+  "name": "@chenglou/pretext",
+  "summary": "Fast multiline text measurement and layout without DOM reflow",
+  "tags": [
+    "text-layout",
+    "canvas",
+    "performance",
+    "typography",
+    "virtualization",
+    "measurement"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "Measuring text height in the browser requires querying the DOM — calling getBoundingClientRect() or reading offsetHeight forces the browser to perform a full layout reflow, one of the most expensive operations possible. In virtualised lists, dynamic text containers, or layouts where text flows around obstacles, you may need thousands of these measurements per frame. DOM-based measurement makes that cost prohibitive.",
+    "mental_model": "Pretext separates the expensive part (measuring character widths via Canvas) from the cheap part (computing line breaks via arithmetic). Call prepare() once per text string — it measures every segment with Canvas and caches the results. Then call layout() as many times as you like at any width, entirely in arithmetic, with no DOM access at all. Prepare once, layout many times.",
+    "when_to_use": "Use pretext when you need to know text dimensions before rendering — virtualised scrolling lists where you must know item heights upfront, text flowing around images or arbitrary obstacles, dynamic subtitle/caption positioning, detecting content overflow at build time, or any animation that requires text metrics on every frame.",
+    "when_not_to_use": "Pretext only measures plain text — it cannot handle HTML markup, inline images, or mixed rich content. For simple cases where you measure a single element once on mount, the browser's built-in ResizeObserver or getBoundingClientRect is simpler and sufficient. Pretext's two-phase API adds conceptual overhead that is only justified when measurements are frequent or happen before render.",
+    "alternatives": [
+      {
+        "name": "ResizeObserver",
+        "reason": "Built-in browser API that notifies you when an element changes size — simpler when you just need to react to size changes after render rather than predict them before"
+      },
+      {
+        "name": "canvas measureText",
+        "reason": "The raw Canvas API that pretext uses internally — reach for it directly for one-off measurements, but you lose pretext's caching, line-break logic, and multilingual handling"
+      },
+      {
+        "name": "opentype.js",
+        "reason": "Parses font files for full glyph path access — use it when you need to render text to SVG paths or manipulate letterforms, not just measure layout"
+      }
+    ]
+  },
+  "graph_nodes": [
+    {
+      "id": "prepare",
+      "type": "function",
+      "label": "prepare()",
+      "summary": "One-time text preparation — measures every segment's width via Canvas and returns an opaque PreparedText handle. This is the expensive step (~19ms for 500 texts); do it once and reuse the handle.",
+      "difficulty": 1,
+      "signature": "prepare(text: string, font: string, options?: Options): PreparedText",
+      "tags": ["measurement", "canvas", "cache"]
+    },
+    {
+      "id": "prepareWithSegments",
+      "type": "function",
+      "label": "prepareWithSegments()",
+      "summary": "Like prepare() but also returns the raw segments array, enabling custom rendering or inspection of individual text chunks.",
+      "difficulty": 2,
+      "signature": "prepareWithSegments(text: string, font: string, options?: Options): { prepared: PreparedText; segments: Segment[] }",
+      "tags": ["measurement", "segments", "advanced"]
+    },
+    {
+      "id": "layout",
+      "type": "function",
+      "label": "layout()",
+      "summary": "Fast height and line count calculation from a PreparedText handle at a given max width. Runs in ~0.09ms — no DOM access, pure arithmetic on cached segment widths.",
+      "difficulty": 1,
+      "signature": "layout(prepared: PreparedText, maxWidth: number, lineHeight: number): { height: number; lineCount: number }",
+      "tags": ["layout", "height", "fast"]
+    },
+    {
+      "id": "layoutWithLines",
+      "type": "function",
+      "label": "layoutWithLines()",
+      "summary": "Like layout() but also returns per-line details — the text content and pixel width of each line. Use this when you need to position or style individual lines.",
+      "difficulty": 2,
+      "signature": "layoutWithLines(prepared: PreparedText, maxWidth: number, lineHeight: number): { height: number; lineCount: number; lines: Line[] }",
+      "tags": ["layout", "lines", "advanced"]
+    },
+    {
+      "id": "layoutNextLine",
+      "type": "function",
+      "label": "layoutNextLine()",
+      "summary": "Incremental single-line layout from a character cursor position — returns the next line's text range and width. Use this for streaming or obstacle-aware layouts where each line has a different available width.",
+      "difficulty": 3,
+      "signature": "layoutNextLine(prepared: PreparedText, startPos: number, maxWidth: number): { endPos: number; width: number } | null",
+      "tags": ["incremental", "streaming", "obstacles"]
+    },
+    {
+      "id": "walkLineRanges",
+      "type": "function",
+      "label": "walkLineRanges()",
+      "summary": "Iterates over every line range in the text, calling a callback with start position, end position, and line width. Efficient for building custom rendering pipelines.",
+      "difficulty": 2,
+      "signature": "walkLineRanges(prepared: PreparedText, maxWidth: number, callback: (start: number, end: number, width: number) => void): void",
+      "tags": ["iteration", "rendering", "pipeline"]
+    },
+    {
+      "id": "clearCache",
+      "type": "function",
+      "label": "clearCache()",
+      "summary": "Releases all cached Canvas font measurements from memory. Call this when you've finished a batch of measurements and want to free memory.",
+      "difficulty": 1,
+      "signature": "clearCache(): void",
+      "tags": ["memory", "cache"]
+    },
+    {
+      "id": "setLocale",
+      "type": "function",
+      "label": "setLocale()",
+      "summary": "Configures the locale used by Intl.Segmenter for text boundary detection. Affects where line breaks occur in CJK and other non-Latin scripts.",
+      "difficulty": 2,
+      "signature": "setLocale(locale: string): void",
+      "tags": ["i18n", "locale", "cjk"]
+    },
+    {
+      "id": "PreparedText",
+      "type": "concept",
+      "label": "PreparedText",
+      "summary": "Opaque handle returned by prepare(). Stores cached segment widths and font metrics — pass it to layout functions. Treat it as immutable; do not inspect its internals.",
+      "difficulty": 1,
+      "signature": null,
+      "tags": ["handle", "cache", "immutable"]
+    }
+  ],
+  "graph_edges": [
+    { "source": "prepare", "target": "PreparedText", "type": "returns", "label": "returns", "animated": true },
+    { "source": "prepareWithSegments", "target": "PreparedText", "type": "returns", "label": "returns", "animated": true },
+    { "source": "PreparedText", "target": "layout", "type": "contains", "label": "input to" },
+    { "source": "PreparedText", "target": "layoutWithLines", "type": "contains", "label": "input to" },
+    { "source": "PreparedText", "target": "layoutNextLine", "type": "contains", "label": "input to" },
+    { "source": "PreparedText", "target": "walkLineRanges", "type": "contains", "label": "input to" }
+  ],
+  "tasks": [
+    {
+      "id": "install",
+      "title": "Install @chenglou/pretext",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install via npm",
+          "code": "npm install @chenglou/pretext",
+          "explanation": ""
+        },
+        {
+          "label": "Import the functions you need",
+          "code": "import { prepare, layout } from '@chenglou/pretext';",
+          "explanation": ""
+        }
+      ]
+    },
+    {
+      "id": "basic-height",
+      "title": "Calculate text height before rendering",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Prepare the text once",
+          "code": "import { prepare, layout } from '@chenglou/pretext';\n\nconst font = '16px Inter';\nconst prepared = prepare('Hello, world! This is a longer string that may wrap.', font);",
+          "explanation": "prepare() measures every word segment via Canvas and caches the widths. This is the only expensive step — do it once per string."
+        },
+        {
+          "label": "Compute height at any width — no DOM needed",
+          "code": "const LINE_HEIGHT = 24;\nconst containerWidth = 300;\n\nconst { height, lineCount } = layout(prepared, containerWidth, LINE_HEIGHT);\nconsole.log(`${lineCount} lines, ${height}px tall`);",
+          "explanation": "layout() runs entirely in arithmetic — it checks cached widths against maxWidth to find line breaks. You can call it thousands of times per frame safely."
+        },
+        {
+          "label": "Reuse the handle at different widths",
+          "code": "// Same prepared handle, different widths — all fast\nconst narrow = layout(prepared, 200, LINE_HEIGHT);\nconst wide   = layout(prepared, 600, LINE_HEIGHT);\nconst full   = layout(prepared, 1200, LINE_HEIGHT);",
+          "explanation": "Because the handle is immutable, you can call layout() at as many widths as you need without re-measuring."
+        }
+      ]
+    },
+    {
+      "id": "per-line-details",
+      "title": "Get per-line text and widths",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Use layoutWithLines for line-level detail",
+          "code": "import { prepare, layoutWithLines } from '@chenglou/pretext';\n\nconst prepared = prepare(longText, '14px system-ui');\nconst { height, lineCount, lines } = layoutWithLines(prepared, 400, 20);\n\nlines.forEach((line, i) => {\n  console.log(`Line ${i + 1}: \"${line.text}\" — ${line.width.toFixed(1)}px`);\n});",
+          "explanation": "layoutWithLines returns the same height and lineCount as layout(), plus a lines array. Each entry has the text content and pixel width of that line."
+        },
+        {
+          "label": "Position elements using line widths",
+          "code": "// Centre each line independently\nlines.forEach((line, i) => {\n  const x = (containerWidth - line.width) / 2;\n  const y = i * lineHeight;\n  ctx.fillText(line.text, x, y); // Canvas rendering\n});",
+          "explanation": "Because you know each line's width ahead of time, you can centre, right-align, or justify lines without DOM queries."
+        }
+      ]
+    },
+    {
+      "id": "variable-width-layout",
+      "title": "Flow text around an obstacle",
+      "difficulty": "advanced",
+      "steps": [
+        {
+          "label": "Use layoutNextLine to vary width per line",
+          "code": "import { prepare, layoutNextLine } from '@chenglou/pretext';\n\nconst prepared = prepare(articleText, '16px Georgia');\n\n// An image occupies the top-right corner\nconst IMAGE_LINES = 5;\nconst IMAGE_WIDTH = 200;\nconst FULL_WIDTH  = 600;\n\nconst lines = [];\nlet cursor = 0;\nlet lineIndex = 0;\n\nwhile (cursor < articleText.length) {\n  // First 5 lines are narrower to make room for the image\n  const availableWidth = lineIndex < IMAGE_LINES\n    ? FULL_WIDTH - IMAGE_WIDTH\n    : FULL_WIDTH;\n\n  const result = layoutNextLine(prepared, cursor, availableWidth);\n  if (result === null) break;\n\n  lines.push({ text: articleText.slice(cursor, result.endPos), width: result.width });\n  cursor = result.endPos;\n  lineIndex++;\n}",
+          "explanation": "layoutNextLine gives you one line at a time from a character cursor, letting you change the available width on every line. This is how you implement text flowing around shapes, images, or arbitrary obstacles."
+        }
+      ]
+    },
+    {
+      "id": "virtualised-list",
+      "title": "Pre-calculate heights for a virtualised list",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Prepare all items upfront",
+          "code": "import { prepare, layout, clearCache } from '@chenglou/pretext';\n\nconst FONT = '14px Inter';\nconst LINE_HEIGHT = 20;\nconst CONTAINER_WIDTH = 480;\n\n// Prepare all items (batch the expensive step)\nconst prepared = items.map(item => prepare(item.text, FONT));\n\n// Calculate all heights — fast, no DOM access\nconst heights = prepared.map(p =>\n  layout(p, CONTAINER_WIDTH, LINE_HEIGHT).height\n);\n\n// Free memory after batch\nclearCache();",
+          "explanation": "In a virtualised list you need row heights before you can render any rows. Pretext lets you compute all of them upfront in a fast batch, then pass the heights array to your virtualiser (react-window, tanstack-virtual, etc.)."
+        },
+        {
+          "label": "Pass heights to a virtualiser",
+          "code": "import { VariableSizeList } from 'react-window';\n\n<VariableSizeList\n  height={600}\n  itemCount={items.length}\n  itemSize={index => heights[index]}\n  width={CONTAINER_WIDTH}\n>\n  {({ index, style }) => (\n    <div style={style}>{items[index].text}</div>\n  )}\n</VariableSizeList>",
+          "explanation": "react-window's VariableSizeList accepts an itemSize function. Because you pre-calculated all heights with pretext, there's no layout thrashing during scroll."
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "pypi_url": "https://www.npmjs.com/package/@chenglou/pretext",
+    "repo_url": "https://github.com/chenglou/pretext",
+    "docs_url": "https://chenglou.me/pretext/",
+    "weekly_downloads": 0,
+    "version": "0.0.3",
+    "license": "MIT"
+  }
+}
