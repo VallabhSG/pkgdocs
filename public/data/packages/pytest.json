@@ -4,17 +4,34 @@
   "name": "pytest",
   "summary": "pytest: simple powerful testing with Python",
   "tags": [
-    "libraries",
     "testing",
+    "unit-tests",
+    "fixtures",
+    "tdd",
+    "python",
+    "libraries",
     "utilities"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "pytest is a Python library for pytest: simple powerful testing with python.",
-    "mental_model": "",
-    "when_to_use": "Use pytest when you need pytest: simple powerful testing with python.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Python's built-in unittest framework requires tests to be methods inside classes that inherit from TestCase, and setup/teardown uses a rigid inheritance model. Writing even simple tests means boilerplate, and sharing state between tests is awkward. pytest took the view that tests should just be functions.",
+    "mental_model": "In pytest, a test is any function whose name starts with test_. Assertions use plain Python assert statements — pytest rewrites them to show a detailed diff on failure. Fixtures are dependency-injected via function arguments: declare you need a database connection by adding db as a parameter, and pytest finds and provides the fixture automatically.",
+    "when_to_use": "Use pytest for any Python project with tests. It's the de facto standard — most libraries, frameworks, and CI pipelines assume pytest. Its plugin ecosystem covers everything from coverage (pytest-cov) to async tests (pytest-asyncio) to parameterisation.",
+    "when_not_to_use": "For extremely simple one-off scripts where adding a dependency feels heavy, unittest is built into Python. For property-based testing, add Hypothesis on top of pytest rather than replacing it.",
+    "alternatives": [
+      {
+        "name": "unittest",
+        "reason": "Built into Python's standard library — no install needed, good for minimal projects"
+      },
+      {
+        "name": "hypothesis",
+        "reason": "Property-based testing that generates inputs automatically; used alongside pytest"
+      },
+      {
+        "name": "ward",
+        "reason": "Modern test framework with a focus on output readability; worth evaluating for new projects"
+      }
+    ]
   },
   "graph": {
     "nodes": [

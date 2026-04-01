@@ -5,18 +5,33 @@
   "summary": "RFC9562 UUIDs",
   "tags": [
     "uuid",
+    "unique-id",
     "guid",
     "rfc4122",
+    "identity",
     "rfc9562",
     "typescript"
   ],
   "difficulty": 2,
   "story": {
-    "problem": "For the creation of RFC9562 (formerly RFC4122) UUIDs\n\n- **Complete** - Support for all RFC9562 UUID versions\n- **Cross-platform** - Support for...\n  - Typescript\n  - Chrome, Safari, Firefox, and Edge\n  - NodeJS\n  - React Native / Expo\n- **Secure** - Uses modern crypto API for random values\n- **Compact** - Zero-dependency, tree-shakable\n- **CLI** - uuid command line utility\n\n> [!NOTE]\n>\n> Starting with uuid@12 CommonJS is no longer supported.  See implications and motivation for details.",
-    "mental_model": "",
-    "when_to_use": "Use uuid when you need rfc9562 uuids.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Generating unique identifiers that are truly unique across distributed systems, time, and machines without a centralised coordinator is a solved problem — but solving it correctly requires understanding RFC 4122 and avoiding common pitfalls like using Math.random() which has insufficient entropy.",
+    "mental_model": "UUID v4 generates a 128-bit random identifier with enough entropy that collisions are astronomically unlikely. UUID v1 encodes a timestamp and MAC address to guarantee uniqueness across time. The uuid library implements all RFC variants correctly and outputs them in the standard hyphenated string format.",
+    "when_to_use": "Use uuid whenever you need a unique ID that doesn't require a database sequence: primary keys in distributed systems, idempotency keys for API calls, session tokens, file names, or correlation IDs for logging.",
+    "when_not_to_use": "For database primary keys where you control the DB, auto-incrementing integers are smaller and faster to index. For sortable unique IDs (e.g. for pagination), consider ULID or UUIDv7, which encode a timestamp prefix.",
+    "alternatives": [
+      {
+        "name": "nanoid",
+        "reason": "Generates shorter URL-safe IDs with comparable entropy — better when you need compact IDs in URLs"
+      },
+      {
+        "name": "cuid2",
+        "reason": "Collision-resistant, sortable, URL-safe IDs designed for databases — better than UUID for primary keys"
+      },
+      {
+        "name": "crypto.randomUUID",
+        "reason": "Built into Node 14.17+ and modern browsers — no package needed for basic v4 UUIDs"
+      }
+    ]
   },
   "graph": {
     "nodes": [

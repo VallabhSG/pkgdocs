@@ -4,24 +4,37 @@
   "name": "typer",
   "summary": "Typer, build great CLIs. Easy to code. Based on Python type hints",
   "tags": [
+    "cli",
+    "type-hints",
+    "argparse",
+    "command-line",
+    "python",
     "application-frameworks",
     "libraries",
     "python-modules",
-    "cli",
     "click",
-    "python",
-    "python3",
-    "shell",
-    "terminal",
-    "typehints"
+    "python3"
   ],
   "difficulty": 2,
   "story": {
-    "problem": "Typer, build great CLIs. Easy to code. Based on Python type hints.\n\n    \n\n    \n\n    \n\n    \n\n---\n\n**Documentation**: https://typer.tiangolo.com\n\n**Source Code**: https://github.com/fastapi/typer\n\n---\n\nTyper is a library for building CLI applications that users will **love using** and developers will **love creating**. Based on Python type hints.\n\nIt's also a command line tool to run scripts, automatically converting them to CLI applications.\n\nThe key features are:\n\n* **Intuitive to write**:…",
-    "mental_model": "",
-    "when_to_use": "Use typer when you need typer, build great clis. easy to code. based on python type hints.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Click is powerful but verbose — every option needs both a decorator and a parameter. If you're already using Python type hints, you're duplicating information: once in the function signature and once in the Click decorators. Typer, built by the FastAPI author, makes type hints the single source of truth for CLI interfaces.",
+    "mental_model": "Typer reads your function's type annotations to build the CLI automatically. def main(name: str, count: int = 1) becomes a command with a required --name string argument and an optional --count integer with a default. The same annotations that your IDE uses for autocomplete become the CLI's argument definitions.",
+    "when_to_use": "Use Typer when you're already writing typed Python code and want to expose it as a CLI with minimal boilerplate. It's especially good for tools used internally or distributed as packages where IDE support matters.",
+    "when_not_to_use": "Typer's magic can be surprising — if you need precise control over how arguments are parsed, displayed, or composed, drop down to Click directly. For simple one-file scripts, Click or even argparse may be clearer.",
+    "alternatives": [
+      {
+        "name": "click",
+        "reason": "More explicit, more mature; Typer is built on top of it — use Click directly when you need fine-grained control"
+      },
+      {
+        "name": "argparse",
+        "reason": "Zero dependencies, part of the standard library — fine for simple tools you don't distribute"
+      },
+      {
+        "name": "fire",
+        "reason": "Zero-config CLI generation from any Python object; even less boilerplate but less control over the interface"
+      }
+    ]
   },
   "graph": {
     "nodes": [

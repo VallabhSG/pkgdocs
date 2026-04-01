@@ -4,24 +4,37 @@
   "name": "pydantic",
   "summary": "Data validation using Python type hints",
   "tags": [
+    "validation",
+    "serialization",
+    "type-hints",
+    "json-schema",
+    "data-parsing",
     "python-modules",
     "hints",
-    "json-schema",
     "parsing",
     "pydantic",
-    "python",
-    "python310",
-    "python311",
-    "python312",
-    "python313"
+    "python"
   ],
   "difficulty": 2,
   "story": {
-    "problem": "[](https://github.com/pydantic/pydantic/actions?query=event%3Apush+branch%3Amain+workflow%3ACI)\n[](https://coverage-badge.samuelcolvin.workers.dev/redirect/pydantic/pydantic)\n[](https://pypi.python.org/pypi/pydantic)\n[](https://anaconda.org/conda-forge/pydantic)\n[](https://pepy.tech/project/pydantic)\n[](https://github.com/pydantic/pydantic)\n[](https://github.com/pydantic/pydantic/blob/main/LICENSE)\n[](https://docs.pydantic.dev/latest/contributing/#badges)\n[](https://docs.pydantic.dev/latest/llms…",
-    "mental_model": "",
-    "when_to_use": "``python\nfrom datetime import datetime\nfrom typing import Optional\nfrom pydantic import BaseModel\n\nclass User(BaseModel):\n    id: int\n    name: str = 'John Doe'\n    signup_ts: Optional[datetime] = None\n    friends: list[int] = []\n\nexternal_data = {'id': '123', 'signup_ts': '2017-06-01 12:22', 'friends': [1, '2', b'3']}\nuser =…",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Python dicts from JSON APIs or config files are untyped — you access fields by string keys, get None for missing values, and discover type mismatches at runtime rather than at the point of data entry. Pydantic was built to bring Python's type hint system to runtime data validation.",
+    "mental_model": "Define a Pydantic model the same way you'd define a dataclass, but with type annotations. When you instantiate it, Pydantic validates every field against its type, coerces compatible values (a string '42' becomes int 42), and raises a detailed ValidationError listing every problem at once — not just the first one.",
+    "when_to_use": "Use Pydantic for parsing API responses, validating config files, defining request/response schemas in FastAPI, or any time you receive data from an external source and want guarantees about its shape and types.",
+    "when_not_to_use": "Pydantic adds overhead on every model instantiation — not ideal for tight inner loops parsing millions of small objects. For pure config files with no user-facing validation, dataclasses or simple TypedDicts may be lighter.",
+    "alternatives": [
+      {
+        "name": "attrs",
+        "reason": "More control over class behaviour; lighter weight than Pydantic for pure data classes"
+      },
+      {
+        "name": "marshmallow",
+        "reason": "Older serialization/validation library; more explicit but more verbose than Pydantic"
+      },
+      {
+        "name": "msgspec",
+        "reason": "Significantly faster than Pydantic for high-throughput serialization scenarios"
+      }
+    ]
   },
   "graph": {
     "nodes": [

@@ -4,24 +4,37 @@
   "name": "django",
   "summary": "A high-level Python web framework that encourages rapid development and clean, pragmatic design",
   "tags": [
+    "web-framework",
+    "orm",
+    "full-stack",
+    "python",
+    "batteries-included",
     "application-frameworks",
     "dynamic-content",
     "python-modules",
     "wsgi",
-    "www/http",
-    "apps",
-    "django",
-    "framework",
-    "models",
-    "orm"
+    "www/http"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "django is a Python library for a high-level python web framework that encourages rapid development and clean, pragmatic design.",
-    "mental_model": "",
-    "when_to_use": "Use django when you need a high-level python web framework that encourages rapid development and clean, pragmatic design.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Building a web application involves solving the same problems every time: connecting to a database, managing user authentication, handling form validation, generating HTML, and building an admin interface. Django was designed so you'd never have to solve those problems again — it comes with everything pre-integrated.",
+    "mental_model": "Django follows the MTV pattern (Model, Template, View). Models are Python classes that map to database tables via a built-in ORM. Views are functions or classes that receive a request and return a response. Templates are HTML files with a simple tag syntax. Django wires them together with a URL dispatcher. The 'opinionated' structure means every Django project looks the same.",
+    "when_to_use": "Use Django for full-stack web applications that need user accounts, an admin interface for content management, forms with validation, or an ORM for complex data relationships. It's the right choice when you want a complete, production-ready framework with a well-trodden path for common features.",
+    "when_not_to_use": "Django is heavy for pure REST APIs — the ORM, templates, and admin panel add weight you don't use. FastAPI is a better starting point for API-only projects. Django's synchronous-by-default nature (though async support has improved) can also be a constraint for highly concurrent applications.",
+    "alternatives": [
+      {
+        "name": "fastapi",
+        "reason": "Purpose-built for async REST APIs with automatic validation and docs — much lighter than Django REST Framework"
+      },
+      {
+        "name": "flask",
+        "reason": "Microframework — start here if you want to assemble your own stack piece by piece"
+      },
+      {
+        "name": "wagtail",
+        "reason": "CMS built on Django — use it when you need Django's power with a polished content editing interface"
+      }
+    ]
   },
   "graph": {
     "nodes": [

@@ -5,23 +5,32 @@
   "summary": "Performant, flexible and extensible forms library for React Hooks",
   "tags": [
     "react",
+    "forms",
+    "validation",
+    "performance",
+    "uncontrolled",
     "hooks",
     "form",
-    "forms",
     "form-validation",
-    "validation",
     "typescript",
-    "react-hooks",
-    "dx",
-    "form-builder"
+    "react-hooks"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "[](https://www.npmjs.com/package/react-hook-form)\n[](https://www.npmjs.com/package/react-hook-form)\n[](https://github.com/react-hook-form/react-hook-form/blob/master/LICENSE)\n[](https://discord.gg/yYv7GZ8)\n\n  Get started | \n  API |\n  Form Builder |\n  FAQs |\n  Examples",
-    "mental_model": "- Built with performance, UX and DX in mind\n- Embraces native HTML form validation\n- Out of the box integration with UI libraries\n- Small size and no dependencies\n- Support Yup, Zod, AJV, Superstruct, Joi and others",
-    "when_to_use": "Use react-hook-form when you need performant, flexible and extensible forms library for react hooks.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Controlled forms in React — where every input is tied to state with onChange — cause a re-render on every keystroke. A form with 10 fields re-renders 10 times per character typed. For complex forms with validation, this tanks performance. React Hook Form uses uncontrolled inputs and the ref model to avoid re-renders.",
+    "mental_model": "Instead of storing form values in React state, React Hook Form stores them in a ref (outside React's render cycle). You register each input with a register() function, which attaches the ref. Validation runs on submit or blur, not on every keystroke. Re-renders only happen when validation errors change or the form is submitted.",
+    "when_to_use": "Use React Hook Form for any form with more than 3-4 fields, especially if they have validation logic. It integrates well with Zod (via @hookform/resolvers/zod) for schema-based validation, giving you type-safe forms with runtime validation in a few lines.",
+    "when_not_to_use": "For very simple single-field forms (a search box, a newsletter signup), useState is less code. For highly dynamic forms where fields are added/removed programmatically, the useFieldArray API works but adds complexity — evaluate Formik for that use case.",
+    "alternatives": [
+      {
+        "name": "formik",
+        "reason": "Older, more opinionated form library; controlled by default but has a larger ecosystem of examples"
+      },
+      {
+        "name": "tanstack-form",
+        "reason": "Framework-agnostic form library from the React Query author — newer but with strong TypeScript support"
+      }
+    ]
   },
   "graph": {
     "nodes": [

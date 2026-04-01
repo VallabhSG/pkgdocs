@@ -4,15 +4,33 @@
   "name": "pandas",
   "summary": "Powerful data structures for data analysis, time series, and statistics",
   "tags": [
+    "dataframe",
+    "data-analysis",
+    "csv",
+    "pandas",
+    "tabular",
     "scientific/engineering"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "pandas is a Python library for powerful data structures for data analysis, time series, and statistics.",
-    "mental_model": "",
-    "when_to_use": "Use pandas when you need powerful data structures for data analysis, time series, and statistics.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Analysing tabular data in Python before pandas meant juggling lists of dicts, writing CSV parsers by hand, and implementing your own groupby logic. Wes McKinney built pandas while working at a hedge fund because no existing tool gave Python the data manipulation power that R had with data frames.",
+    "mental_model": "A pandas DataFrame is a spreadsheet you program. Rows and columns have labels; you filter with boolean masks, transform with .apply(), aggregate with .groupby(), and join with .merge() — all without writing loops. The mental shift is to describe the shape of the data you want, not the steps to get there.",
+    "when_to_use": "Use pandas for data cleaning, exploration, and transformation: reading CSV/Excel/JSON files, computing statistics, reshaping data before feeding it to a model, or generating reports. It's the standard tool for the 'data wrangling' phase of any data science or analytics project.",
+    "when_not_to_use": "Pandas struggles with datasets larger than a few GB in RAM. For big data, use Polars (faster, lower memory) or Dask (distributed pandas). For pure numerical math without labels, NumPy is more appropriate.",
+    "alternatives": [
+      {
+        "name": "polars",
+        "reason": "10-50x faster than pandas on typical workloads; better memory efficiency; recommended for new projects"
+      },
+      {
+        "name": "dask",
+        "reason": "Distributed pandas — same API but works on datasets larger than RAM"
+      },
+      {
+        "name": "numpy",
+        "reason": "Lower-level but faster when you only need numerical arrays without labelled columns"
+      }
+    ]
   },
   "graph": {
     "nodes": [

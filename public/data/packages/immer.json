@@ -5,21 +5,32 @@
   "summary": "Create your next immutable state by mutating the current one",
   "tags": [
     "immutable",
+    "state",
+    "redux",
+    "react",
+    "mutations",
     "mutable",
     "copy-on-write",
     "typescript",
     "immutables",
-    "reducer",
-    "redux",
-    "state-tree"
+    "reducer"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "[](https://www.npmjs.com/package/immer) [](https://github.com/immerjs/immer/actions?query=branch%3Amain) [](https://coveralls.io/github/immerjs/immer?branch=main) [](https://github.com/prettier/prettier) [](#backers) [](#sponsors) [](https://gitpod.io/#https://github.com/immerjs/immer)\n\n_Create the next immutable state tree by simply modifying the current tree_\n\nWinner of the \"Breakthrough of the year\" React open source award and \"Most impactful contribution\" JavaScript open source award in 2019",
-    "mental_model": "",
-    "when_to_use": "Use immer when you need create your next immutable state by mutating the current one.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "React and Redux require immutable state updates — you must return a new object instead of modifying the existing one. For deeply nested state, this means writing spread-heavy code like { ...state, user: { ...state.user, address: { ...state.user.address, city: 'New York' } } } just to change one field. Immer makes this readable again.",
+    "mental_model": "Immer gives you a draft — a mutable proxy of your current state. You write code as if you're mutating it directly: draft.user.address.city = 'New York'. Behind the scenes, Immer records every change and produces a new immutable object with only those changes applied. Mutations on the draft never touch the original.",
+    "when_to_use": "Use Immer whenever you have deeply nested state updates that are painful to write immutably: Redux reducers, Zustand's set function, or React useState with complex objects. It's built into Redux Toolkit's createSlice, so you're probably already using it.",
+    "when_not_to_use": "For flat, simple state (a counter, a boolean toggle), immer's overhead isn't worth it — just spread the object. Immer also has edge cases with classes, Maps, and Sets that require using enableMapSet() and enableAllPlugins().",
+    "alternatives": [
+      {
+        "name": "structuredClone",
+        "reason": "Built-in deep clone — sufficient when you just need a copy to mutate, without structural sharing"
+      },
+      {
+        "name": "immutable.js",
+        "reason": "Persistent immutable data structures with structural sharing — more rigorous but heavier and less ergonomic"
+      }
+    ]
   },
   "graph": {
     "nodes": [

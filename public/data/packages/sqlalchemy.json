@@ -4,15 +4,33 @@
   "name": "sqlalchemy",
   "summary": "Database Abstraction Library",
   "tags": [
+    "orm",
+    "sql",
+    "database",
+    "postgresql",
+    "mysql",
     "front-ends"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "sqlalchemy is a Python library for database abstraction library.",
-    "mental_model": "",
-    "when_to_use": "Use sqlalchemy when you need database abstraction library.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Writing raw SQL strings in Python means string concatenation (and SQL injection risks), database-specific syntax that breaks when you switch engines, and no way to express relationships between tables as Python objects. SQLAlchemy solved this by offering both a high-level ORM and a Pythonic SQL expression layer.",
+    "mental_model": "SQLAlchemy has two layers you use together. The Core layer gives you a SQL expression API — table.select().where(table.c.id == 5) generates correct SQL for any database. The ORM layer maps Python classes to tables, so you work with User objects and SQLAlchemy handles the INSERT/SELECT/JOIN. You can mix both layers freely.",
+    "when_to_use": "Use SQLAlchemy in any Python application that talks to a relational database — web apps, data pipelines, ETL scripts. It supports PostgreSQL, MySQL, SQLite, and Oracle, so the same code runs everywhere. It's the standard ORM in the Python ecosystem, with integrations for Flask, FastAPI, and most web frameworks.",
+    "when_not_to_use": "SQLAlchemy's full ORM is overkill for simple read-only queries or scripts that just need to run a few SQL statements. For those cases, use the database's driver directly (psycopg2, sqlite3) or a lightweight query builder like databases.",
+    "alternatives": [
+      {
+        "name": "tortoise-orm",
+        "reason": "Async-native ORM modelled after Django ORM; better for pure asyncio applications"
+      },
+      {
+        "name": "peewee",
+        "reason": "Smaller, simpler ORM for straightforward CRUD applications without complex relationships"
+      },
+      {
+        "name": "databases",
+        "reason": "Async SQL query library without ORM overhead; good when you want to write SQL directly but asynchronously"
+      }
+    ]
   },
   "graph": {
     "nodes": [

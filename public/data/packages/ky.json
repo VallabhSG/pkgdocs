@@ -4,24 +4,37 @@
   "name": "ky",
   "summary": "Tiny and elegant HTTP client based on the Fetch API",
   "tags": [
+    "http",
     "fetch",
+    "browser",
+    "lightweight",
+    "api-client",
     "request",
     "requests",
-    "http",
     "https",
     "fetching",
-    "get",
-    "url",
-    "curl",
-    "wget"
+    "get"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "ky is an npm package for tiny and elegant http client based on the fetch api.",
-    "mental_model": "",
-    "when_to_use": "Use ky when you need tiny and elegant http client based on the fetch api.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "The fetch API is great but verbose for common patterns: checking response.ok manually, parsing JSON, setting timeouts, and adding retry logic each require boilerplate. Axios solves this but adds 13KB and XMLHttpRequest for a browser-only app that already has fetch. Ky wraps fetch with the ergonomics you actually want in under 2KB.",
+    "mental_model": "Ky is fetch with sensible defaults: it throws on non-2xx responses, parses JSON automatically with .json(), and accepts an options object that extends the RequestInit interface. Hooks replace axios interceptors — beforeRequest, afterResponse, and beforeRetry give you the same insertion points.",
+    "when_to_use": "Use Ky in browser-only or Deno applications where bundle size matters and you don't need Node.js compatibility. It's a direct replacement for axios in these contexts with a fraction of the footprint.",
+    "when_not_to_use": "Ky doesn't support Node.js's older http module (though it works in Node 18+ with native fetch). For isomorphic code (same HTTP client in browser and Node), use axios or got. For React apps that need caching and state, React Query provides the better abstraction.",
+    "alternatives": [
+      {
+        "name": "axios",
+        "reason": "Works in both browser and Node.js with XMLHttpRequest fallback — use when you need isomorphic support"
+      },
+      {
+        "name": "got",
+        "reason": "Node.js-first HTTP client with streams, pagination, and retry — the right choice for server-side Node code"
+      },
+      {
+        "name": "fetch",
+        "reason": "Built-in and zero-KB — sufficient for simple requests without retry or hooks"
+      }
+    ]
   },
   "graph": {
     "nodes": [

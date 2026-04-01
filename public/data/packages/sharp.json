@@ -4,24 +4,37 @@
   "name": "sharp",
   "summary": "High performance Node.js image processing, the fastest module to resize JPEG, PNG, WebP, GIF, AVIF and TIFF images",
   "tags": [
-    "jpeg",
-    "png",
+    "image-processing",
+    "resize",
     "webp",
     "avif",
+    "libvips",
+    "jpeg",
+    "png",
     "tiff",
     "gif",
-    "svg",
-    "jp2",
-    "dzi",
-    "image"
+    "svg"
   ],
   "difficulty": 2,
   "story": {
-    "problem": "The typical use case for this high speed Node-API module\nis to convert large images in common formats to\nsmaller, web-friendly JPEG, PNG, WebP, GIF and AVIF images of varying dimensions.\n\nIt can be used with all JavaScript runtimes\nthat provide support for Node-API v9, including\nNode.js (^18.17.0 or >= 20.3.0), Deno and Bun.\n\nResizing an image is typically 4x-5x faster than using the\nquickest ImageMagick and GraphicsMagick settings\ndue to its use of libvips.\n\nColour spaces, embedded ICC…",
-    "mental_model": "",
-    "when_to_use": "``sh\nnpm install sharp\n`\n\n`javascript\nconst sharp = require('sharp');\n``",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Node.js image processing was historically slow and memory-hungry — libraries used ImageMagick via child processes, paying the cost of spawning a new process for every image. Sharp wraps libvips, a C library that processes images in a streaming pipeline, using far less memory and running much faster.",
+    "mental_model": "Sharp is a transformation pipeline for images. You chain operations: sharp(input).resize(800, 600).webp({ quality: 80 }).toFile(output). The pipeline is lazy — nothing runs until you call a finaliser like .toFile() or .toBuffer(). libvips processes the image in a streaming pass rather than loading it fully into memory.",
+    "when_to_use": "Use Sharp for image resizing, format conversion (JPEG to WebP/AVIF), thumbnail generation, watermarking, and metadata extraction in Node.js. It's the standard choice for image processing in server-side Next.js, image CDN backends, and upload pipelines.",
+    "when_not_to_use": "Sharp is a native module — it requires native binaries and can complicate deployment in serverless environments. For Cloudflare Workers or edge functions, use the Cloudflare Images API or Vercel's built-in image optimisation instead.",
+    "alternatives": [
+      {
+        "name": "jimp",
+        "reason": "Pure JavaScript image processing — no native binaries, easier to deploy, but 10-20x slower than Sharp"
+      },
+      {
+        "name": "canvas",
+        "reason": "Node Canvas API for arbitrary 2D drawing — better when you need to compose images with text and shapes"
+      },
+      {
+        "name": "imagemagick",
+        "reason": "Broader format support and filters via CLI — use it for edge cases Sharp doesn't cover"
+      }
+    ]
   },
   "graph": {
     "nodes": [

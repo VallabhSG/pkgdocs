@@ -3,14 +3,33 @@
   "ecosystem": "pypi",
   "name": "rich",
   "summary": "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal",
-  "tags": [],
+  "tags": [
+    "cli",
+    "terminal",
+    "colors",
+    "progress-bar",
+    "tables"
+  ],
   "difficulty": 1,
   "story": {
-    "problem": "rich is a Python library for render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal.",
-    "mental_model": "",
-    "when_to_use": "Use rich when you need render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Terminal output in Python is stuck in the 1970s by default — monochrome text, manual string formatting for tables, and no way to show progress without writing your own ANSI escape sequences. Rich changed the expectation of what a well-crafted CLI tool should look like.",
+    "mental_model": "Rich is a markup-over-print-statements system. Use rich.print() instead of print() and add [bold red]text[/bold red] markup in your strings. For structured output, create Table or Panel objects and pass them to a Console. Under the hood, Rich auto-detects whether the terminal supports colour and gracefully degrades.",
+    "when_to_use": "Use Rich in any CLI tool or long-running script where you want readable output: progress bars for downloads or processing loops, syntax-highlighted code, formatted tables, structured log output, or pretty-printed Python objects for debugging.",
+    "when_not_to_use": "Rich adds 1-2MB to your package size and a startup cost. For library code that should be output-agnostic, stick to logging. For applications deployed purely as web services with no terminal interaction, Rich adds nothing.",
+    "alternatives": [
+      {
+        "name": "colorama",
+        "reason": "Lighter weight cross-platform colour support; less feature-rich but smaller footprint"
+      },
+      {
+        "name": "tqdm",
+        "reason": "Focused purely on progress bars — simpler to use for that single use case"
+      },
+      {
+        "name": "textual",
+        "reason": "Full TUI framework built on Rich — use it when you need interactive terminal apps, not just output"
+      }
+    ]
   },
   "graph": {
     "nodes": [

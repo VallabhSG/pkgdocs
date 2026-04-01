@@ -5,23 +5,36 @@
   "summary": "Hooks for managing, caching and syncing asynchronous and remote data in React",
   "tags": [
     "react",
-    "typescript",
+    "data-fetching",
+    "caching",
+    "server-state",
     "async",
+    "typescript",
     "cache",
     "data",
     "fetch",
-    "graphql",
-    "hooks",
-    "query",
-    "rest"
+    "graphql"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "You're looking at the v3 version of react-query. Starting with v4, react-query is now available as @tanstack/react-query\n\nFind the docs at https://tanstack.com/query/latest",
-    "mental_model": "",
-    "when_to_use": "Use react-query when you need hooks for managing, caching and syncing asynchronous and remote data in react.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "React components that fetch data end up managing an explosion of state: loading, error, data, refetching, stale, and more — all in useEffect hooks that leak, fire twice in StrictMode, and don't deduplicate identical requests. TanStack Query (formerly React Query) treats server data as a separate concern from UI state.",
+    "mental_model": "React Query maintains a client-side cache keyed by query keys. When two components request the same key, they share one fetch. Data is considered 'stale' after a configurable time and refetched automatically on window focus or remount. You describe what data you need with a query key and an async function; React Query handles when and how to fetch it.",
+    "when_to_use": "Use React Query for any React app that fetches server data: REST APIs, GraphQL, or any async function. It replaces 95% of the useEffect+useState patterns for data fetching and adds caching, background refetching, and optimistic updates for free.",
+    "when_not_to_use": "React Query is for server state (data that lives on a server). For UI state (modals, form values, local toggles), use useState or Zustand. If you're already using a full data layer like Apollo Client for GraphQL, React Query is redundant.",
+    "alternatives": [
+      {
+        "name": "swr",
+        "reason": "Vercel's data fetching library with a similar model — slightly simpler API, slightly less features"
+      },
+      {
+        "name": "apollo-client",
+        "reason": "Purpose-built for GraphQL — normalised cache and automatic type generation make it worth the complexity"
+      },
+      {
+        "name": "rtk-query",
+        "reason": "Redux Toolkit's data fetching — good if you're already using Redux and want everything in one place"
+      }
+    ]
   },
   "graph": {
     "nodes": [

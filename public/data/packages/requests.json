@@ -4,24 +4,37 @@
   "name": "requests",
   "summary": "Python HTTP for Humans",
   "tags": [
+    "http",
+    "requests",
+    "python",
+    "api-client",
+    "rest",
     "libraries",
     "www/http",
     "client",
     "cookies",
-    "forhumans",
-    "http",
-    "humans",
-    "python",
-    "python-requests",
-    "requests"
+    "forhumans"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "[](https://pypi.org/project/requests/)\n[](https://pypi.org/project/requests)\n[](https://pepy.tech/project/requests)\n[](https://github.com/psf/requests/graphs/contributors)\n\n**Requests** is a simple, yet elegant, HTTP library.\n\n``python\n>>> import requests\n>>> r = requests.get('https://httpbin.org/basic-auth/user/pass', auth=('user', 'pass'))\n>>> r.status_code\n200\n>>> r.headers['content-type']\n'application/json; charset=utf8'\n>>> r.encoding\n'utf-8'\n>>> r.text\n'{\"authenticated\": true, ...'\n>>>…",
-    "mental_model": "Requests is ready for the demands of building robust and reliable HTTP–speaking applications, for the needs of today.\n\n- Keep-Alive & Connection Pooling\n- International Domains and URLs\n- Sessions with Cookie Persistence\n- Browser-style TLS/SSL Verification\n- Basic & Digest Authentication\n- Familiar dict–like Cookies\n- Automatic Content Decompression and Decoding\n- Multi-part File Uploads\n- SOCKS…",
-    "when_to_use": "[](https://requests.readthedocs.io)",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Python's built-in urllib is painfully verbose — you need dozens of lines just to make a POST request with headers and parse the response. Before requests, every team wrote their own wrapper or copied boilerplate. Kenneth Reitz published requests in 2011 and the community never looked back.",
+    "mental_model": "Think of requests as a polished envelope system for HTTP: you stuff your data in, address it with a URL and headers, send it, and get a clean Response object back. The library handles encoding, redirects, cookies, and keep-alive connections so you don't have to.",
+    "when_to_use": "Use requests for any synchronous HTTP work: calling REST APIs, scraping web pages, downloading files, or integrating with webhooks. It's the right default for scripts, CLI tools, and Django/Flask backends that don't need async.",
+    "when_not_to_use": "Avoid requests when you're writing async code — it will block your event loop. Switch to httpx (drop-in async API) or aiohttp for FastAPI backends, async scrapers, or anything running inside asyncio.",
+    "alternatives": [
+      {
+        "name": "httpx",
+        "reason": "Drop-in async-compatible replacement; supports HTTP/2 and is the natural upgrade path"
+      },
+      {
+        "name": "aiohttp",
+        "reason": "Mature async HTTP client/server built specifically for asyncio workloads"
+      },
+      {
+        "name": "urllib3",
+        "reason": "Lower-level library that requests itself uses; reach for it only when you need fine-grained connection control"
+      }
+    ]
   },
   "graph": {
     "nodes": [
@@ -81,7 +94,7 @@
     "pypi_url": "https://pypi.org/project/requests/",
     "repo_url": "https://github.com/psf/requests",
     "docs_url": "https://requests.readthedocs.io",
-    "weekly_downloads": 0,
+    "weekly_downloads": 324905759,
     "version": "2.33.1",
     "license": "Apache-2.0"
   }

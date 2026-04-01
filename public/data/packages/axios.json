@@ -4,24 +4,37 @@
   "name": "axios",
   "summary": "Promise based HTTP client for the browser and node.js",
   "tags": [
-    "xhr",
     "http",
-    "ajax",
+    "api-client",
+    "interceptors",
     "promise",
+    "isomorphic",
+    "xhr",
+    "ajax",
     "node",
     "browser",
-    "fetch",
-    "rest",
-    "api",
-    "client"
+    "fetch"
   ],
   "difficulty": 3,
   "story": {
-    "problem": "🥇 Gold sponsors       We’re bound by one common purpose: to give you the financial tools, resources and information you ne...  www.principal.com \n    Buy real Instagram followers from Twicsy starting at only $2.97. Twicsy has been voted the best site...  twicsy.com \n       Hi, we&#x27;re Descope! We are building something in the authentication space for app developers and...  Website | Docs | Community \n       Best Route Planning And Route Optimization Software  Explore | Free Trial | Contact \n…",
-    "mental_model": "- **Browser Requests:** Make XMLHttpRequests directly from the browser.\n- **Node.js Requests:** Make http requests from Node.js environments.\n- **Promise-based:** Fully supports the Promise API for easier asynchronous code.\n- **Interceptors:** Intercept requests and responses to add custom logic or transform data.\n- **Data Transformation:** Transform request and response data automatically.\n-…",
-    "when_to_use": "``js\nimport axios from \"axios\";\n//const axios = require('axios'); // legacy way\n\ntry {\n  const response = await axios.get(\"/user?ID=12345\");\n  console.log(response);\n} catch (error) {\n  console.error(error);\n}\n\n// Optionally the request above could also be done as\naxios\n  .get(\"/user\", {\n    params: {\n      ID: 12345,\n    },\n  })\n  .then(function…",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "The native fetch API is verbose for the patterns every app uses: you need to manually check response.ok, call response.json(), set Content-Type headers on every POST, and handle errors yourself. Axios wraps fetch with sensible defaults and adds features like request/response interceptors that are hard to implement cleanly with fetch.",
+    "mental_model": "Axios is a promise-based HTTP client that treats requests as a pipeline: request interceptors run before the request is sent, the request goes out, then response interceptors run on the way back. This makes cross-cutting concerns like auth tokens and error logging trivially easy to add in one place.",
+    "when_to_use": "Use axios when you need request/response interceptors (auth headers, logging, retry logic), want automatic JSON serialisation/deserialisation, need to cancel in-flight requests, or want consistent behaviour between browser and Node.js environments.",
+    "when_not_to_use": "For simple requests in modern apps, fetch is built-in and perfectly adequate. For lightweight browser-only code, ky is a smaller alternative. React Query or SWR abstract data fetching further — prefer those when you also need caching and state management.",
+    "alternatives": [
+      {
+        "name": "ky",
+        "reason": "Tiny fetch wrapper for browser-only use — same idea as axios but ~2KB instead of ~13KB"
+      },
+      {
+        "name": "fetch",
+        "reason": "Built into browsers and Node 18+ — no install needed for simple use cases"
+      },
+      {
+        "name": "react-query",
+        "reason": "Combines data fetching with caching and state — the right abstraction for React apps that need server state"
+      }
+    ]
   },
   "graph": {
     "nodes": [

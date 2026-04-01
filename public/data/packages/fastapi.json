@@ -4,6 +4,11 @@
   "name": "fastapi",
   "summary": "FastAPI framework, high performance, easy to learn, fast to code, ready for production",
   "tags": [
+    "api",
+    "async",
+    "openapi",
+    "pydantic",
+    "web-framework",
     "application-frameworks",
     "http-servers",
     "libraries",
@@ -12,11 +17,24 @@
   ],
   "difficulty": 1,
   "story": {
-    "problem": "fastapi is a Python library for fastapi framework, high performance, easy to learn, fast to code, ready for production.",
-    "mental_model": "",
-    "when_to_use": "Use fastapi when you need fastapi framework, high performance, easy to learn, fast to code, ready for production.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Building Python APIs with Flask meant adding separate libraries for validation, serialization, and auto-generated docs — and none of them talked to each other. Django REST Framework was powerful but heavy. FastAPI was designed around the insight that Python type hints contain everything needed to handle all three automatically.",
+    "mental_model": "In FastAPI, your function signatures are the API contract. Annotate a parameter as int and FastAPI validates the incoming value, rejects bad requests, and documents the type in the OpenAPI spec — all from the same annotation. Pydantic models define request/response shapes and handle serialization. The result is an API where the code and the docs are always in sync.",
+    "when_to_use": "Use FastAPI when building REST or GraphQL APIs in Python, especially when you need async support, automatic OpenAPI/Swagger docs, request validation, or are building microservices. It's the best choice for new Python API projects.",
+    "when_not_to_use": "FastAPI is API-only — it has no templating, admin interface, or ORM. For full-stack web apps with server-rendered HTML, Django is better. For tiny internal tools, Flask's smaller learning curve might be preferable.",
+    "alternatives": [
+      {
+        "name": "django",
+        "reason": "Full-featured framework with built-in ORM, admin, auth — better for full-stack apps"
+      },
+      {
+        "name": "flask",
+        "reason": "Simpler and more flexible; good for small APIs or when you want to choose every component yourself"
+      },
+      {
+        "name": "litestar",
+        "reason": "Similar philosophy to FastAPI but with different design choices; worth evaluating for new projects"
+      }
+    ]
   },
   "graph": {
     "nodes": [

@@ -4,15 +4,33 @@
   "name": "aiohttp",
   "summary": "Async http client/server framework (asyncio)",
   "tags": [
+    "async",
+    "asyncio",
+    "http-client",
+    "http-server",
+    "web",
     "www/http"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "aiohttp is a Python library for async http client/server framework (asyncio).",
-    "mental_model": "",
-    "when_to_use": "Use aiohttp when you need async http client/server framework (asyncio).",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "When Python's asyncio became stable, the synchronous requests library became a liability in async applications — every HTTP call blocked the event loop, defeating the point of async. aiohttp was one of the first libraries to provide both an async HTTP client and a full async HTTP server built on asyncio.",
+    "mental_model": "aiohttp runs entirely on asyncio's event loop. The client uses async with session.get(url) as response to make requests that yield control back to the loop while waiting for the network. The server side uses a similar pattern — request handlers are coroutines that the server dispatches concurrently without threads.",
+    "when_to_use": "Use aiohttp when you need a battle-tested async HTTP client or server, especially in applications that make many concurrent HTTP calls (scrapers, API aggregators) or build lightweight async web services. It has a mature ecosystem and is widely used in production.",
+    "when_not_to_use": "For new async API projects, FastAPI (built on Starlette/uvicorn) has better developer ergonomics, automatic validation, and docs. For synchronous scripts, requests is simpler. httpx offers a compatible API with both sync and async modes if you want flexibility.",
+    "alternatives": [
+      {
+        "name": "httpx",
+        "reason": "Supports both sync and async; requests-compatible API; easier migration path from synchronous code"
+      },
+      {
+        "name": "fastapi",
+        "reason": "Better choice for building async HTTP servers — more ergonomic with automatic OpenAPI docs"
+      },
+      {
+        "name": "trio",
+        "reason": "Alternative async runtime that some find more intuitive; aiohttp doesn't support trio natively"
+      }
+    ]
   },
   "graph": {
     "nodes": [

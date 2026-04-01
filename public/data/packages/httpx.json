@@ -4,19 +4,31 @@
   "name": "httpx",
   "summary": "The next generation HTTP client",
   "tags": [
-    "www/http",
-    "asyncio",
     "http",
+    "async",
+    "asyncio",
+    "http2",
+    "api-client",
+    "www/http",
     "python",
     "trio"
   ],
   "difficulty": 2,
   "story": {
-    "problem": "HTTPX - A next-generation HTTP client for Python.\n\n    \n\n    \n\nHTTPX is a fully featured HTTP client library for Python 3. It includes **an integrated command line client**, has support for both **HTTP/1.1 and HTTP/2**, and provides both **sync and async APIs**.\n\n---\n\nInstall HTTPX using pip:\n\n``shell\n$ pip install httpx\n`\n\nNow, let's get started:\n\n`pycon\n>>> import httpx\n>>> r = httpx.get('https://www.example.org/')\n>>> r\n\n>>> r.status_code\n200\n>>> r.headers['content-type']\n'text/html;…",
-    "mental_model": "HTTPX builds on the well-established usability of requests, and gives you:\n\n* A broadly requests-compatible API.\n* An integrated command-line client.\n* HTTP/1.1 and HTTP/2 support.\n* Standard synchronous interface, but with async support if you need it.\n* Ability to make requests directly to WSGI applications or ASGI applications.\n* Strict timeouts everywhere.\n* Fully type annotated.\n* 100% test…",
-    "when_to_use": "Use httpx when you need the next generation http client.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "When Python's async ecosystem matured around FastAPI and asyncio, developers needed an HTTP client that could keep up. The requests library is synchronous-only — calling it inside an async function blocks the entire event loop. httpx was built to be the modern, async-capable successor.",
+    "mental_model": "httpx has two modes: a synchronous Client that works exactly like requests, and an AsyncClient you use inside async with. Both share the same API, so you can switch between them or gradually migrate without rewriting business logic.",
+    "when_to_use": "Use httpx when building FastAPI or asyncio applications that call external APIs. Also reach for it when you need HTTP/2 support, a requests-compatible API with async support, or a single library that works in both sync and async contexts.",
+    "when_not_to_use": "For simple synchronous scripts where you already use requests, there's little reason to switch — requests has a larger ecosystem of auth libraries and middleware. For high-volume async scraping at scale, aiohttp's lower-level control may be more efficient.",
+    "alternatives": [
+      {
+        "name": "requests",
+        "reason": "Simpler, more mature, larger ecosystem — use it when async isn't needed"
+      },
+      {
+        "name": "aiohttp",
+        "reason": "More battle-tested for high-concurrency async use cases; more control over the connection pool"
+      }
+    ]
   },
   "graph": {
     "nodes": [

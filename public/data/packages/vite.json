@@ -4,20 +4,35 @@
   "name": "vite",
   "summary": "Native-ESM powered web dev build tool",
   "tags": [
-    "frontend",
-    "framework",
-    "hmr",
-    "dev-server",
     "build-tool",
+    "hmr",
+    "esmodules",
+    "frontend",
+    "bundler",
+    "framework",
+    "dev-server",
     "vite"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "> Next Generation Frontend Tooling\n\n- 💡 Instant Server Start\n- ⚡️ Lightning Fast HMR\n- 🛠️ Rich Features\n- 📦 Optimized Build\n- 🔩 Universal Plugin Interface\n- 🔑 Fully Typed APIs\n\nVite (French word for \"fast\", pronounced /viːt/) is a new breed of frontend build tool that significantly improves the frontend development experience. It consists of two major parts:\n\n- A dev server that serves your source files over native ES modules, with rich built-in features and astonishingly fast Hot Module…",
-    "mental_model": "",
-    "when_to_use": "Use vite when you need native-esm powered web dev build tool.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Webpack bundles your entire application before the dev server starts — for large apps this takes 30-60 seconds on cold start, and HMR updates take 5-10 seconds. Evan You built Vite on the insight that modern browsers can load ES modules natively, eliminating the need to bundle at all during development.",
+    "mental_model": "In dev mode, Vite serves your source files directly as native ES modules — no bundling. The browser requests a file, Vite transforms it (TypeScript, JSX, CSS) on demand and sends it back in milliseconds. HMR works at the module level: change a component, only that module updates. For production, Vite uses Rollup to create an optimised bundle.",
+    "when_to_use": "Use Vite for any modern frontend project: React, Vue, Svelte, or vanilla JavaScript. It's the current standard for new projects, replacing Create React App. Also use it as the build tool underlying frameworks like Astro and SvelteKit.",
+    "when_not_to_use": "For server-rendered apps (Next.js, Remix, Nuxt), the framework handles the build tool. For very old browsers that don't support ES modules, you'll need additional configuration. Large monorepos may need Turborepo or Nx on top of Vite to manage builds across packages.",
+    "alternatives": [
+      {
+        "name": "webpack",
+        "reason": "Older but extremely configurable — still necessary for complex legacy setups or when you need fine-grained chunk splitting"
+      },
+      {
+        "name": "esbuild",
+        "reason": "The fastest bundler; Vite uses it internally for transforms but lacks esbuild's raw speed for full bundles"
+      },
+      {
+        "name": "turbopack",
+        "reason": "Vercel's Webpack replacement built in Rust — deeply integrated with Next.js, may replace Vite for that ecosystem"
+      }
+    ]
   },
   "graph": {
     "nodes": [

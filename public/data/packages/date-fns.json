@@ -4,23 +4,37 @@
   "name": "date-fns",
   "summary": "Modern JavaScript date utility library",
   "tags": [
-    "typescript",
     "date",
+    "time",
+    "formatting",
+    "immutable",
+    "tree-shakable",
+    "typescript",
     "date-fns",
     "hacktoberfest",
     "javascript",
-    "modules",
-    "nodejs",
-    "time",
-    "utilities"
+    "modules"
   ],
   "difficulty": 2,
   "story": {
-    "problem": "🔥️ **NEW**: date-fns v4.0 with first-class time zone support is out!\n\ndate-fns provides the most comprehensive, yet simple and consistent toolset for manipulating JavaScript dates in a browser & Node.js\n\n👉 Documentation\n\n👉 Blog\n\nIt's like Lodash for dates\n\n- It has **200+ functions** for all occasions.\n- **Modular**: Pick what you need. Works with webpack, Browserify, or Rollup and also supports tree-shaking.\n- **Native dates**: Uses existing native type. It doesn't extend core objects for…",
-    "mental_model": "",
-    "when_to_use": "Use date-fns when you need modern javascript date utility library.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Moment.js normalised date handling in JavaScript but became monolithic — even importing one function loads the entire 67KB library. Immutability was bolted on, timezone support required a separate plugin, and the maintainers officially marked it as legacy. date-fns was designed from the start as a collection of pure functions, one file per function.",
+    "mental_model": "Every date-fns function is a standalone export: import { format, addDays, differenceInCalendarDays } from 'date-fns'. Each function takes a plain Date and returns a new Date or a primitive — no classes, no mutation, no chaining. Your bundler tree-shakes everything you don't import, so you pay only for what you use.",
+    "when_to_use": "Use date-fns for formatting, parsing, arithmetic (add/subtract days, months, years), comparison, and locale-aware output in any JavaScript environment. Import only what you need and the bundle impact is minimal.",
+    "when_not_to_use": "date-fns v2 has limited first-party timezone support — for complex timezone-aware applications use Luxon or the Temporal polyfill. The function-heavy API can feel verbose for simple one-liners; Day.js's method chaining is more readable in those cases.",
+    "alternatives": [
+      {
+        "name": "dayjs",
+        "reason": "2KB with a fluent chaining API — better for simple formatting and arithmetic without needing tree-shaking"
+      },
+      {
+        "name": "luxon",
+        "reason": "Best-in-class timezone support via the Intl API — worth the larger bundle for international applications"
+      },
+      {
+        "name": "Temporal",
+        "reason": "TC39 built-in for dates and times — available via polyfill, will eventually replace all date libraries"
+      }
+    ]
   },
   "graph": {
     "nodes": [

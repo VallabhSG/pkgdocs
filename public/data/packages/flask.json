@@ -4,24 +4,37 @@
   "name": "flask",
   "summary": "A simple framework for building complex web applications",
   "tags": [
+    "web-framework",
+    "wsgi",
+    "routing",
+    "microframework",
+    "python",
     "application",
     "application-frameworks",
     "dynamic-content",
-    "wsgi",
     "flask",
-    "jinja",
-    "pallets",
-    "python",
-    "web-framework",
-    "werkzeug"
+    "jinja"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "Flask is a lightweight [WSGI] web application framework. It is designed\nto make getting started quick and easy, with the ability to scale up to\ncomplex applications. It began as a simple wrapper around [Werkzeug]\nand [Jinja], and has become one of the most popular Python web\napplication frameworks.\n\nFlask offers suggestions, but doesn't enforce any dependencies or\nproject layout. It is up to the developer to choose the tools and\nlibraries they want to use. There are many extensions provided by…",
-    "mental_model": "",
-    "when_to_use": "```python",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Django's 'batteries included' approach is a blessing for large apps but a burden for small ones — you get an ORM, admin panel, and template engine whether you want them or not. Armin Ronacher built Flask as a microframework: give developers the essentials (routing, request/response) and let them pick everything else.",
+    "mental_model": "Flask is a WSGI application at its core. You register routes with @app.route() decorators, and each route is just a Python function that returns a response. There's no magic — what you see is what runs. Extensions (SQLAlchemy, Flask-Login, etc.) slot in cleanly when you need them.",
+    "when_to_use": "Use Flask for small-to-medium web apps and APIs where you want to control the stack, for prototypes where you need something running fast, or when teaching web development concepts without the complexity of Django.",
+    "when_not_to_use": "Flask becomes painful as an app grows — you end up assembling Django yourself from extensions. For async APIs, FastAPI is a better starting point. For anything needing built-in auth, admin, or ORM, Django pays off faster.",
+    "alternatives": [
+      {
+        "name": "fastapi",
+        "reason": "Better for pure APIs — adds async support, automatic validation, and OpenAPI docs"
+      },
+      {
+        "name": "django",
+        "reason": "Choose Django when you need an ORM, admin panel, or auth out of the box"
+      },
+      {
+        "name": "starlette",
+        "reason": "ASGI-native microframework; Flask's spiritual successor for async applications"
+      }
+    ]
   },
   "graph": {
     "nodes": [

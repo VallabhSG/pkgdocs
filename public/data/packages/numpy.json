@@ -4,15 +4,33 @@
   "name": "numpy",
   "summary": "Fundamental package for array computing in Python",
   "tags": [
+    "numpy",
+    "array",
+    "linear-algebra",
+    "scientific",
+    "matrix",
     "scientific/engineering"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "numpy is a Python library for fundamental package for array computing in python.",
-    "mental_model": "",
-    "when_to_use": "Use numpy when you need fundamental package for array computing in python.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Python lists are general-purpose and slow for numerical work — each element is a Python object with overhead, and there's no vectorised math. Before NumPy, scientific computing in Python meant writing slow loops or reaching for C extensions manually. NumPy solved this by providing a typed, contiguous array backed by optimised C and Fortran code.",
+    "mental_model": "Think of a NumPy ndarray as a typed, multi-dimensional grid of numbers stored contiguously in memory. Operations on the array run in compiled C — adding two arrays of a million numbers is a single C loop, not a million Python function calls. The key insight is 'vectorise your thinking': replace loops with operations on whole arrays.",
+    "when_to_use": "Use NumPy any time you're doing numerical computation: matrix math, statistics, signal processing, image data as pixel arrays, or feeding data into ML libraries. It's the foundation most scientific Python libraries (pandas, scipy, PyTorch) are built on.",
+    "when_not_to_use": "NumPy is not for general-purpose data manipulation with mixed types or strings — use pandas DataFrames there. For very large datasets that don't fit in RAM, look at Dask or CuPy (GPU arrays).",
+    "alternatives": [
+      {
+        "name": "pandas",
+        "reason": "Built on NumPy; adds labelled columns, mixed types, and data wrangling — better for tabular data"
+      },
+      {
+        "name": "polars",
+        "reason": "Faster DataFrame library written in Rust; good when you need speed but don't need NumPy's raw array API"
+      },
+      {
+        "name": "torch",
+        "reason": "PyTorch tensors mirror NumPy's API but run on GPU — the natural upgrade for ML workloads"
+      }
+    ]
   },
   "graph": {
     "nodes": [

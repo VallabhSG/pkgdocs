@@ -4,18 +4,35 @@
   "name": "vitest",
   "summary": "Next generation testing framework powered by Vite",
   "tags": [
+    "testing",
     "vite",
+    "jest-compatible",
+    "unit-tests",
+    "typescript",
     "vitest",
     "test",
     "jest"
   ],
   "difficulty": 3,
   "story": {
-    "problem": "[](https://npmx.dev/package/vitest)\n\nNext generation testing framework powered by Vite.\n\nGitHub | Documentation",
-    "mental_model": "",
-    "when_to_use": "Use vitest when you need next generation testing framework powered by vite.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Jest works well but has a major friction point in Vite projects: Vite uses native ES modules and Vite-specific transforms (e.g. CSS modules, SVG imports), while Jest uses CommonJS and its own transform pipeline. Getting them to agree requires complex configuration. Vitest runs inside Vite's pipeline so your test environment matches your app environment exactly.",
+    "mental_model": "Vitest is Jest's API running inside Vite. If you know Jest (describe, it, expect, vi.mock), you know Vitest. The key difference is that Vitest uses Vite's config and transforms — the same aliases, plugins, and module resolution in your tests as in your app. No separate babel or jest.config to maintain.",
+    "when_to_use": "Use Vitest for any Vite-based project (React, Vue, Svelte) that needs unit or integration tests. It's also a good Jest replacement in non-Vite Node projects that want faster test execution and native ES module support.",
+    "when_not_to_use": "For Next.js projects, Jest is still the recommended and better-documented choice. Vitest's browser mode (for running tests in a real browser) is still maturing — for end-to-end browser tests, use Playwright or Cypress.",
+    "alternatives": [
+      {
+        "name": "jest",
+        "reason": "More mature, larger ecosystem, recommended by React and Next.js — use it for non-Vite projects"
+      },
+      {
+        "name": "playwright",
+        "reason": "End-to-end browser testing — tests run in real browsers, not jsdom; complementary to Vitest not a replacement"
+      },
+      {
+        "name": "mocha",
+        "reason": "Older, more minimal test runner with no built-in assertions — combine with chai; less common in modern projects"
+      }
+    ]
   },
   "graph": {
     "nodes": [

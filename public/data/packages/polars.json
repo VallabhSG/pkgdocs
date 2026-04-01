@@ -4,23 +4,37 @@
   "name": "polars",
   "summary": "Blazingly fast DataFrame library",
   "tags": [
+    "dataframe",
+    "rust",
+    "fast",
+    "data-engineering",
+    "lazy-evaluation",
     "scientific/engineering",
     "arrow",
-    "dataframe",
     "dataframe-library",
     "dataframes",
-    "out-of-core",
-    "polars",
-    "python",
-    "rust"
+    "out-of-core"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "Documentation:\n  Python\n  -\n  Rust\n  -\n  Node.js\n  -\n  R\n  |\n  StackOverflow:\n  Python\n  -\n  Rust\n  -\n  Node.js\n  -\n  R\n  |\n  User guide\n  |\n  Discord",
-    "mental_model": "",
-    "when_to_use": "Use polars when you need blazingly fast dataframe library.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Pandas was designed when datasets fit comfortably in a few GB and multi-core CPUs were a novelty. Today, pandas is slow on large datasets, uses more memory than necessary, and runs single-threaded by default. Polars was rebuilt from scratch in Rust with a query optimiser and multi-threaded execution engine.",
+    "mental_model": "Polars uses a lazy evaluation model: instead of running operations immediately, it builds a query plan. When you call .collect(), the optimiser rewrites the plan to eliminate redundant work, push filters down, and parallelise across all CPU cores. Think of it like SQL — the engine decides how to execute, not you.",
+    "when_to_use": "Use Polars for data transformation on datasets over 500MB, in production data pipelines where speed matters, or anywhere you're hitting pandas memory limits. It's also a good choice for new projects even on small data — the API is cleaner and the performance headroom is free.",
+    "when_not_to_use": "The ML ecosystem (scikit-learn, PyTorch, statsmodels) speaks NumPy arrays and pandas DataFrames. You'll need to call .to_pandas() or .to_numpy() at the handoff point, which adds friction. For quick exploratory work in a Jupyter notebook, pandas' ecosystem and familiarity often wins.",
+    "alternatives": [
+      {
+        "name": "pandas",
+        "reason": "Larger ecosystem, better ML library integration, more Stack Overflow answers — still the default for data science"
+      },
+      {
+        "name": "dask",
+        "reason": "Distributed pandas for datasets larger than RAM; better when you're already on a pandas codebase"
+      },
+      {
+        "name": "cudf",
+        "reason": "GPU-accelerated DataFrames from NVIDIA; use when you have a GPU and need maximum throughput"
+      }
+    ]
   },
   "graph": {
     "nodes": [

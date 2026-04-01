@@ -5,23 +5,36 @@
   "summary": "🐻 Bear necessities for state management in React",
   "tags": [
     "react",
+    "state-management",
+    "global-state",
+    "hooks",
+    "lightweight",
     "state",
     "manager",
     "management",
     "redux",
-    "store",
-    "hacktoberfest",
-    "hooks",
-    "react-context",
-    "reactjs"
+    "store"
   ],
   "difficulty": 2,
   "story": {
-    "problem": "[](https://github.com/pmndrs/zustand/actions?query=workflow%3ATest)\n[](https://bundlejs.com/?q=zustand)\n[](https://www.npmjs.com/package/zustand)\n[](https://www.npmjs.com/package/zustand)\n[](https://discord.gg/poimandres)\n\n  \n    \n  \n\nA small, fast and scalable bearbones state-management solution using simplified flux principles. Has a comfy API based on hooks, isn't boilerplatey or opinionated.\n\nDon't disregard it because it's cute. It has quite the claws, lots of time was spent dealing with…",
-    "mental_model": "",
-    "when_to_use": "Reducing nested structures is tiresome. Have you tried immer?\n\n``jsx\nimport { produce } from 'immer'\n\nconst useLushStore = create((set) => ({\n  lush: { forest: { contains: { a: 'bear' } } },\n  clearForest: () =>\n    set(\n      produce((state) => {\n        state.lush.forest.contains = null\n      }),\n    ),\n}))\n\nconst clearForest =…",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Redux solves state management but brings enormous complexity: actions, reducers, selectors, middleware, and a steep learning curve for what is often a shared variable. Context API re-renders the entire subtree on every update. Zustand was built to provide global state with the simplicity of useState and the power of Redux.",
+    "mental_model": "A Zustand store is a custom hook. You define state and actions together in one object, and any component calls useStore(state => state.count) to subscribe to exactly the slice it needs. Only components that subscribed to changed state re-render. No providers, no reducers, no boilerplate.",
+    "when_to_use": "Use Zustand for global UI state that multiple components need to read and write: auth status, theme preferences, shopping cart, modal state, or any data too complex for prop drilling but not complex enough to justify Redux.",
+    "when_not_to_use": "Zustand is not designed for server state — use React Query for that. For very large applications with complex state machines or time-travel debugging requirements, Redux Toolkit's tooling is more mature.",
+    "alternatives": [
+      {
+        "name": "jotai",
+        "reason": "Atomic state model — each atom is independent, avoiding the single-store pattern; better for derived state"
+      },
+      {
+        "name": "valtio",
+        "reason": "Proxy-based state that feels like mutating plain objects — very natural if you dislike the selector pattern"
+      },
+      {
+        "name": "redux-toolkit",
+        "reason": "More opinionated but better DevTools, time-travel debugging, and team conventions for large apps"
+      }
+    ]
   },
   "graph": {
     "nodes": [

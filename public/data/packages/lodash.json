@@ -1,23 +1,35 @@
 {
   "id": "lodash",
-  "ecosystem": "npm",
+  "ecosystem": "pypi",
   "name": "lodash",
-  "summary": "Lodash modular utilities",
+  "summary": "python implementation for lodash",
   "tags": [
-    "modules",
-    "stdlib",
-    "util",
+    "utility",
+    "functional",
+    "collections",
     "javascript",
-    "lodash",
-    "utilities"
+    "stdlib"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "Using npm:\n``shell\n$ npm i -g npm\n$ npm i --save lodash\n`\n\nIn Node.js:\n`js\n// Load the full build.\nvar _ = require('lodash');\n// Load the core build.\nvar _ = require('lodash/core');\n// Load the FP build for immutable auto-curried iteratee-first data-last methods.\nvar fp = require('lodash/fp');\n\n// Load method categories.\nvar array = require('lodash/array');\nvar object = require('lodash/fp/object');\n\n// Cherry-pick methods for smaller browserify/rollup/webpack bundles.\nvar at =…",
-    "mental_model": "",
-    "when_to_use": "Use lodash when you need lodash modular utilities.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "JavaScript's standard library is famously sparse. There's no built-in groupBy, chunk, debounce, cloneDeep, or flatten. Every project either wrote these utilities from scratch or copy-pasted snippets. Lodash became the de facto standard library for JavaScript by providing over 200 well-tested utility functions.",
+    "mental_model": "Think of lodash as the standard library JavaScript should have had. It follows functional programming conventions: functions take data as their first argument, are composable, and never mutate inputs. The _(collection).chain().map().filter().value() syntax lets you build data transformation pipelines clearly.",
+    "when_to_use": "Use lodash for array manipulation (chunk, flatten, groupBy, uniq), object utilities (cloneDeep, merge, pick, omit), function helpers (debounce, throttle, memoize), and collection operations. Import only the functions you need (import groupBy from 'lodash/groupBy') to keep bundle size down.",
+    "when_not_to_use": "Modern JavaScript (ES2020+) has absorbed many lodash features natively: Array.flat(), Object.fromEntries(), optional chaining, nullish coalescing. Audit what you actually need before adding lodash — you may already have it in the language.",
+    "alternatives": [
+      {
+        "name": "radash",
+        "reason": "Modern lodash alternative written in TypeScript with better tree-shaking and async utilities"
+      },
+      {
+        "name": "remeda",
+        "reason": "Type-safe utility library with data-first and data-last variants for better inference"
+      },
+      {
+        "name": "es-toolkit",
+        "reason": "Drop-in lodash replacement with smaller bundle size and modern TypeScript types"
+      }
+    ]
   },
   "graph": {
     "nodes": [
@@ -36,23 +48,27 @@
   },
   "tasks": [
     {
-      "id": "installation",
-      "title": "Installation",
+      "id": "install",
+      "title": "Install lodash",
       "difficulty": "beginner",
       "steps": [
         {
+          "label": "Install via pip",
+          "code": "pip install lodash"
+        },
+        {
           "label": "Import",
-          "code": "In Node.js:"
+          "code": "import lodash"
         }
       ]
     }
   ],
   "meta": {
-    "pypi_url": "https://www.npmjs.com/package/lodash",
-    "repo_url": "https://github.com/lodash/lodash",
-    "docs_url": "https://lodash.com/",
-    "weekly_downloads": 137659801,
-    "version": "4.17.21",
-    "license": "MIT"
+    "pypi_url": "https://pypi.org/project/lodash/",
+    "repo_url": "https://github.com/ironmaniiith",
+    "docs_url": "https://github.com/ironmaniiith",
+    "weekly_downloads": 0,
+    "version": "0.0.1",
+    "license": "UNKNOWN"
   }
 }

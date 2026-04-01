@@ -5,18 +5,29 @@
   "summary": "TypeScript is a language for application scale JavaScript development",
   "tags": [
     "typescript",
-    "microsoft",
+    "types",
+    "static-analysis",
+    "javascript",
     "compiler",
-    "language",
-    "javascript"
+    "microsoft",
+    "language"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "typescript is an npm package for typescript is a language for application scale javascript development.",
-    "mental_model": "",
-    "when_to_use": "Use typescript when you need typescript is a language for application scale javascript development.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "JavaScript is dynamically typed — typos in property names, passing the wrong type to a function, and refactoring without knowing all callers are all silent runtime errors. In large codebases, these become expensive bugs. TypeScript adds a static type system that catches them at compile time without changing how the code runs.",
+    "mental_model": "TypeScript is a strict superset of JavaScript: all valid JavaScript is valid TypeScript. You add type annotations where they help and TypeScript infers the rest. The compiler strips all types before running, so the output is plain JavaScript. Think of types as documentation that the computer checks.",
+    "when_to_use": "Use TypeScript for any JavaScript project that will grow beyond a few hundred lines or be worked on by more than one person. The upfront cost of adding types pays back quickly in editor autocomplete, safe refactoring, and catching bugs before runtime.",
+    "when_not_to_use": "TypeScript adds a compilation step and a learning curve. For tiny scripts, config files, or throwaway code, plain JavaScript is faster to write. TypeScript's type system also has limits — it can't track runtime behaviour, only the shape of values at compile time.",
+    "alternatives": [
+      {
+        "name": "jsdoc",
+        "reason": "Type comments in JavaScript without a build step — TypeScript can even check these; good for small projects"
+      },
+      {
+        "name": "flow",
+        "reason": "Meta's type checker; similar to TypeScript but smaller ecosystem and community"
+      }
+    ]
   },
   "graph": {
     "nodes": [

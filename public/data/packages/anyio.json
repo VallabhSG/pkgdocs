@@ -3,14 +3,33 @@
   "ecosystem": "pypi",
   "name": "anyio",
   "summary": "High-level concurrency and networking framework on top of asyncio or Trio",
-  "tags": [],
+  "tags": [
+    "async",
+    "asyncio",
+    "trio",
+    "concurrency",
+    "compatibility"
+  ],
   "difficulty": 1,
   "story": {
-    "problem": "anyio is a Python library for high-level concurrency and networking framework on top of asyncio or trio.",
-    "mental_model": "",
-    "when_to_use": "Use anyio when you need high-level concurrency and networking framework on top of asyncio or trio.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Python has two competing async runtimes: asyncio (built-in) and trio (third-party). Libraries that hardcode asyncio can't be used in trio applications and vice versa. Framework authors had to pick one and exclude the other. anyio provides a compatibility layer so library authors can write async code once and have it work on both backends.",
+    "mental_model": "anyio is an abstraction over async primitives — task groups, cancellation, sockets, file I/O, locks. When you import from anyio, you get APIs that run correctly whether the underlying runtime is asyncio or trio. Applications choose the backend at startup; libraries built on anyio just work on either.",
+    "when_to_use": "Use anyio when writing an async library or framework that you want to be runtime-agnostic. It's also useful in applications that want trio's structured concurrency model but need to interop with asyncio-based libraries like FastAPI or aiohttp.",
+    "when_not_to_use": "For application code that commits to asyncio (e.g. a FastAPI app), using asyncio directly is simpler — there's no need for the compatibility layer. anyio shines at the library level, not the application level.",
+    "alternatives": [
+      {
+        "name": "asyncio",
+        "reason": "Python's built-in async runtime — sufficient for applications that don't need trio compatibility"
+      },
+      {
+        "name": "trio",
+        "reason": "Alternative async runtime with a cleaner structured concurrency model; use anyio on top of it to maintain compatibility"
+      },
+      {
+        "name": "curio",
+        "reason": "Experimental async library from the asyncio author; mostly superseded by trio and asyncio improvements"
+      }
+    ]
   },
   "graph": {
     "nodes": [

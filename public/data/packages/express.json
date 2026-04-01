@@ -4,24 +4,37 @@
   "name": "express",
   "summary": "Fast, unopinionated, minimalist web framework",
   "tags": [
+    "node",
+    "web-framework",
+    "middleware",
+    "rest-api",
+    "http-server",
     "express",
     "framework",
     "sinatra",
     "web",
-    "http",
-    "rest",
-    "restful",
-    "router",
-    "app",
-    "api"
+    "http"
   ],
   "difficulty": 2,
   "story": {
-    "problem": "express is an npm package for fast, unopinionated, minimalist web framework.",
-    "mental_model": "",
-    "when_to_use": "Use express when you need fast, unopinionated, minimalist web framework.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Node.js's built-in http module gives you raw access to requests and responses but nothing else — no routing, no middleware, no cookie parsing, no static file serving. Every web app needed to solve these problems from scratch. Express defined the Node.js web server model that most frameworks still follow today.",
+    "mental_model": "Express is a middleware pipeline. Every incoming request travels through a chain of middleware functions in order. Each middleware calls next() to pass the request forward, sends a response to end the chain, or both. app.get('/users', middleware1, middleware2, handler) is just a named slot in that chain.",
+    "when_to_use": "Use Express for REST APIs and web servers in Node.js, especially when you value a minimal core with full control over what you add. It's the most documented Node.js framework with the largest ecosystem of compatible middleware.",
+    "when_not_to_use": "Express is synchronous by default and has poor built-in TypeScript support. For TypeScript-first APIs, try Fastify or Hono. For full-stack apps with server-side rendering, use Next.js. For edge/serverless, Hono's smaller footprint is better.",
+    "alternatives": [
+      {
+        "name": "fastify",
+        "reason": "2-3x faster than Express, TypeScript-first, built-in JSON schema validation — the modern Express replacement"
+      },
+      {
+        "name": "hono",
+        "reason": "Tiny and runs everywhere: Node, Cloudflare Workers, Deno, Bun — best for edge deployments"
+      },
+      {
+        "name": "koa",
+        "reason": "From the Express team; async-first and more minimal — a cleaner version of Express's ideas"
+      }
+    ]
   },
   "graph": {
     "nodes": [

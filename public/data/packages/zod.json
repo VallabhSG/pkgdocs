@@ -4,23 +4,37 @@
   "name": "zod",
   "summary": "TypeScript-first schema declaration and validation library with static type inference",
   "tags": [
+    "validation",
     "typescript",
     "schema",
-    "validation",
+    "runtime-types",
+    "parsing",
     "type",
     "inference",
     "runtime-validation",
     "schema-validation",
-    "static-types",
-    "type-inference"
+    "static-types"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "zod is an npm package for typescript-first schema declaration and validation library with static type inference.",
-    "mental_model": "",
-    "when_to_use": "Use zod when you need typescript-first schema declaration and validation library with static type inference.",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "TypeScript types exist only at compile time — they're completely erased at runtime. When you receive JSON from an API, there's no guarantee it matches your TypeScript interface. You could get a null where you expect a string and TypeScript can't catch it. Zod bridges the gap by providing runtime validation that produces TypeScript types.",
+    "mental_model": "A Zod schema is both a validator and a type: z.object({ name: z.string(), age: z.number() }) defines a schema you can call .parse() on at runtime AND extracts a TypeScript type from it with z.infer<typeof schema>. One definition, both compile-time and runtime safety.",
+    "when_to_use": "Use Zod at every trust boundary: parsing API responses, validating form inputs, reading environment variables, or loading config files. Any time external data enters your application, a Zod schema is the right gatekeeper.",
+    "when_not_to_use": "Zod adds bundle size (around 12KB gzipped). For purely server-side validation where bundle size doesn't matter but performance does, Typebox or Ajv (JSON Schema) are faster. If you're already using Pydantic on the Python side, you may want to generate Zod schemas from it rather than maintain both.",
+    "alternatives": [
+      {
+        "name": "valibot",
+        "reason": "Similar API to Zod but tree-shakable — much smaller bundle for browser apps that only use a subset"
+      },
+      {
+        "name": "yup",
+        "reason": "Older schema validation library; less TypeScript-native but battle-tested in form libraries"
+      },
+      {
+        "name": "typebox",
+        "reason": "JSON Schema-based; generates both TypeScript types and JSON Schema from one definition — useful for OpenAPI"
+      }
+    ]
   },
   "graph": {
     "nodes": [

@@ -4,24 +4,37 @@
   "name": "socket.io",
   "summary": "node.js realtime framework server",
   "tags": [
-    "realtime",
-    "framework",
     "websocket",
-    "tcp",
+    "realtime",
     "events",
+    "chat",
+    "multiplayer",
+    "framework",
+    "tcp",
     "socket",
     "io",
-    "javascript",
-    "nodejs",
-    "socket-io"
+    "javascript"
   ],
   "difficulty": 2,
   "story": {
-    "problem": "[](https://replit.com/@socketio/socketio-minimal-example)\n[](#backers) [](#sponsors)\n[](https://github.com/socketio/socket.io/actions)\n[](https://www.npmjs.com/package/socket.io)\n\n[](https://slackin-socketio.now.sh)",
-    "mental_model": "Socket.IO enables real-time bidirectional event-based communication. It consists of:\n\n- a Node.js server (this repository)\n- a Javascript client library for the browser (or a Node.js client)\n\nSome implementations in other languages are also available:\n\n- Java\n- C++\n- Swift\n- Dart\n- Python\n- .NET\n- Rust\n- PHP\n\nIts main features are:",
-    "when_to_use": "The following example attaches socket.io to a plain Node.JS\nHTTP server listening on port 3000.\n\n``js\nconst server = require('http').createServer();\nconst io = require('socket.io')(server);\nio.on('connection', client => {\n  client.on('event', data => { /* … */ });\n  client.on('disconnect', () => { /* … */ });\n});\nserver.listen(3000);\n``",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Raw WebSockets require you to handle reconnection, event multiplexing, room management, binary data, and fallback for environments that don't support WebSockets. Socket.IO was built to make real-time bidirectional communication reliable across browsers, mobile clients, and servers without managing any of that yourself.",
+    "mental_model": "Socket.IO is an event emitter over the network. On the server: io.on('connection', socket => socket.on('message', data => io.emit('message', data))). On the client: socket.on('message', data => ...) and socket.emit('message', data). Both sides emit and listen to named events. Rooms let you broadcast to subsets of clients.",
+    "when_to_use": "Use Socket.IO for chat applications, live collaboration, real-time dashboards, multiplayer games, or any feature where the server needs to push updates to clients. The automatic reconnection and room system make it production-ready out of the box.",
+    "when_not_to_use": "Socket.IO's abstraction layer adds overhead — if you're communicating between services where you control both ends, raw WebSockets or Server-Sent Events (for one-way) are lighter. For very high throughput (millions of concurrent connections), the overhead of Socket.IO's protocol becomes meaningful.",
+    "alternatives": [
+      {
+        "name": "ws",
+        "reason": "Raw WebSocket library — faster and lighter; use it when you control both client and server and don't need rooms/namespaces"
+      },
+      {
+        "name": "partykit",
+        "reason": "Managed WebSocket infrastructure — abstracts servers entirely; good for collaborative features without ops"
+      },
+      {
+        "name": "ably",
+        "reason": "Managed real-time messaging platform — offloads infra entirely at the cost of vendor lock-in"
+      }
+    ]
   },
   "graph": {
     "nodes": [

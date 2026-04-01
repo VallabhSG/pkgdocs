@@ -5,17 +5,33 @@
   "summary": "Composable command line interface toolkit",
   "tags": [
     "cli",
+    "command-line",
+    "argparse",
+    "python",
+    "terminal",
     "click",
-    "pallets",
-    "python"
+    "pallets"
   ],
   "difficulty": 1,
   "story": {
-    "problem": "Click is a Python package for creating beautiful command line interfaces\nin a composable way with as little code as necessary. It's the \"Command\nLine Interface Creation Kit\". It's highly configurable but comes with\nsensible defaults out of the box.\n\nIt aims to make the process of writing command line tools quick and fun\nwhile also preventing any frustration caused by the inability to\nimplement an intended CLI API.\n\nClick in three points:\n\n-   Arbitrary nesting of commands\n-   Automatic help…",
-    "mental_model": "",
-    "when_to_use": "``python\nimport click\n\n@click.command()\n@click.option(\"--count\", default=1, help=\"Number of greetings.\")\n@click.option(\"--name\", prompt=\"Your name\", help=\"The person to greet.\")\ndef hello(count, name):\n    \"\"\"Simple program that greets NAME for a total of COUNT times.\"\"\"\n    for _ in range(count):\n        click.echo(f\"Hello, {name}!\")\n\nif __name__…",
-    "when_not_to_use": "",
-    "alternatives": []
+    "problem": "Python's argparse requires registering each argument imperatively, writing help text separately, and handling subcommands through awkward nesting. For anything beyond a trivial script, you're fighting the framework. Click's insight was that CLI structure should mirror code structure.",
+    "mental_model": "Click uses decorators to turn ordinary Python functions into CLI commands. Add @click.command() and @click.option() to a function, and it instantly becomes a command with argument parsing, --help generation, type validation, and shell completion — all derived from the decorator chain.",
+    "when_to_use": "Use Click for any CLI tool you're distributing or that has more than 2-3 arguments. It's the standard choice for Python CLIs, especially when you need subcommands (like git-style interfaces), prompts, progress bars, or colored output.",
+    "when_not_to_use": "For extremely simple one-argument scripts, argparse or even sys.argv is fine. If you want type hints to drive the CLI automatically, look at Typer (which wraps Click under the hood).",
+    "alternatives": [
+      {
+        "name": "typer",
+        "reason": "Built on Click; derives CLI arguments from type annotations — less boilerplate if you already use type hints"
+      },
+      {
+        "name": "argparse",
+        "reason": "Standard library, no dependencies — good for simple scripts you don't want to install"
+      },
+      {
+        "name": "fire",
+        "reason": "Google's library that auto-generates CLIs from any Python object; good for quick scripting"
+      }
+    ]
   },
   "graph": {
     "nodes": [
