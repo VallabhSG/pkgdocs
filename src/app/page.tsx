@@ -5,6 +5,7 @@ import type { Package } from "@/lib/types";
 import SearchBar from "@/components/SearchBar";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { HeroSection } from "@/components/HeroSection";
+import CmdKTrigger from "@/components/CmdKTrigger";
 
 async function getPackages(): Promise<Package[]> {
   if (isSupabaseConfigured() && supabase) {
@@ -29,6 +30,19 @@ async function getPackages(): Promise<Package[]> {
 }
 
 const FEATURED_IDS = ["requests", "pandas", "fastapi", "zod", "axios", "vite"];
+
+const CATEGORIES: { label: string; emoji: string; ids: string[] }[] = [
+  { label: "Data Science",     emoji: "📊", ids: ["pandas", "numpy", "polars", "pillow", "sqlalchemy"] },
+  { label: "Web Frameworks",   emoji: "🌐", ids: ["fastapi", "flask", "django", "express"] },
+  { label: "HTTP & Async",     emoji: "⚡", ids: ["requests", "httpx", "axios", "ky", "aiohttp", "anyio"] },
+  { label: "Testing",          emoji: "🧪", ids: ["pytest", "vitest", "playwright"] },
+  { label: "ORM & Database",   emoji: "🗄️", ids: ["prisma", "drizzle-orm", "sqlalchemy", "redis-py", "alembic"] },
+  { label: "State & Forms",    emoji: "🔄", ids: ["zustand", "jotai", "immer", "react-query", "react-hook-form"] },
+  { label: "Validation",       emoji: "✅", ids: ["zod", "pydantic"] },
+  { label: "Scraping & ML",    emoji: "🤖", ids: ["scrapy", "beautifulsoup4", "boto3"] },
+  { label: "Build & Tooling",  emoji: "🔧", ids: ["vite", "tailwindcss", "typescript"] },
+  { label: "CLI & Output",     emoji: "🖥️", ids: ["click", "typer", "rich"] },
+];
 
 const FEATURES = [
   {
@@ -74,6 +88,11 @@ export default async function HomePage() {
   const featured = FEATURED_IDS.map((id) => packages.find((p) => p.id === id)).filter(Boolean) as Package[];
   const pypiCount = packages.filter((p) => p.ecosystem === "pypi").length;
   const npmCount  = packages.filter((p) => p.ecosystem === "npm").length;
+  const pkgById = new Map(packages.map((p) => [p.id, p]));
+  const categories = CATEGORIES.map((cat) => ({
+    ...cat,
+    packages: cat.ids.map((id) => pkgById.get(id)).filter(Boolean) as Package[],
+  })).filter((c) => c.packages.length > 0);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -86,7 +105,8 @@ export default async function HomePage() {
             <span className="font-bold text-slate-900 tracking-tight">pkgdocs</span>
             <span className="text-xs bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full font-medium">beta</span>
           </div>
-          <div className="flex items-center gap-5 text-sm text-slate-500">
+          <div className="flex items-center gap-3 text-sm text-slate-500">
+            <CmdKTrigger />
             <span className="hidden sm:inline">
               <span className="font-semibold text-slate-700">{packages.length}</span> packages
             </span>
@@ -132,6 +152,41 @@ export default async function HomePage() {
       </section>
 
       {/* ── Featured packages ── */}
+      {/* ── Category browser ── */}
+      <section className="bg-white border-b border-slate-200">
+        <div className="max-w-5xl mx-auto px-6 py-10">
+          <p className="text-center text-xs font-bold text-slate-400 uppercase tracking-widest mb-8">
+            Browse by category
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {categories.map((cat) => (
+              <div key={cat.label} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 hover:border-indigo-200 hover:bg-indigo-50/30 transition-colors">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-base">{cat.emoji}</span>
+                  <span className="text-sm font-bold text-slate-700">{cat.label}</span>
+                  <span className="ml-auto text-xs text-slate-400">{cat.packages.length} packages</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {cat.packages.map((p) => (
+                    <Link
+                      key={p.id}
+                      href={`/package/${p.id}`}
+                      className={`text-xs font-mono px-2.5 py-1 rounded-full border font-medium transition-all hover:shadow-sm ${
+                        p.ecosystem === "npm"
+                          ? "bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-100"
+                          : "bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100"
+                      }`}
+                    >
+                      {p.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {featured.length > 0 && (
         <section className="border-b border-slate-200 bg-slate-50">
           <div className="max-w-5xl mx-auto px-6 py-10">

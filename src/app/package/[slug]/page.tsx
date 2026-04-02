@@ -71,9 +71,30 @@ function Skeleton() {
   );
 }
 
+interface RelatedCard {
+  id: string;
+  name: string;
+  ecosystem: string;
+  summary: string;
+  tags: string[];
+}
+
+function computeRelated(pkg: Package, all: RelatedCard[]): RelatedCard[] {
+  return all
+    .filter((p) => p.id !== pkg.id)
+    .map((p) => ({ card: p, shared: p.tags.filter((t) => pkg.tags.includes(t)).length }))
+    .filter((x) => x.shared > 0)
+    .sort((a, b) => b.shared - a.shared)
+    .slice(0, 4)
+    .map((x) => x.card);
+}
+
+let allCardsCache: RelatedCard[] | null = null;
+
 export default function PackagePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const [pkg, setPkg] = useState<Package | null | undefined>(undefined);
+  const [related, setRelated] = useState<RelatedCard[]>([]);
   const [activeView, setActiveView] = useState<ViewMode>("story");
   const [prevView, setPrevView] = useState<ViewMode>("story");
   const [focusNodeId, setFocusNodeId] = useState<string | null>(null);
@@ -81,7 +102,21 @@ export default function PackagePage({ params }: { params: Promise<{ slug: string
   useEffect(() => {
     fetch(`/api/packages/${slug}`)
       .then((r) => { if (!r.ok) throw new Error("Not found"); return r.json(); })
-      .then(setPkg)
+      .then((data: Package) => {
+        setPkg(data);
+        // Compute related packages
+        if (allCardsCache) {
+          setRelated(computeRelated(data, allCardsCache));
+        } else {
+          fetch("/api/packages")
+            .then((r) => r.json())
+            .then((all: RelatedCard[]) => {
+              allCardsCache = all;
+              setRelated(computeRelated(data, all));
+            })
+            .catch(() => {});
+        }
+      })
       .catch(() => setPkg(null));
   }, [slug]);
 
@@ -123,7 +158,7 @@ export default function PackagePage({ params }: { params: Promise<{ slug: string
 
       {/* ── Sidebar (desktop) ── */}
       <div className="hidden md:block">
-        <PackageSidebar pkg={pkg} activeView={activeView} onViewChange={changeView} />
+        <PackageSidebar pkg={pkg} activeView={activeView} onViewChange={changeView} related={related} />
       </div>
 
       {/* ── Mobile top bar ── */}

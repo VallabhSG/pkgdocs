@@ -4,10 +4,19 @@ import Link from "next/link";
 import { ExternalLink, ChevronLeft, Download, Tag, BookOpen, Play, Map, Zap } from "lucide-react";
 import type { Package, ViewMode } from "@/lib/types";
 
+interface RelatedCard {
+  id: string;
+  name: string;
+  ecosystem: string;
+  summary: string;
+  tags: string[];
+}
+
 interface Props {
   pkg: Package;
   activeView: ViewMode;
   onViewChange: (v: ViewMode) => void;
+  related?: RelatedCard[];
 }
 
 const views: { id: ViewMode; label: string; icon: React.ReactNode; hint: string }[] = [
@@ -38,7 +47,7 @@ function DifficultyBar({ level }: { level: 1 | 2 | 3 }) {
   );
 }
 
-export default function PackageSidebar({ pkg, activeView, onViewChange }: Props) {
+export default function PackageSidebar({ pkg, activeView, onViewChange, related = [] }: Props) {
   const isNpm = pkg.ecosystem === "npm";
 
   return (
@@ -149,6 +158,32 @@ export default function PackageSidebar({ pkg, activeView, onViewChange }: Props)
               <span key={t} className="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-500 px-2 py-0.5 rounded-md font-mono transition-colors cursor-default">
                 {t}
               </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Related packages ── */}
+      {related.length > 0 && (
+        <div className="px-5 py-3 border-b border-slate-100">
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">See also</p>
+          <div className="space-y-1.5">
+            {related.map((r) => (
+              <Link
+                key={r.id}
+                href={`/package/${r.id}`}
+                className="flex items-start gap-2 group rounded-lg p-2 hover:bg-indigo-50 transition-colors"
+              >
+                <span className={`mt-0.5 shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                  r.ecosystem === "npm" ? "bg-rose-100 text-rose-500" : "bg-blue-100 text-blue-500"
+                }`}>
+                  {r.ecosystem === "npm" ? "js" : "py"}
+                </span>
+                <div className="min-w-0">
+                  <div className="text-xs font-bold font-mono text-slate-700 group-hover:text-indigo-700 transition-colors truncate">{r.name}</div>
+                  <div className="text-[11px] text-slate-400 leading-snug line-clamp-1">{r.summary}</div>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
