@@ -39,14 +39,181 @@
         "id": "click",
         "type": "module",
         "label": "click",
-        "summary": "Top-level module. Import as `import click` or `from click import ...`",
+        "summary": "Import as `import click`. Decorator-based CLI framework.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "command",
+        "type": "function",
+        "label": "@click.command()",
+        "summary": "Turn a function into a CLI command. Call with `python script.py` or via entry_points.",
+        "difficulty": 1,
+        "tags": [
+          "command",
+          "common"
+        ]
+      },
+      {
+        "id": "group",
+        "type": "function",
+        "label": "@click.group()",
+        "summary": "Create a command group (subcommands). `@group.command()` registers subcommands.",
+        "difficulty": 1,
+        "tags": [
+          "command",
+          "common"
+        ]
+      },
+      {
+        "id": "option",
+        "type": "function",
+        "label": "@click.option()",
+        "summary": "Declare optional flags/values: --name, --count, --flag/--no-flag. Types, defaults, prompts.",
+        "difficulty": 1,
+        "tags": [
+          "params",
+          "common"
+        ]
+      },
+      {
+        "id": "argument",
+        "type": "function",
+        "label": "@click.argument()",
+        "summary": "Positional arguments. Simpler than options — no flag, just positional.",
+        "difficulty": 1,
+        "tags": [
+          "params"
+        ]
+      },
+      {
+        "id": "types",
+        "type": "concept",
+        "label": "Parameter Types",
+        "summary": "STRING, INT, FLOAT, BOOL, UUID, Path, File, DateTime, Choice, IntRange, FloatRange.",
+        "difficulty": 2,
+        "tags": [
+          "types"
+        ]
+      },
+      {
+        "id": "context",
+        "type": "class",
+        "label": "Context (ctx)",
+        "summary": "Holds state per invocation. ctx.obj for shared state, ctx.invoke() to call other commands.",
+        "difficulty": 2,
+        "tags": [
+          "context"
+        ]
+      },
+      {
+        "id": "echo",
+        "type": "function",
+        "label": "click.echo() / click.style()",
+        "summary": "click.echo() for output (handles encoding). click.style() for ANSI colours.",
+        "difficulty": 1,
+        "tags": [
+          "output",
+          "common"
+        ]
+      },
+      {
+        "id": "progressbar",
+        "type": "function",
+        "label": "click.progressbar()",
+        "summary": "Simple progress bar for iterables: `with click.progressbar(items) as bar: for item in bar:`.",
+        "difficulty": 2,
+        "tags": [
+          "ui"
+        ]
+      },
+      {
+        "id": "testing",
+        "type": "class",
+        "label": "CliRunner (testing)",
+        "summary": "from click.testing import CliRunner. Invoke CLI commands in tests and capture output.",
+        "difficulty": 2,
+        "tags": [
+          "testing"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "click",
+        "to": "command",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "click",
+        "to": "group",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "click",
+        "to": "option",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "click",
+        "to": "argument",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "click",
+        "to": "echo",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "click",
+        "to": "progressbar",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "click",
+        "to": "testing",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "command",
+        "to": "option",
+        "label": "decorated-with"
+      },
+      {
+        "id": "e9",
+        "from": "command",
+        "to": "argument",
+        "label": "decorated-with"
+      },
+      {
+        "id": "e10",
+        "from": "option",
+        "to": "types",
+        "label": "uses"
+      },
+      {
+        "id": "e11",
+        "from": "group",
+        "to": "command",
+        "label": "contains"
+      },
+      {
+        "id": "e12",
+        "from": "command",
+        "to": "context",
+        "label": "receives"
+      }
+    ]
   },
   "tasks": [
     {

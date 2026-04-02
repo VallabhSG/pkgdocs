@@ -38,14 +38,161 @@
         "id": "aiohttp",
         "type": "module",
         "label": "aiohttp",
-        "summary": "Top-level module. Import as `import aiohttp` or `from aiohttp import ...`",
+        "summary": "Async HTTP client/server framework. Import as `import aiohttp`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "ClientSession",
+        "type": "class",
+        "label": "ClientSession",
+        "summary": "The HTTP client. Create once per app with `async with aiohttp.ClientSession() as session:`. Reuse across requests.",
+        "difficulty": 1,
+        "tags": [
+          "client",
+          "common"
+        ]
+      },
+      {
+        "id": "client_methods",
+        "type": "concept",
+        "label": "session.get / .post / .put / .delete",
+        "summary": "HTTP methods. All are async context managers: `async with session.get(url) as resp:`.",
+        "difficulty": 1,
+        "tags": [
+          "http",
+          "common"
+        ]
+      },
+      {
+        "id": "ClientResponse",
+        "type": "class",
+        "label": "ClientResponse",
+        "summary": "Response object. .status, await .json(), await .text(), await .read() (bytes).",
+        "difficulty": 1,
+        "tags": [
+          "response"
+        ]
+      },
+      {
+        "id": "web",
+        "type": "module",
+        "label": "aiohttp.web",
+        "summary": "Server-side: Application, RouteTableDef, Request, Response, run_app(). Build async web apps.",
+        "difficulty": 2,
+        "tags": [
+          "server"
+        ]
+      },
+      {
+        "id": "web_app",
+        "type": "class",
+        "label": "web.Application",
+        "summary": "WSGI-like app object. Register routes, middleware, startup/cleanup signals.",
+        "difficulty": 2,
+        "tags": [
+          "server"
+        ]
+      },
+      {
+        "id": "web_request",
+        "type": "class",
+        "label": "web.Request",
+        "summary": "Incoming server request: .match_info, await .json(), await .post(), .headers.",
+        "difficulty": 2,
+        "tags": [
+          "server"
+        ]
+      },
+      {
+        "id": "connector",
+        "type": "class",
+        "label": "TCPConnector",
+        "summary": "Controls connection pooling: limit, limit_per_host, ssl, ttl_dns_cache.",
+        "difficulty": 3,
+        "tags": [
+          "advanced"
+        ]
+      },
+      {
+        "id": "timeout",
+        "type": "class",
+        "label": "ClientTimeout",
+        "summary": "Timeout settings: total, connect, sock_read. Pass to ClientSession(timeout=...).",
+        "difficulty": 2,
+        "tags": [
+          "reliability"
+        ]
+      },
+      {
+        "id": "ws",
+        "type": "concept",
+        "label": "WebSocket Support",
+        "summary": "session.ws_connect() for client WS; web.WebSocketResponse for server-side.",
+        "difficulty": 3,
+        "tags": [
+          "websocket"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "aiohttp",
+        "to": "ClientSession",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "aiohttp",
+        "to": "web",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "ClientSession",
+        "to": "client_methods",
+        "label": "method"
+      },
+      {
+        "id": "e4",
+        "from": "client_methods",
+        "to": "ClientResponse",
+        "label": "returns"
+      },
+      {
+        "id": "e5",
+        "from": "ClientSession",
+        "to": "connector",
+        "label": "uses"
+      },
+      {
+        "id": "e6",
+        "from": "ClientSession",
+        "to": "timeout",
+        "label": "accepts"
+      },
+      {
+        "id": "e7",
+        "from": "ClientSession",
+        "to": "ws",
+        "label": "supports"
+      },
+      {
+        "id": "e8",
+        "from": "web",
+        "to": "web_app",
+        "label": "contains"
+      },
+      {
+        "id": "e9",
+        "from": "web_app",
+        "to": "web_request",
+        "label": "receives"
+      }
+    ]
   },
   "tasks": [
     {

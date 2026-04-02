@@ -35,29 +35,154 @@
   "graph": {
     "nodes": [
       {
-        "id": "react_hook_form",
+        "id": "react-hook-form",
         "type": "module",
         "label": "react-hook-form",
-        "summary": "Top-level module. Import as `import react_hook_form` or `from react_hook_form import ...`",
+        "summary": "Import from 'react-hook-form'. Uncontrolled form validation library.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
       },
       {
-        "id": "package.json",
+        "id": "useForm",
         "type": "function",
-        "label": "package.json",
-        "summary": "Function exported from react-hook-form.",
-        "difficulty": 1
+        "label": "useForm(options)",
+        "summary": "Core hook. Returns { register, handleSubmit, watch, formState, setValue, getValues, reset, control }.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "register",
+        "type": "function",
+        "label": "register(name, rules)",
+        "summary": "Connect an input to the form. Returns { ref, onChange, onBlur, name }. Supports validation rules.",
+        "difficulty": 1,
+        "tags": [
+          "registration",
+          "common"
+        ]
+      },
+      {
+        "id": "handleSubmit",
+        "type": "function",
+        "label": "handleSubmit(onValid, onInvalid)",
+        "summary": "Wraps form onSubmit. Validates first; calls onValid(data) on success.",
+        "difficulty": 1,
+        "tags": [
+          "submit",
+          "common"
+        ]
+      },
+      {
+        "id": "formState",
+        "type": "object",
+        "label": "formState",
+        "summary": "{ errors, isSubmitting, isValid, isDirty, dirtyFields, touchedFields }.",
+        "difficulty": 1,
+        "tags": [
+          "state"
+        ]
+      },
+      {
+        "id": "Controller",
+        "type": "component",
+        "label": "Controller",
+        "summary": "Wrapper for controlled components (Select, DatePicker, etc.) that don't use native inputs.",
+        "difficulty": 2,
+        "tags": [
+          "controlled"
+        ]
+      },
+      {
+        "id": "useWatch",
+        "type": "function",
+        "label": "useWatch() / watch()",
+        "summary": "Subscribe to field value changes. useWatch is more performant (targeted re-render).",
+        "difficulty": 2,
+        "tags": [
+          "watch"
+        ]
+      },
+      {
+        "id": "resolver",
+        "type": "concept",
+        "label": "Schema Resolvers (Zod, Yup, Joi)",
+        "summary": "Pass resolver to useForm for schema validation: `resolver: zodResolver(schema)`. Auto-maps errors.",
+        "difficulty": 2,
+        "tags": [
+          "validation",
+          "common"
+        ]
+      },
+      {
+        "id": "useFieldArray",
+        "type": "function",
+        "label": "useFieldArray()",
+        "summary": "Manage dynamic arrays of fields: append, prepend, remove, move, swap.",
+        "difficulty": 2,
+        "tags": [
+          "arrays"
+        ]
       }
     ],
     "edges": [
       {
         "id": "e1",
-        "from": "react_hook_form",
-        "to": "package.json",
+        "from": "react-hook-form",
+        "to": "useForm",
         "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "react-hook-form",
+        "to": "Controller",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "react-hook-form",
+        "to": "useFieldArray",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "useForm",
+        "to": "register",
+        "label": "returns"
+      },
+      {
+        "id": "e5",
+        "from": "useForm",
+        "to": "handleSubmit",
+        "label": "returns"
+      },
+      {
+        "id": "e6",
+        "from": "useForm",
+        "to": "formState",
+        "label": "returns"
+      },
+      {
+        "id": "e7",
+        "from": "useForm",
+        "to": "useWatch",
+        "label": "returns"
+      },
+      {
+        "id": "e8",
+        "from": "useForm",
+        "to": "resolver",
+        "label": "accepts"
+      },
+      {
+        "id": "e9",
+        "from": "register",
+        "to": "formState",
+        "label": "feeds-errors"
       }
     ]
   },

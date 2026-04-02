@@ -42,14 +42,176 @@
         "id": "polars",
         "type": "module",
         "label": "polars",
-        "summary": "Top-level module. Import as `import polars` or `from polars import ...`",
+        "summary": "Import as `import polars as pl`. Rust-backed DataFrame library.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "DataFrame",
+        "type": "class",
+        "label": "DataFrame",
+        "summary": "Immutable columnar data structure. All operations are lazy-friendly and return new DataFrames.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "LazyFrame",
+        "type": "class",
+        "label": "LazyFrame",
+        "summary": "Lazy API: df.lazy() → chain operations → .collect(). Polars optimizes the full query plan.",
+        "difficulty": 2,
+        "tags": [
+          "lazy",
+          "common"
+        ]
+      },
+      {
+        "id": "Series",
+        "type": "class",
+        "label": "Series",
+        "summary": "Single typed column. Supports vectorized operations, Expr-compatible.",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "Expr",
+        "type": "class",
+        "label": "Expr (expressions)",
+        "summary": "pl.col('name'), pl.lit(1), pl.when(cond).then(a).otherwise(b). Expressions compose into queries.",
+        "difficulty": 2,
+        "tags": [
+          "expr",
+          "common"
+        ]
+      },
+      {
+        "id": "read_io",
+        "type": "function",
+        "label": "pl.read_csv / read_parquet / read_json",
+        "summary": "Fast I/O readers. Also scan_csv / scan_parquet for lazy loading.",
+        "difficulty": 1,
+        "tags": [
+          "io",
+          "common"
+        ]
+      },
+      {
+        "id": "groupby_agg",
+        "type": "concept",
+        "label": "group_by().agg()",
+        "summary": "Grouped aggregations: .group_by('col').agg([pl.col('val').sum(), pl.col('x').mean()]).",
+        "difficulty": 2,
+        "tags": [
+          "agg"
+        ]
+      },
+      {
+        "id": "join",
+        "type": "function",
+        "label": "DataFrame.join()",
+        "summary": "Join operations: inner, left, right, full, semi, anti, cross. Very fast on large data.",
+        "difficulty": 2,
+        "tags": [
+          "join"
+        ]
+      },
+      {
+        "id": "dtypes",
+        "type": "concept",
+        "label": "Data Types (pl.Int64, pl.Utf8…)",
+        "summary": "Strict typing: Int8-Int64, Float32/64, Boolean, Utf8, Date, Datetime, Duration, List, Struct.",
+        "difficulty": 2,
+        "tags": [
+          "types"
+        ]
+      },
+      {
+        "id": "context",
+        "type": "concept",
+        "label": "Context (select / with_columns / filter)",
+        "summary": "df.select([exprs]) replaces cols, .with_columns() adds, .filter(expr) filters rows.",
+        "difficulty": 1,
+        "tags": [
+          "query",
+          "common"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "polars",
+        "to": "DataFrame",
+        "label": "core"
+      },
+      {
+        "id": "e2",
+        "from": "polars",
+        "to": "LazyFrame",
+        "label": "core"
+      },
+      {
+        "id": "e3",
+        "from": "polars",
+        "to": "Series",
+        "label": "core"
+      },
+      {
+        "id": "e4",
+        "from": "polars",
+        "to": "Expr",
+        "label": "core"
+      },
+      {
+        "id": "e5",
+        "from": "polars",
+        "to": "read_io",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "DataFrame",
+        "to": "LazyFrame",
+        "label": "via-lazy()"
+      },
+      {
+        "id": "e7",
+        "from": "LazyFrame",
+        "to": "DataFrame",
+        "label": "via-collect()"
+      },
+      {
+        "id": "e8",
+        "from": "DataFrame",
+        "to": "groupby_agg",
+        "label": "method"
+      },
+      {
+        "id": "e9",
+        "from": "DataFrame",
+        "to": "join",
+        "label": "method"
+      },
+      {
+        "id": "e10",
+        "from": "DataFrame",
+        "to": "context",
+        "label": "method"
+      },
+      {
+        "id": "e11",
+        "from": "context",
+        "to": "Expr",
+        "label": "uses"
+      }
+    ]
   },
   "tasks": [
     {

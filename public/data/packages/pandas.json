@@ -38,14 +38,201 @@
         "id": "pandas",
         "type": "module",
         "label": "pandas",
-        "summary": "Top-level module. Import as `import pandas` or `from pandas import ...`",
+        "summary": "Top-level module. Convention: `import pandas as pd`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "DataFrame",
+        "type": "class",
+        "label": "DataFrame",
+        "summary": "2D labeled table — rows × columns. The primary pandas data structure.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "Series",
+        "type": "class",
+        "label": "Series",
+        "summary": "1D labeled array. Each column in a DataFrame is a Series.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "Index",
+        "type": "class",
+        "label": "Index / MultiIndex",
+        "summary": "Row/column labels. MultiIndex enables hierarchical indexing.",
+        "difficulty": 2,
+        "tags": [
+          "index"
+        ]
+      },
+      {
+        "id": "read_csv",
+        "type": "function",
+        "label": "pd.read_csv() / pd.read_json()",
+        "summary": "Load data from CSV, JSON, Excel, Parquet, SQL into a DataFrame.",
+        "difficulty": 1,
+        "tags": [
+          "io",
+          "common"
+        ]
+      },
+      {
+        "id": "groupby",
+        "type": "function",
+        "label": "DataFrame.groupby()",
+        "summary": "Split-apply-combine: group rows by key, apply aggregation (sum, mean, count).",
+        "difficulty": 2,
+        "tags": [
+          "agg",
+          "common"
+        ]
+      },
+      {
+        "id": "merge",
+        "type": "function",
+        "label": "pd.merge() / DataFrame.join()",
+        "summary": "SQL-style joins (inner, left, right, outer) on one or more key columns.",
+        "difficulty": 2,
+        "tags": [
+          "join"
+        ]
+      },
+      {
+        "id": "loc_iloc",
+        "type": "concept",
+        "label": ".loc[] and .iloc[]",
+        "summary": ".loc selects by label, .iloc by integer position. Both support slicing and boolean masks.",
+        "difficulty": 2,
+        "tags": [
+          "indexing"
+        ]
+      },
+      {
+        "id": "apply",
+        "type": "function",
+        "label": "DataFrame.apply()",
+        "summary": "Apply a function along rows (axis=1) or columns (axis=0).",
+        "difficulty": 2,
+        "tags": [
+          "transform"
+        ]
+      },
+      {
+        "id": "pivot",
+        "type": "function",
+        "label": "DataFrame.pivot_table()",
+        "summary": "Reshape data: rows become columns. Similar to Excel pivot tables.",
+        "difficulty": 3,
+        "tags": [
+          "reshape"
+        ]
+      },
+      {
+        "id": "na",
+        "type": "concept",
+        "label": "NaN / NA handling",
+        "summary": "dropna(), fillna(), isna() — manage missing values represented as NaN.",
+        "difficulty": 2,
+        "tags": [
+          "cleaning"
+        ]
+      },
+      {
+        "id": "dtypes",
+        "type": "concept",
+        "label": "dtypes & Categorical",
+        "summary": "Column data types. Use CategoricalDtype to reduce memory for string columns.",
+        "difficulty": 2,
+        "tags": [
+          "dtype"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "pandas",
+        "to": "DataFrame",
+        "label": "core"
+      },
+      {
+        "id": "e2",
+        "from": "pandas",
+        "to": "Series",
+        "label": "core"
+      },
+      {
+        "id": "e3",
+        "from": "pandas",
+        "to": "read_csv",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "pandas",
+        "to": "merge",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "DataFrame",
+        "to": "Series",
+        "label": "column-is"
+      },
+      {
+        "id": "e6",
+        "from": "DataFrame",
+        "to": "groupby",
+        "label": "method"
+      },
+      {
+        "id": "e7",
+        "from": "DataFrame",
+        "to": "loc_iloc",
+        "label": "method"
+      },
+      {
+        "id": "e8",
+        "from": "DataFrame",
+        "to": "apply",
+        "label": "method"
+      },
+      {
+        "id": "e9",
+        "from": "DataFrame",
+        "to": "pivot",
+        "label": "method"
+      },
+      {
+        "id": "e10",
+        "from": "DataFrame",
+        "to": "na",
+        "label": "method"
+      },
+      {
+        "id": "e11",
+        "from": "DataFrame",
+        "to": "dtypes",
+        "label": "has"
+      },
+      {
+        "id": "e12",
+        "from": "read_csv",
+        "to": "DataFrame",
+        "label": "returns"
+      }
+    ]
   },
   "tasks": [
     {

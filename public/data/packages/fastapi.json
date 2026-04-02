@@ -42,14 +42,207 @@
         "id": "fastapi",
         "type": "module",
         "label": "fastapi",
-        "summary": "Top-level module. Import as `import fastapi` or `from fastapi import ...`",
+        "summary": "Top-level module. Import FastAPI, APIRouter, Depends, etc.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "FastAPI",
+        "type": "class",
+        "label": "FastAPI",
+        "summary": "Main application class. Create with `app = FastAPI()`. Mount routers, middleware, lifecycle hooks.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "APIRouter",
+        "type": "class",
+        "label": "APIRouter",
+        "summary": "Group related endpoints into a router, then include in the app with app.include_router().",
+        "difficulty": 2,
+        "tags": [
+          "routing"
+        ]
+      },
+      {
+        "id": "path_ops",
+        "type": "concept",
+        "label": "Path Operations (@app.get, @app.post…)",
+        "summary": "Decorators that register route handlers: get, post, put, delete, patch.",
+        "difficulty": 1,
+        "tags": [
+          "routing",
+          "common"
+        ]
+      },
+      {
+        "id": "Depends",
+        "type": "function",
+        "label": "Depends()",
+        "summary": "Dependency injection. Pass functions as deps — FastAPI calls them and injects their return value.",
+        "difficulty": 2,
+        "tags": [
+          "di",
+          "common"
+        ]
+      },
+      {
+        "id": "Body",
+        "type": "function",
+        "label": "Body / Query / Path / Header",
+        "summary": "Declare request parameters with metadata, validation, and aliases.",
+        "difficulty": 2,
+        "tags": [
+          "params"
+        ]
+      },
+      {
+        "id": "BaseModel",
+        "type": "class",
+        "label": "Pydantic BaseModel (via fastapi)",
+        "summary": "Request/response schemas. FastAPI auto-validates, parses, and documents them.",
+        "difficulty": 1,
+        "tags": [
+          "schema",
+          "common"
+        ]
+      },
+      {
+        "id": "HTTPException",
+        "type": "class",
+        "label": "HTTPException",
+        "summary": "Raise HTTP errors: `raise HTTPException(status_code=404, detail='Not found')`.",
+        "difficulty": 1,
+        "tags": [
+          "error"
+        ]
+      },
+      {
+        "id": "BackgroundTasks",
+        "type": "class",
+        "label": "BackgroundTasks",
+        "summary": "Run tasks after returning response (email, logging) without blocking.",
+        "difficulty": 2,
+        "tags": [
+          "async"
+        ]
+      },
+      {
+        "id": "middleware",
+        "type": "concept",
+        "label": "Middleware (@app.middleware)",
+        "summary": "Intercept requests/responses globally. Used for CORS, auth, logging, timing.",
+        "difficulty": 3,
+        "tags": [
+          "middleware"
+        ]
+      },
+      {
+        "id": "lifespan",
+        "type": "concept",
+        "label": "Lifespan (startup/shutdown)",
+        "summary": "async context manager for startup/shutdown logic (DB pool, ML model load).",
+        "difficulty": 2,
+        "tags": [
+          "lifecycle"
+        ]
+      },
+      {
+        "id": "openapi",
+        "type": "concept",
+        "label": "Auto OpenAPI / Swagger UI",
+        "summary": "FastAPI generates /docs (Swagger) and /redoc automatically from type hints.",
+        "difficulty": 1,
+        "tags": [
+          "docs"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "fastapi",
+        "to": "FastAPI",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "fastapi",
+        "to": "APIRouter",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "fastapi",
+        "to": "Depends",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "fastapi",
+        "to": "HTTPException",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "fastapi",
+        "to": "BackgroundTasks",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "FastAPI",
+        "to": "path_ops",
+        "label": "uses"
+      },
+      {
+        "id": "e7",
+        "from": "FastAPI",
+        "to": "middleware",
+        "label": "supports"
+      },
+      {
+        "id": "e8",
+        "from": "FastAPI",
+        "to": "lifespan",
+        "label": "supports"
+      },
+      {
+        "id": "e9",
+        "from": "FastAPI",
+        "to": "openapi",
+        "label": "generates"
+      },
+      {
+        "id": "e10",
+        "from": "path_ops",
+        "to": "BaseModel",
+        "label": "validates-with"
+      },
+      {
+        "id": "e11",
+        "from": "path_ops",
+        "to": "Depends",
+        "label": "uses"
+      },
+      {
+        "id": "e12",
+        "from": "path_ops",
+        "to": "Body",
+        "label": "uses"
+      },
+      {
+        "id": "e13",
+        "from": "APIRouter",
+        "to": "FastAPI",
+        "label": "mounted-in"
+      }
+    ]
   },
   "tasks": [
     {

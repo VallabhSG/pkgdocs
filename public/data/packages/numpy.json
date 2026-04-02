@@ -38,14 +38,199 @@
         "id": "numpy",
         "type": "module",
         "label": "numpy",
-        "summary": "Top-level module. Import as `import numpy` or `from numpy import ...`",
+        "summary": "Top-level module. Convention: `import numpy as np`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "ndarray",
+        "type": "class",
+        "label": "ndarray",
+        "summary": "N-dimensional array — the core data structure. Supports vectorized operations, slicing, broadcasting.",
+        "difficulty": 1,
+        "tags": [
+          "array",
+          "common"
+        ]
+      },
+      {
+        "id": "array",
+        "type": "function",
+        "label": "np.array()",
+        "summary": "Create an ndarray from a list or nested list.",
+        "difficulty": 1,
+        "tags": [
+          "creation"
+        ]
+      },
+      {
+        "id": "zeros",
+        "type": "function",
+        "label": "np.zeros() / np.ones()",
+        "summary": "Create arrays filled with 0s or 1s of a given shape.",
+        "difficulty": 1,
+        "tags": [
+          "creation"
+        ]
+      },
+      {
+        "id": "arange",
+        "type": "function",
+        "label": "np.arange() / np.linspace()",
+        "summary": "Generate evenly spaced values (step-based or count-based).",
+        "difficulty": 1,
+        "tags": [
+          "creation"
+        ]
+      },
+      {
+        "id": "random",
+        "type": "module",
+        "label": "np.random",
+        "summary": "Random number generation: rand, randn, randint, seed, default_rng.",
+        "difficulty": 2,
+        "tags": [
+          "random"
+        ]
+      },
+      {
+        "id": "linalg",
+        "type": "module",
+        "label": "np.linalg",
+        "summary": "Linear algebra: dot, inv, eig, svd, norm, solve.",
+        "difficulty": 3,
+        "tags": [
+          "math"
+        ]
+      },
+      {
+        "id": "math_funcs",
+        "type": "function",
+        "label": "Ufuncs (np.sin, np.exp, np.sqrt…)",
+        "summary": "Universal functions that apply element-wise to arrays with broadcasting.",
+        "difficulty": 2,
+        "tags": [
+          "math",
+          "common"
+        ]
+      },
+      {
+        "id": "reshape",
+        "type": "function",
+        "label": "ndarray.reshape() / np.reshape()",
+        "summary": "Change array shape without copying data. Use -1 for automatic dimension.",
+        "difficulty": 2,
+        "tags": [
+          "shape"
+        ]
+      },
+      {
+        "id": "concatenate",
+        "type": "function",
+        "label": "np.concatenate() / np.stack()",
+        "summary": "Join arrays along existing or new axes.",
+        "difficulty": 2,
+        "tags": [
+          "shape"
+        ]
+      },
+      {
+        "id": "indexing",
+        "type": "concept",
+        "label": "Fancy Indexing & Boolean Masks",
+        "summary": "Select elements with boolean arrays (arr[arr > 0]) or integer index arrays.",
+        "difficulty": 2,
+        "tags": [
+          "indexing"
+        ]
+      },
+      {
+        "id": "dtype",
+        "type": "concept",
+        "label": "dtype",
+        "summary": "Data type of array elements (float64, int32, bool, etc). Controls memory and precision.",
+        "difficulty": 2,
+        "tags": [
+          "dtype"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "numpy",
+        "to": "ndarray",
+        "label": "core"
+      },
+      {
+        "id": "e2",
+        "from": "numpy",
+        "to": "array",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "numpy",
+        "to": "zeros",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "numpy",
+        "to": "arange",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "numpy",
+        "to": "random",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "numpy",
+        "to": "linalg",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "numpy",
+        "to": "math_funcs",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "array",
+        "to": "ndarray",
+        "label": "returns"
+      },
+      {
+        "id": "e9",
+        "from": "ndarray",
+        "to": "reshape",
+        "label": "method"
+      },
+      {
+        "id": "e10",
+        "from": "ndarray",
+        "to": "indexing",
+        "label": "supports"
+      },
+      {
+        "id": "e11",
+        "from": "ndarray",
+        "to": "dtype",
+        "label": "has"
+      },
+      {
+        "id": "e12",
+        "from": "numpy",
+        "to": "concatenate",
+        "label": "contains"
+      }
+    ]
   },
   "tasks": [
     {

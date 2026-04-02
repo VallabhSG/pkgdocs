@@ -39,17 +39,172 @@
   "graph": {
     "nodes": [
       {
-        "id": "react_query",
+        "id": "react-query",
         "type": "module",
-        "label": "react-query",
-        "summary": "Top-level module. Import as `import react_query` or `from react_query import ...`",
+        "label": "@tanstack/react-query",
+        "summary": "Import from '@tanstack/react-query'. Provides hooks for async state management.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "QueryClient",
+        "type": "class",
+        "label": "QueryClient",
+        "summary": "Central cache store. Create once: `const queryClient = new QueryClient()`. Configure defaults.",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "QueryClientProvider",
+        "type": "component",
+        "label": "QueryClientProvider",
+        "summary": "Wrap app root: `<QueryClientProvider client={queryClient}>`. Makes client available to all hooks.",
+        "difficulty": 1,
+        "tags": [
+          "setup",
+          "common"
+        ]
+      },
+      {
+        "id": "useQuery",
+        "type": "function",
+        "label": "useQuery()",
+        "summary": "Fetch and cache async data. `useQuery({ queryKey: ['todos'], queryFn: fetchTodos })`. Returns { data, isLoading, error }.",
+        "difficulty": 1,
+        "tags": [
+          "query",
+          "common"
+        ]
+      },
+      {
+        "id": "useMutation",
+        "type": "function",
+        "label": "useMutation()",
+        "summary": "Trigger create/update/delete ops. Returns { mutate, isPending }. Use onSuccess to invalidate queries.",
+        "difficulty": 2,
+        "tags": [
+          "mutation",
+          "common"
+        ]
+      },
+      {
+        "id": "useInfiniteQuery",
+        "type": "function",
+        "label": "useInfiniteQuery()",
+        "summary": "Paginated data: returns pages array, hasNextPage, fetchNextPage. For infinite scroll.",
+        "difficulty": 2,
+        "tags": [
+          "pagination"
+        ]
+      },
+      {
+        "id": "queryKey",
+        "type": "concept",
+        "label": "Query Keys",
+        "summary": "Array-based cache keys: ['user', id]. Hierarchical invalidation: invalidateQueries(['user']) clears all user queries.",
+        "difficulty": 2,
+        "tags": [
+          "cache",
+          "common"
+        ]
+      },
+      {
+        "id": "staleTime",
+        "type": "concept",
+        "label": "staleTime & gcTime",
+        "summary": "staleTime: how long data is fresh (no refetch). gcTime: how long inactive cache lives.",
+        "difficulty": 2,
+        "tags": [
+          "cache"
+        ]
+      },
+      {
+        "id": "prefetch",
+        "type": "function",
+        "label": "queryClient.prefetchQuery()",
+        "summary": "Pre-populate cache on the server or before navigation to avoid loading states.",
+        "difficulty": 2,
+        "tags": [
+          "ssr"
+        ]
+      },
+      {
+        "id": "devtools",
+        "type": "concept",
+        "label": "ReactQueryDevtools",
+        "summary": "Import from '@tanstack/react-query-devtools'. Inspect cache, query states, and timings.",
+        "difficulty": 1,
+        "tags": [
+          "devtools"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "react-query",
+        "to": "QueryClient",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "react-query",
+        "to": "QueryClientProvider",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "react-query",
+        "to": "useQuery",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "react-query",
+        "to": "useMutation",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "react-query",
+        "to": "useInfiniteQuery",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "QueryClientProvider",
+        "to": "QueryClient",
+        "label": "wraps"
+      },
+      {
+        "id": "e7",
+        "from": "useQuery",
+        "to": "queryKey",
+        "label": "uses"
+      },
+      {
+        "id": "e8",
+        "from": "useQuery",
+        "to": "staleTime",
+        "label": "configures"
+      },
+      {
+        "id": "e9",
+        "from": "QueryClient",
+        "to": "prefetch",
+        "label": "method"
+      },
+      {
+        "id": "e10",
+        "from": "useMutation",
+        "to": "QueryClient",
+        "label": "invalidates"
+      }
+    ]
   },
   "tasks": [
     {

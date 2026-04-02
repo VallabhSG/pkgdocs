@@ -37,14 +37,176 @@
         "id": "rich",
         "type": "module",
         "label": "rich",
-        "summary": "Top-level module. Import as `import rich` or `from rich import ...`",
+        "summary": "Import from rich: `from rich import print`, `from rich.console import Console`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "Console",
+        "type": "class",
+        "label": "Console",
+        "summary": "Main output object. `c = Console(); c.print('[bold red]Hello[/]')`. Controls width, file, markup.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "markup",
+        "type": "concept",
+        "label": "Rich Markup",
+        "summary": "BBCode-like tags: [bold], [italic], [red], [link=url], [bold magenta on white]. Nesting supported.",
+        "difficulty": 1,
+        "tags": [
+          "markup",
+          "common"
+        ]
+      },
+      {
+        "id": "Table",
+        "type": "class",
+        "label": "Table",
+        "summary": "Render data as terminal tables. Add columns/rows, set styles, alignment, borders.",
+        "difficulty": 1,
+        "tags": [
+          "display",
+          "common"
+        ]
+      },
+      {
+        "id": "Progress",
+        "type": "class",
+        "label": "Progress (progress bars)",
+        "summary": "Live progress bars with spinners. track() wraps iterables. Custom columns.",
+        "difficulty": 2,
+        "tags": [
+          "progress",
+          "common"
+        ]
+      },
+      {
+        "id": "Syntax",
+        "type": "class",
+        "label": "Syntax",
+        "summary": "Syntax-highlighted code blocks via Pygments. `Syntax(code, 'python', theme='monokai')`.",
+        "difficulty": 1,
+        "tags": [
+          "display"
+        ]
+      },
+      {
+        "id": "Traceback",
+        "type": "class",
+        "label": "Traceback",
+        "summary": "Beautiful exception tracebacks with local variable values. `install()` to replace default.",
+        "difficulty": 2,
+        "tags": [
+          "debug"
+        ]
+      },
+      {
+        "id": "Padding",
+        "type": "class",
+        "label": "Layout primitives (Panel, Padding, Group)",
+        "summary": "Panel wraps content in a box. Padding adds whitespace. Group stacks renderables.",
+        "difficulty": 2,
+        "tags": [
+          "layout"
+        ]
+      },
+      {
+        "id": "logging",
+        "type": "concept",
+        "label": "RichHandler (logging integration)",
+        "summary": "from rich.logging import RichHandler. Add to logging.basicConfig for pretty log output.",
+        "difficulty": 2,
+        "tags": [
+          "logging"
+        ]
+      },
+      {
+        "id": "inspect",
+        "type": "function",
+        "label": "rich.inspect()",
+        "summary": "Introspect any Python object: shows attrs, methods, docstrings in a nicely formatted panel.",
+        "difficulty": 1,
+        "tags": [
+          "debug",
+          "common"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "rich",
+        "to": "Console",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "rich",
+        "to": "Table",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "rich",
+        "to": "Progress",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "rich",
+        "to": "Syntax",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "rich",
+        "to": "Traceback",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "rich",
+        "to": "inspect",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "Console",
+        "to": "markup",
+        "label": "renders"
+      },
+      {
+        "id": "e8",
+        "from": "Console",
+        "to": "Table",
+        "label": "renders"
+      },
+      {
+        "id": "e9",
+        "from": "Console",
+        "to": "Syntax",
+        "label": "renders"
+      },
+      {
+        "id": "e10",
+        "from": "Console",
+        "to": "Padding",
+        "label": "renders"
+      },
+      {
+        "id": "e11",
+        "from": "rich",
+        "to": "logging",
+        "label": "contains"
+      }
+    ]
   },
   "tasks": [
     {

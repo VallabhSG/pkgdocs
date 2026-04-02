@@ -38,14 +38,175 @@
         "id": "sqlalchemy",
         "type": "module",
         "label": "sqlalchemy",
-        "summary": "Top-level module. Import as `import sqlalchemy` or `from sqlalchemy import ...`",
+        "summary": "Import from sqlalchemy. Two APIs: Core (SQL builder) and ORM (object mapping).",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "engine",
+        "type": "function",
+        "label": "create_engine(url)",
+        "summary": "Database connection factory: `engine = create_engine('postgresql://...')`. Manages connection pool.",
+        "difficulty": 1,
+        "tags": [
+          "connection",
+          "common"
+        ]
+      },
+      {
+        "id": "Session",
+        "type": "class",
+        "label": "Session / sessionmaker",
+        "summary": "ORM unit-of-work. Use with `with Session(engine) as session:`. Tracks changes, flushes, commits.",
+        "difficulty": 1,
+        "tags": [
+          "orm",
+          "common"
+        ]
+      },
+      {
+        "id": "Base",
+        "type": "class",
+        "label": "DeclarativeBase",
+        "summary": "ORM model base: `class MyModel(Base): __tablename__ = 'table'`. Maps Python class to DB table.",
+        "difficulty": 1,
+        "tags": [
+          "orm",
+          "common"
+        ]
+      },
+      {
+        "id": "Column",
+        "type": "class",
+        "label": "Column / mapped_column",
+        "summary": "Define table columns: `Column(String, primary_key=True)` or typed `mapped_column(int, nullable=False)`.",
+        "difficulty": 1,
+        "tags": [
+          "orm"
+        ]
+      },
+      {
+        "id": "relationship",
+        "type": "function",
+        "label": "relationship()",
+        "summary": "ORM associations: one-to-many, many-to-many. lazy='select'/'joined'/'subquery'/'dynamic'.",
+        "difficulty": 2,
+        "tags": [
+          "orm"
+        ]
+      },
+      {
+        "id": "select",
+        "type": "function",
+        "label": "select() (Core + ORM)",
+        "summary": "Build SELECT: `stmt = select(User).where(User.age > 18).order_by(User.name)`.",
+        "difficulty": 1,
+        "tags": [
+          "query",
+          "common"
+        ]
+      },
+      {
+        "id": "execute",
+        "type": "function",
+        "label": "session.execute() / conn.execute()",
+        "summary": "Run a statement. `result = session.execute(stmt)`. Use .scalars(), .all(), .one() to fetch.",
+        "difficulty": 1,
+        "tags": [
+          "query"
+        ]
+      },
+      {
+        "id": "migration",
+        "type": "concept",
+        "label": "Alembic (migrations)",
+        "summary": "SQLAlchemy pairs with Alembic for schema migrations: alembic init, revision --autogenerate, upgrade.",
+        "difficulty": 2,
+        "tags": [
+          "migration"
+        ]
+      },
+      {
+        "id": "async_support",
+        "type": "concept",
+        "label": "Async (create_async_engine)",
+        "summary": "from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession. Full async support.",
+        "difficulty": 3,
+        "tags": [
+          "async"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "sqlalchemy",
+        "to": "engine",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "sqlalchemy",
+        "to": "Session",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "sqlalchemy",
+        "to": "Base",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "sqlalchemy",
+        "to": "select",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "engine",
+        "to": "Session",
+        "label": "backs"
+      },
+      {
+        "id": "e6",
+        "from": "Base",
+        "to": "Column",
+        "label": "uses"
+      },
+      {
+        "id": "e7",
+        "from": "Base",
+        "to": "relationship",
+        "label": "uses"
+      },
+      {
+        "id": "e8",
+        "from": "Session",
+        "to": "execute",
+        "label": "method"
+      },
+      {
+        "id": "e9",
+        "from": "Session",
+        "to": "select",
+        "label": "executes"
+      },
+      {
+        "id": "e10",
+        "from": "sqlalchemy",
+        "to": "migration",
+        "label": "pairs-with"
+      },
+      {
+        "id": "e11",
+        "from": "sqlalchemy",
+        "to": "async_support",
+        "label": "supports"
+      }
+    ]
   },
   "tasks": [
     {

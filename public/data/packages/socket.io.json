@@ -42,26 +42,161 @@
         "id": "socket.io",
         "type": "module",
         "label": "socket.io",
-        "summary": "Top-level module. Import as `import socket.io` or `from socket.io import ...`",
+        "summary": "Server: `import { Server } from 'socket.io'`. Client: `import io from 'socket.io-client'`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
       },
       {
-        "id": "package.json",
-        "type": "function",
-        "label": "package.json",
-        "summary": "Function exported from socket.io.",
-        "difficulty": 1
+        "id": "Server",
+        "type": "class",
+        "label": "Server (io)",
+        "summary": "Attach to HTTP server: `const io = new Server(httpServer)`. Manage namespaces, rooms, middleware.",
+        "difficulty": 1,
+        "tags": [
+          "server",
+          "common"
+        ]
+      },
+      {
+        "id": "connection",
+        "type": "concept",
+        "label": "connection event",
+        "summary": "`io.on('connection', socket => { ... })` fires for each new client. socket is the per-client handle.",
+        "difficulty": 1,
+        "tags": [
+          "events",
+          "common"
+        ]
+      },
+      {
+        "id": "Socket_server",
+        "type": "class",
+        "label": "Socket (server-side)",
+        "summary": "Per-client object: socket.emit(), socket.on(), socket.join(room), socket.id, socket.rooms.",
+        "difficulty": 1,
+        "tags": [
+          "server"
+        ]
+      },
+      {
+        "id": "emit",
+        "type": "concept",
+        "label": "Emitting Events",
+        "summary": "socket.emit('event', data) → one client. io.emit() → all. io.to(room).emit() → room members.",
+        "difficulty": 1,
+        "tags": [
+          "events",
+          "common"
+        ]
+      },
+      {
+        "id": "rooms",
+        "type": "concept",
+        "label": "Rooms",
+        "summary": "socket.join('room')/leave('room'). Broadcast to rooms: io.to('room').emit(). Server-side concept only.",
+        "difficulty": 2,
+        "tags": [
+          "rooms"
+        ]
+      },
+      {
+        "id": "namespace",
+        "type": "concept",
+        "label": "Namespaces",
+        "summary": "`io.of('/admin')` creates a scoped channel. Clients connect to `io('/admin')`. Separate event buses.",
+        "difficulty": 2,
+        "tags": [
+          "namespace"
+        ]
+      },
+      {
+        "id": "middleware_sio",
+        "type": "concept",
+        "label": "Middleware",
+        "summary": "`io.use((socket, next) => { ... next() })` for auth/session. Runs before connection event.",
+        "difficulty": 2,
+        "tags": [
+          "middleware"
+        ]
+      },
+      {
+        "id": "client",
+        "type": "class",
+        "label": "Client (socket.io-client)",
+        "summary": "`const socket = io('http://server')`. socket.emit(), socket.on(), socket.disconnect().",
+        "difficulty": 1,
+        "tags": [
+          "client",
+          "common"
+        ]
+      },
+      {
+        "id": "ack",
+        "type": "concept",
+        "label": "Acknowledgements",
+        "summary": "Request-response over WS: socket.emit('event', data, callback). Server calls the callback.",
+        "difficulty": 2,
+        "tags": [
+          "advanced"
+        ]
       }
     ],
     "edges": [
       {
         "id": "e1",
         "from": "socket.io",
-        "to": "package.json",
+        "to": "Server",
         "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "socket.io",
+        "to": "client",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "Server",
+        "to": "connection",
+        "label": "emits"
+      },
+      {
+        "id": "e4",
+        "from": "connection",
+        "to": "Socket_server",
+        "label": "provides"
+      },
+      {
+        "id": "e5",
+        "from": "Socket_server",
+        "to": "emit",
+        "label": "method"
+      },
+      {
+        "id": "e6",
+        "from": "Socket_server",
+        "to": "rooms",
+        "label": "method"
+      },
+      {
+        "id": "e7",
+        "from": "Server",
+        "to": "namespace",
+        "label": "method"
+      },
+      {
+        "id": "e8",
+        "from": "Server",
+        "to": "middleware_sio",
+        "label": "method"
+      },
+      {
+        "id": "e9",
+        "from": "emit",
+        "to": "ack",
+        "label": "supports"
       }
     ]
   },

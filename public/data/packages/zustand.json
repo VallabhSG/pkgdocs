@@ -42,39 +42,160 @@
         "id": "zustand",
         "type": "module",
         "label": "zustand",
-        "summary": "Top-level module. Import as `import zustand` or `from zustand import ...`",
+        "summary": "Import as `import { create } from 'zustand'`. Minimal, unopinionated state management.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
       },
       {
-        "id": "package.json",
+        "id": "create",
         "type": "function",
-        "label": "package.json",
-        "summary": "Function exported from zustand.",
-        "difficulty": 1
+        "label": "create(initializer)",
+        "summary": "Factory that returns a React hook: `const useStore = create((set, get) => ({ count: 0, inc: () => set(s => ({count: s.count+1})) }))`.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
       },
       {
-        "id": "*",
+        "id": "useStore",
         "type": "function",
-        "label": "*",
-        "summary": "Function exported from zustand.",
-        "difficulty": 1
+        "label": "useStore(selector?)",
+        "summary": "React hook to access store state. `const count = useStore(s => s.count)`. Re-renders only when selection changes.",
+        "difficulty": 1,
+        "tags": [
+          "hook",
+          "common"
+        ]
+      },
+      {
+        "id": "set",
+        "type": "function",
+        "label": "set(partial | updater)",
+        "summary": "Update state. Partial: `set({ x: 1 })`. Updater: `set(state => ({ x: state.x + 1 }))`. Does shallow merge.",
+        "difficulty": 1,
+        "tags": [
+          "update"
+        ]
+      },
+      {
+        "id": "get",
+        "type": "function",
+        "label": "get()",
+        "summary": "Read current state inside actions. Useful when you need current state inside an action closure.",
+        "difficulty": 2,
+        "tags": [
+          "access"
+        ]
+      },
+      {
+        "id": "subscribe",
+        "type": "function",
+        "label": "store.subscribe(listener)",
+        "summary": "Subscribe to state changes outside React. Returns unsubscribe fn. Used in non-component code.",
+        "difficulty": 2,
+        "tags": [
+          "subscribe"
+        ]
+      },
+      {
+        "id": "persist",
+        "type": "concept",
+        "label": "persist middleware",
+        "summary": "`create(persist(initializer, { name: 'my-store' }))` — auto-saves to localStorage/sessionStorage/custom.",
+        "difficulty": 2,
+        "tags": [
+          "middleware",
+          "common"
+        ]
+      },
+      {
+        "id": "immer_mw",
+        "type": "concept",
+        "label": "immer middleware",
+        "summary": "`create(immer(initializer))` — write mutable-style updates inside set. Uses Immer under the hood.",
+        "difficulty": 2,
+        "tags": [
+          "middleware"
+        ]
+      },
+      {
+        "id": "devtools",
+        "type": "concept",
+        "label": "devtools middleware",
+        "summary": "`create(devtools(initializer))` — connect to Redux DevTools for time-travel debugging.",
+        "difficulty": 2,
+        "tags": [
+          "devtools"
+        ]
+      },
+      {
+        "id": "shallow",
+        "type": "function",
+        "label": "shallow (equality)",
+        "summary": "import shallow from 'zustand/shallow'. Use as second arg to useStore to prevent unnecessary re-renders when selecting multiple values.",
+        "difficulty": 2,
+        "tags": [
+          "performance"
+        ]
       }
     ],
     "edges": [
       {
         "id": "e1",
         "from": "zustand",
-        "to": "package.json",
+        "to": "create",
         "label": "contains"
       },
       {
         "id": "e2",
+        "from": "create",
+        "to": "useStore",
+        "label": "returns"
+      },
+      {
+        "id": "e3",
+        "from": "create",
+        "to": "set",
+        "label": "provides"
+      },
+      {
+        "id": "e4",
+        "from": "create",
+        "to": "get",
+        "label": "provides"
+      },
+      {
+        "id": "e5",
+        "from": "useStore",
+        "to": "subscribe",
+        "label": "method"
+      },
+      {
+        "id": "e6",
         "from": "zustand",
-        "to": "*",
-        "label": "contains"
+        "to": "persist",
+        "label": "middleware"
+      },
+      {
+        "id": "e7",
+        "from": "zustand",
+        "to": "immer_mw",
+        "label": "middleware"
+      },
+      {
+        "id": "e8",
+        "from": "zustand",
+        "to": "devtools",
+        "label": "middleware"
+      },
+      {
+        "id": "e9",
+        "from": "useStore",
+        "to": "shallow",
+        "label": "uses"
       }
     ]
   },

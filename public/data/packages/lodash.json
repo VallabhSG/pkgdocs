@@ -37,14 +37,153 @@
         "id": "lodash",
         "type": "module",
         "label": "lodash",
-        "summary": "Top-level module. Import as `import lodash` or `from lodash import ...`",
+        "summary": "Import as `import _ from 'lodash'` or cherry-pick: `import chunk from 'lodash/chunk'`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "array",
+        "type": "concept",
+        "label": "Array Utilities",
+        "summary": "chunk, compact, difference, flatten, flattenDeep, intersection, union, uniq, zip, take, drop.",
+        "difficulty": 1,
+        "tags": [
+          "array",
+          "common"
+        ]
+      },
+      {
+        "id": "collection",
+        "type": "concept",
+        "label": "Collection Methods",
+        "summary": "filter, find, findIndex, map, reduce, forEach, groupBy, sortBy, orderBy, countBy, keyBy.",
+        "difficulty": 1,
+        "tags": [
+          "collection",
+          "common"
+        ]
+      },
+      {
+        "id": "object",
+        "type": "concept",
+        "label": "Object Utilities",
+        "summary": "assign, merge, cloneDeep, pick, omit, has, get, set, keys, values, entries, mapKeys, mapValues.",
+        "difficulty": 1,
+        "tags": [
+          "object",
+          "common"
+        ]
+      },
+      {
+        "id": "string",
+        "type": "concept",
+        "label": "String Utilities",
+        "summary": "camelCase, kebabCase, snakeCase, capitalize, trim, truncate, escape, pad, repeat, template.",
+        "difficulty": 1,
+        "tags": [
+          "string"
+        ]
+      },
+      {
+        "id": "function_utils",
+        "type": "concept",
+        "label": "Function Utilities",
+        "summary": "debounce, throttle, memoize, once, partial, curry, bind, flip, negate, wrap.",
+        "difficulty": 2,
+        "tags": [
+          "function",
+          "common"
+        ]
+      },
+      {
+        "id": "math",
+        "type": "concept",
+        "label": "Math Utilities",
+        "summary": "add, subtract, multiply, divide, ceil, floor, round, clamp, inRange, random, sum, sumBy, mean.",
+        "difficulty": 1,
+        "tags": [
+          "math"
+        ]
+      },
+      {
+        "id": "lang",
+        "type": "concept",
+        "label": "Lang / Type Checks",
+        "summary": "isArray, isObject, isString, isNumber, isNil, isEqual, isEmpty, cloneDeep, toArray, toNumber.",
+        "difficulty": 2,
+        "tags": [
+          "type-check"
+        ]
+      },
+      {
+        "id": "chain",
+        "type": "concept",
+        "label": "_.chain() / Lazy Evaluation",
+        "summary": "Wrap a value in a chain to compose operations. Call .value() to execute.",
+        "difficulty": 3,
+        "tags": [
+          "advanced"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "lodash",
+        "to": "array",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "lodash",
+        "to": "collection",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "lodash",
+        "to": "object",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "lodash",
+        "to": "string",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "lodash",
+        "to": "function_utils",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "lodash",
+        "to": "math",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "lodash",
+        "to": "lang",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "lodash",
+        "to": "chain",
+        "label": "contains"
+      },
+      {
+        "id": "e9",
+        "from": "collection",
+        "to": "array",
+        "label": "works-on"
+      }
+    ]
   },
   "tasks": [
     {

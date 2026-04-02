@@ -37,14 +37,153 @@
         "id": "anyio",
         "type": "module",
         "label": "anyio",
-        "summary": "Top-level module. Import as `import anyio` or `from anyio import ...`",
+        "summary": "Async compatibility layer over asyncio and trio. Import as `import anyio`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "run",
+        "type": "function",
+        "label": "anyio.run()",
+        "summary": "Entry point: `anyio.run(main)`. Runs on asyncio or trio based on backend param.",
+        "difficulty": 1,
+        "tags": [
+          "entry",
+          "common"
+        ]
+      },
+      {
+        "id": "task_group",
+        "type": "function",
+        "label": "anyio.create_task_group()",
+        "summary": "Structured concurrency: spawn tasks, auto-cancel siblings on failure. `async with anyio.create_task_group() as tg: tg.start_soon(coro)`.",
+        "difficulty": 2,
+        "tags": [
+          "concurrency",
+          "common"
+        ]
+      },
+      {
+        "id": "sleep",
+        "type": "function",
+        "label": "await anyio.sleep(seconds)",
+        "summary": "Async sleep. Use sleep(0) to yield control.",
+        "difficulty": 1,
+        "tags": [
+          "time"
+        ]
+      },
+      {
+        "id": "move_on",
+        "type": "function",
+        "label": "move_on_after / fail_after",
+        "summary": "Timeout scopes: move_on_after cancels silently, fail_after raises TimeoutError.",
+        "difficulty": 2,
+        "tags": [
+          "timeout",
+          "common"
+        ]
+      },
+      {
+        "id": "streams",
+        "type": "concept",
+        "label": "Byte / Object Streams",
+        "summary": "anyio.create_memory_object_stream() for in-process producer/consumer. Also TCP/Unix socket streams.",
+        "difficulty": 2,
+        "tags": [
+          "io"
+        ]
+      },
+      {
+        "id": "locks",
+        "type": "concept",
+        "label": "Synchronization Primitives",
+        "summary": "Lock, Event, Semaphore, Condition, CapacityLimiter — compatible across asyncio/trio.",
+        "difficulty": 2,
+        "tags": [
+          "sync"
+        ]
+      },
+      {
+        "id": "to_thread",
+        "type": "function",
+        "label": "anyio.to_thread.run_sync()",
+        "summary": "Run blocking code in a thread pool without blocking the event loop.",
+        "difficulty": 2,
+        "tags": [
+          "threading",
+          "common"
+        ]
+      },
+      {
+        "id": "from_thread",
+        "type": "function",
+        "label": "anyio.from_thread.run()",
+        "summary": "Call async code from a sync thread (started by to_thread.run_sync).",
+        "difficulty": 3,
+        "tags": [
+          "threading"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "anyio",
+        "to": "run",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "anyio",
+        "to": "task_group",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "anyio",
+        "to": "sleep",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "anyio",
+        "to": "move_on",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "anyio",
+        "to": "streams",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "anyio",
+        "to": "locks",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "anyio",
+        "to": "to_thread",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "anyio",
+        "to": "from_thread",
+        "label": "contains"
+      },
+      {
+        "id": "e9",
+        "from": "task_group",
+        "to": "move_on",
+        "label": "combines-with"
+      }
+    ]
   },
   "tasks": [
     {

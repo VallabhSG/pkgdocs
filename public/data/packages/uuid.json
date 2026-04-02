@@ -39,26 +39,138 @@
         "id": "uuid",
         "type": "module",
         "label": "uuid",
-        "summary": "Top-level module. Import as `import uuid` or `from uuid import ...`",
+        "summary": "Import named exports: `import { v1, v4, v5, validate, version, parse, stringify } from 'uuid'`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
       },
       {
-        "id": "package.json",
+        "id": "v4",
         "type": "function",
-        "label": "package.json",
-        "summary": "Function exported from uuid.",
-        "difficulty": 1
+        "label": "v4()",
+        "summary": "Generate a random UUID (RFC 4122). Most common use case. `uuid.v4()` → '110ec58a-a0f4-...'.",
+        "difficulty": 1,
+        "tags": [
+          "generation",
+          "common"
+        ]
+      },
+      {
+        "id": "v1",
+        "type": "function",
+        "label": "v1()",
+        "summary": "Time-based UUID. Encodes timestamp + MAC address. Monotonically increasing, not random.",
+        "difficulty": 2,
+        "tags": [
+          "generation"
+        ]
+      },
+      {
+        "id": "v5",
+        "type": "function",
+        "label": "v5(name, namespace)",
+        "summary": "Name-based UUID using SHA-1. Same inputs always produce same UUID. Namespaces: DNS, URL, OID, X500.",
+        "difficulty": 2,
+        "tags": [
+          "generation"
+        ]
+      },
+      {
+        "id": "v3",
+        "type": "function",
+        "label": "v3(name, namespace)",
+        "summary": "Like v5 but uses MD5. Less collision-resistant; prefer v5.",
+        "difficulty": 2,
+        "tags": [
+          "generation"
+        ]
+      },
+      {
+        "id": "validate",
+        "type": "function",
+        "label": "validate(str)",
+        "summary": "Returns true if string is a valid UUID (any version).",
+        "difficulty": 1,
+        "tags": [
+          "validation"
+        ]
+      },
+      {
+        "id": "version",
+        "type": "function",
+        "label": "version(uuid)",
+        "summary": "Returns the UUID version number (1, 3, 4, or 5) from a UUID string.",
+        "difficulty": 1,
+        "tags": [
+          "inspection"
+        ]
+      },
+      {
+        "id": "parse_stringify",
+        "type": "function",
+        "label": "parse() / stringify()",
+        "summary": "parse() converts UUID string → Uint8Array. stringify() converts back. For binary storage.",
+        "difficulty": 2,
+        "tags": [
+          "binary"
+        ]
       }
     ],
     "edges": [
       {
         "id": "e1",
         "from": "uuid",
-        "to": "package.json",
+        "to": "v4",
         "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "uuid",
+        "to": "v1",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "uuid",
+        "to": "v5",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "uuid",
+        "to": "v3",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "uuid",
+        "to": "validate",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "uuid",
+        "to": "version",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "uuid",
+        "to": "parse_stringify",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "v4",
+        "to": "validate",
+        "label": "output-validated-by"
+      },
+      {
+        "id": "e9",
+        "from": "v1",
+        "to": "version",
+        "label": "identified-by"
       }
     ]
   },

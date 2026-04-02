@@ -42,14 +42,178 @@
         "id": "sharp",
         "type": "module",
         "label": "sharp",
-        "summary": "Top-level module. Import as `import sharp` or `from sharp import ...`",
+        "summary": "Factory function: `sharp(input?)` starts a transform pipeline.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "factory",
+        "type": "function",
+        "label": "sharp(input, options?)",
+        "summary": "Create a pipeline from a file path, Buffer, or stream. Options: animated, limitInputPixels.",
+        "difficulty": 1,
+        "tags": [
+          "creation",
+          "common"
+        ]
+      },
+      {
+        "id": "Sharp",
+        "type": "class",
+        "label": "Sharp (pipeline)",
+        "summary": "Chainable transform pipeline. Each method returns `this` for chaining.",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "resize",
+        "type": "function",
+        "label": ".resize(width, height, options)",
+        "summary": "Resize image. fit: cover/contain/fill/inside/outside. withoutEnlargement, position.",
+        "difficulty": 1,
+        "tags": [
+          "transform",
+          "common"
+        ]
+      },
+      {
+        "id": "format",
+        "type": "concept",
+        "label": "Output Format (.jpeg, .png, .webp, .avif)",
+        "summary": ".jpeg({quality:80}), .png(), .webp(), .avif(), .tiff(), .gif() — set output format and options.",
+        "difficulty": 1,
+        "tags": [
+          "output",
+          "common"
+        ]
+      },
+      {
+        "id": "composite",
+        "type": "function",
+        "label": ".composite(overlays)",
+        "summary": "Overlay images: watermarks, text, shape layers. Each overlay has input, gravity/top/left.",
+        "difficulty": 2,
+        "tags": [
+          "composite"
+        ]
+      },
+      {
+        "id": "colour",
+        "type": "concept",
+        "label": "Colour Operations",
+        "summary": ".greyscale(), .tint(colour), .modulate({brightness, saturation, hue}), .negate(), .gamma().",
+        "difficulty": 2,
+        "tags": [
+          "colour"
+        ]
+      },
+      {
+        "id": "metadata",
+        "type": "function",
+        "label": ".metadata()",
+        "summary": "Read image metadata asynchronously: width, height, format, channels, space, density, exif.",
+        "difficulty": 1,
+        "tags": [
+          "info"
+        ]
+      },
+      {
+        "id": "crop",
+        "type": "function",
+        "label": ".extract() / .trim()",
+        "summary": ".extract({left,top,width,height}) crops a region. .trim() removes border pixels.",
+        "difficulty": 2,
+        "tags": [
+          "transform"
+        ]
+      },
+      {
+        "id": "text",
+        "type": "function",
+        "label": "Text Overlay (via SVG)",
+        "summary": "No native text API; use SVG buffer as composite input to render text onto images.",
+        "difficulty": 3,
+        "tags": [
+          "text"
+        ]
+      },
+      {
+        "id": "pipeline",
+        "type": "concept",
+        "label": "Stream / Buffer Pipeline",
+        "summary": ".toBuffer() → Promise<Buffer>, .toFile(path) → writes to disk, .pipe(stream) for streaming.",
+        "difficulty": 2,
+        "tags": [
+          "output"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "sharp",
+        "to": "factory",
+        "label": "exports"
+      },
+      {
+        "id": "e2",
+        "from": "factory",
+        "to": "Sharp",
+        "label": "returns"
+      },
+      {
+        "id": "e3",
+        "from": "Sharp",
+        "to": "resize",
+        "label": "method"
+      },
+      {
+        "id": "e4",
+        "from": "Sharp",
+        "to": "format",
+        "label": "method"
+      },
+      {
+        "id": "e5",
+        "from": "Sharp",
+        "to": "composite",
+        "label": "method"
+      },
+      {
+        "id": "e6",
+        "from": "Sharp",
+        "to": "colour",
+        "label": "method"
+      },
+      {
+        "id": "e7",
+        "from": "Sharp",
+        "to": "metadata",
+        "label": "method"
+      },
+      {
+        "id": "e8",
+        "from": "Sharp",
+        "to": "crop",
+        "label": "method"
+      },
+      {
+        "id": "e9",
+        "from": "Sharp",
+        "to": "pipeline",
+        "label": "method"
+      },
+      {
+        "id": "e10",
+        "from": "Sharp",
+        "to": "text",
+        "label": "supports"
+      }
+    ]
   },
   "tasks": [
     {

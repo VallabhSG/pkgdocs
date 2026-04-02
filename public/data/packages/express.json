@@ -42,14 +42,169 @@
         "id": "express",
         "type": "module",
         "label": "express",
-        "summary": "Top-level module. Import as `import express` or `from express import ...`",
+        "summary": "Default export is the factory function: `const app = express()`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "app",
+        "type": "object",
+        "label": "app (Express instance)",
+        "summary": "The application object. Register routes, middleware, settings. Call app.listen() to start.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "Router",
+        "type": "class",
+        "label": "express.Router()",
+        "summary": "Mini-app for grouping related routes. Mount with app.use('/prefix', router).",
+        "difficulty": 2,
+        "tags": [
+          "routing"
+        ]
+      },
+      {
+        "id": "routing",
+        "type": "concept",
+        "label": "Route Methods (app.get, app.post…)",
+        "summary": "app.get(), app.post(), app.put(), app.delete() bind URL patterns to handlers.",
+        "difficulty": 1,
+        "tags": [
+          "routing",
+          "common"
+        ]
+      },
+      {
+        "id": "middleware",
+        "type": "concept",
+        "label": "Middleware (app.use)",
+        "summary": "Functions with (req, res, next). Process requests in sequence: logging, auth, body parsing.",
+        "difficulty": 2,
+        "tags": [
+          "middleware",
+          "common"
+        ]
+      },
+      {
+        "id": "Request",
+        "type": "object",
+        "label": "req (Request)",
+        "summary": "req.params, req.query, req.body, req.headers, req.cookies.",
+        "difficulty": 1,
+        "tags": [
+          "request"
+        ]
+      },
+      {
+        "id": "Response",
+        "type": "object",
+        "label": "res (Response)",
+        "summary": "res.json(), res.send(), res.status(), res.redirect(), res.render().",
+        "difficulty": 1,
+        "tags": [
+          "response"
+        ]
+      },
+      {
+        "id": "static",
+        "type": "function",
+        "label": "express.static()",
+        "summary": "Serve static files from a directory.",
+        "difficulty": 1,
+        "tags": [
+          "static"
+        ]
+      },
+      {
+        "id": "json_mw",
+        "type": "function",
+        "label": "express.json() / express.urlencoded()",
+        "summary": "Built-in body parsers for JSON and form-encoded request bodies.",
+        "difficulty": 1,
+        "tags": [
+          "middleware",
+          "common"
+        ]
+      },
+      {
+        "id": "error_handler",
+        "type": "concept",
+        "label": "Error-handling Middleware",
+        "summary": "4-arg middleware (err, req, res, next) handles errors thrown in route handlers.",
+        "difficulty": 2,
+        "tags": [
+          "error"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "express",
+        "to": "app",
+        "label": "creates"
+      },
+      {
+        "id": "e2",
+        "from": "express",
+        "to": "Router",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "express",
+        "to": "static",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "express",
+        "to": "json_mw",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "app",
+        "to": "routing",
+        "label": "uses"
+      },
+      {
+        "id": "e6",
+        "from": "app",
+        "to": "middleware",
+        "label": "uses"
+      },
+      {
+        "id": "e7",
+        "from": "routing",
+        "to": "Request",
+        "label": "receives"
+      },
+      {
+        "id": "e8",
+        "from": "routing",
+        "to": "Response",
+        "label": "sends"
+      },
+      {
+        "id": "e9",
+        "from": "app",
+        "to": "error_handler",
+        "label": "uses"
+      },
+      {
+        "id": "e10",
+        "from": "Router",
+        "to": "app",
+        "label": "mounted-in"
+      }
+    ]
   },
   "tasks": [
     {

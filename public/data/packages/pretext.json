@@ -32,97 +32,6 @@
       }
     ]
   },
-  "graph_nodes": [
-    {
-      "id": "prepare",
-      "type": "function",
-      "label": "prepare()",
-      "summary": "One-time text preparation — measures every segment's width via Canvas and returns an opaque PreparedText handle. This is the expensive step (~19ms for 500 texts); do it once and reuse the handle.",
-      "difficulty": 1,
-      "signature": "prepare(text: string, font: string, options?: Options): PreparedText",
-      "tags": ["measurement", "canvas", "cache"]
-    },
-    {
-      "id": "prepareWithSegments",
-      "type": "function",
-      "label": "prepareWithSegments()",
-      "summary": "Like prepare() but also returns the raw segments array, enabling custom rendering or inspection of individual text chunks.",
-      "difficulty": 2,
-      "signature": "prepareWithSegments(text: string, font: string, options?: Options): { prepared: PreparedText; segments: Segment[] }",
-      "tags": ["measurement", "segments", "advanced"]
-    },
-    {
-      "id": "layout",
-      "type": "function",
-      "label": "layout()",
-      "summary": "Fast height and line count calculation from a PreparedText handle at a given max width. Runs in ~0.09ms — no DOM access, pure arithmetic on cached segment widths.",
-      "difficulty": 1,
-      "signature": "layout(prepared: PreparedText, maxWidth: number, lineHeight: number): { height: number; lineCount: number }",
-      "tags": ["layout", "height", "fast"]
-    },
-    {
-      "id": "layoutWithLines",
-      "type": "function",
-      "label": "layoutWithLines()",
-      "summary": "Like layout() but also returns per-line details — the text content and pixel width of each line. Use this when you need to position or style individual lines.",
-      "difficulty": 2,
-      "signature": "layoutWithLines(prepared: PreparedText, maxWidth: number, lineHeight: number): { height: number; lineCount: number; lines: Line[] }",
-      "tags": ["layout", "lines", "advanced"]
-    },
-    {
-      "id": "layoutNextLine",
-      "type": "function",
-      "label": "layoutNextLine()",
-      "summary": "Incremental single-line layout from a character cursor position — returns the next line's text range and width. Use this for streaming or obstacle-aware layouts where each line has a different available width.",
-      "difficulty": 3,
-      "signature": "layoutNextLine(prepared: PreparedText, startPos: number, maxWidth: number): { endPos: number; width: number } | null",
-      "tags": ["incremental", "streaming", "obstacles"]
-    },
-    {
-      "id": "walkLineRanges",
-      "type": "function",
-      "label": "walkLineRanges()",
-      "summary": "Iterates over every line range in the text, calling a callback with start position, end position, and line width. Efficient for building custom rendering pipelines.",
-      "difficulty": 2,
-      "signature": "walkLineRanges(prepared: PreparedText, maxWidth: number, callback: (start: number, end: number, width: number) => void): void",
-      "tags": ["iteration", "rendering", "pipeline"]
-    },
-    {
-      "id": "clearCache",
-      "type": "function",
-      "label": "clearCache()",
-      "summary": "Releases all cached Canvas font measurements from memory. Call this when you've finished a batch of measurements and want to free memory.",
-      "difficulty": 1,
-      "signature": "clearCache(): void",
-      "tags": ["memory", "cache"]
-    },
-    {
-      "id": "setLocale",
-      "type": "function",
-      "label": "setLocale()",
-      "summary": "Configures the locale used by Intl.Segmenter for text boundary detection. Affects where line breaks occur in CJK and other non-Latin scripts.",
-      "difficulty": 2,
-      "signature": "setLocale(locale: string): void",
-      "tags": ["i18n", "locale", "cjk"]
-    },
-    {
-      "id": "PreparedText",
-      "type": "concept",
-      "label": "PreparedText",
-      "summary": "Opaque handle returned by prepare(). Stores cached segment widths and font metrics — pass it to layout functions. Treat it as immutable; do not inspect its internals.",
-      "difficulty": 1,
-      "signature": null,
-      "tags": ["handle", "cache", "immutable"]
-    }
-  ],
-  "graph_edges": [
-    { "source": "prepare", "target": "PreparedText", "type": "returns", "label": "returns", "animated": true },
-    { "source": "prepareWithSegments", "target": "PreparedText", "type": "returns", "label": "returns", "animated": true },
-    { "source": "PreparedText", "target": "layout", "type": "contains", "label": "input to" },
-    { "source": "PreparedText", "target": "layoutWithLines", "type": "contains", "label": "input to" },
-    { "source": "PreparedText", "target": "layoutNextLine", "type": "contains", "label": "input to" },
-    { "source": "PreparedText", "target": "walkLineRanges", "type": "contains", "label": "input to" }
-  ],
   "tasks": [
     {
       "id": "install",
@@ -217,5 +126,165 @@
     "weekly_downloads": 0,
     "version": "0.0.3",
     "license": "MIT"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "prepare",
+        "type": "function",
+        "label": "prepare()",
+        "summary": "One-time text preparation — measures every segment's width via Canvas and returns an opaque PreparedText handle. This is the expensive step (~19ms for 500 texts); do it once and reuse the handle.",
+        "difficulty": 1,
+        "signature": "prepare(text: string, font: string, options?: Options): PreparedText",
+        "tags": [
+          "measurement",
+          "canvas",
+          "cache"
+        ]
+      },
+      {
+        "id": "prepareWithSegments",
+        "type": "function",
+        "label": "prepareWithSegments()",
+        "summary": "Like prepare() but also returns the raw segments array, enabling custom rendering or inspection of individual text chunks.",
+        "difficulty": 2,
+        "signature": "prepareWithSegments(text: string, font: string, options?: Options): { prepared: PreparedText; segments: Segment[] }",
+        "tags": [
+          "measurement",
+          "segments",
+          "advanced"
+        ]
+      },
+      {
+        "id": "layout",
+        "type": "function",
+        "label": "layout()",
+        "summary": "Fast height and line count calculation from a PreparedText handle at a given max width. Runs in ~0.09ms — no DOM access, pure arithmetic on cached segment widths.",
+        "difficulty": 1,
+        "signature": "layout(prepared: PreparedText, maxWidth: number, lineHeight: number): { height: number; lineCount: number }",
+        "tags": [
+          "layout",
+          "height",
+          "fast"
+        ]
+      },
+      {
+        "id": "layoutWithLines",
+        "type": "function",
+        "label": "layoutWithLines()",
+        "summary": "Like layout() but also returns per-line details — the text content and pixel width of each line. Use this when you need to position or style individual lines.",
+        "difficulty": 2,
+        "signature": "layoutWithLines(prepared: PreparedText, maxWidth: number, lineHeight: number): { height: number; lineCount: number; lines: Line[] }",
+        "tags": [
+          "layout",
+          "lines",
+          "advanced"
+        ]
+      },
+      {
+        "id": "layoutNextLine",
+        "type": "function",
+        "label": "layoutNextLine()",
+        "summary": "Incremental single-line layout from a character cursor position — returns the next line's text range and width. Use this for streaming or obstacle-aware layouts where each line has a different available width.",
+        "difficulty": 3,
+        "signature": "layoutNextLine(prepared: PreparedText, startPos: number, maxWidth: number): { endPos: number; width: number } | null",
+        "tags": [
+          "incremental",
+          "streaming",
+          "obstacles"
+        ]
+      },
+      {
+        "id": "walkLineRanges",
+        "type": "function",
+        "label": "walkLineRanges()",
+        "summary": "Iterates over every line range in the text, calling a callback with start position, end position, and line width. Efficient for building custom rendering pipelines.",
+        "difficulty": 2,
+        "signature": "walkLineRanges(prepared: PreparedText, maxWidth: number, callback: (start: number, end: number, width: number) => void): void",
+        "tags": [
+          "iteration",
+          "rendering",
+          "pipeline"
+        ]
+      },
+      {
+        "id": "clearCache",
+        "type": "function",
+        "label": "clearCache()",
+        "summary": "Releases all cached Canvas font measurements from memory. Call this when you've finished a batch of measurements and want to free memory.",
+        "difficulty": 1,
+        "signature": "clearCache(): void",
+        "tags": [
+          "memory",
+          "cache"
+        ]
+      },
+      {
+        "id": "setLocale",
+        "type": "function",
+        "label": "setLocale()",
+        "summary": "Configures the locale used by Intl.Segmenter for text boundary detection. Affects where line breaks occur in CJK and other non-Latin scripts.",
+        "difficulty": 2,
+        "signature": "setLocale(locale: string): void",
+        "tags": [
+          "i18n",
+          "locale",
+          "cjk"
+        ]
+      },
+      {
+        "id": "PreparedText",
+        "type": "concept",
+        "label": "PreparedText",
+        "summary": "Opaque handle returned by prepare(). Stores cached segment widths and font metrics — pass it to layout functions. Treat it as immutable; do not inspect its internals.",
+        "difficulty": 1,
+        "signature": null,
+        "tags": [
+          "handle",
+          "cache",
+          "immutable"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "prepare",
+        "target": "PreparedText",
+        "type": "returns",
+        "label": "returns",
+        "animated": true
+      },
+      {
+        "source": "prepareWithSegments",
+        "target": "PreparedText",
+        "type": "returns",
+        "label": "returns",
+        "animated": true
+      },
+      {
+        "source": "PreparedText",
+        "target": "layout",
+        "type": "contains",
+        "label": "input to"
+      },
+      {
+        "source": "PreparedText",
+        "target": "layoutWithLines",
+        "type": "contains",
+        "label": "input to"
+      },
+      {
+        "source": "PreparedText",
+        "target": "layoutNextLine",
+        "type": "contains",
+        "label": "input to"
+      },
+      {
+        "source": "PreparedText",
+        "target": "walkLineRanges",
+        "type": "contains",
+        "label": "input to"
+      }
+    ]
   }
 }

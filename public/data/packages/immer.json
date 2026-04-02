@@ -38,26 +38,148 @@
         "id": "immer",
         "type": "module",
         "label": "immer",
-        "summary": "Top-level module. Import as `import immer` or `from immer import ...`",
+        "summary": "Import from 'immer'. Immutable state via structural sharing.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
       },
       {
-        "id": "package.json",
+        "id": "produce",
         "type": "function",
-        "label": "package.json",
-        "summary": "Function exported from immer.",
-        "difficulty": 1
+        "label": "produce(base, recipe)",
+        "summary": "Core API. Receive a draft (mutable proxy) in recipe; return new immutable state. `produce(state, draft => { draft.x = 1 })`.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "Draft",
+        "type": "concept",
+        "label": "Draft<T>",
+        "summary": "Mutable proxy of your state inside a producer. Changes tracked via Proxy. TypeScript: Draft<T> type.",
+        "difficulty": 1,
+        "tags": [
+          "types"
+        ]
+      },
+      {
+        "id": "current",
+        "type": "function",
+        "label": "current(draft)",
+        "summary": "Snapshot the draft's current value (plain object) inside a recipe for logging/debugging.",
+        "difficulty": 2,
+        "tags": [
+          "debug"
+        ]
+      },
+      {
+        "id": "original",
+        "type": "function",
+        "label": "original(draft)",
+        "summary": "Get the original (pre-mutation) value of a draft node.",
+        "difficulty": 2,
+        "tags": [
+          "debug"
+        ]
+      },
+      {
+        "id": "freeze",
+        "type": "function",
+        "label": "freeze(obj)",
+        "summary": "Deep-freeze an object to prevent accidental mutation outside Immer.",
+        "difficulty": 2,
+        "tags": [
+          "utility"
+        ]
+      },
+      {
+        "id": "enableMapSet",
+        "type": "function",
+        "label": "enableMapSet()",
+        "summary": "Enable Map and Set support in Immer (not included by default for bundle size).",
+        "difficulty": 2,
+        "tags": [
+          "config"
+        ]
+      },
+      {
+        "id": "patches",
+        "type": "concept",
+        "label": "Patches (undo/redo)",
+        "summary": "produceWithPatches() returns [nextState, patches, inversePatches]. Apply with applyPatches().",
+        "difficulty": 3,
+        "tags": [
+          "advanced"
+        ]
+      },
+      {
+        "id": "curried",
+        "type": "concept",
+        "label": "Curried Producers",
+        "summary": "`const updater = produce(recipe)` — returns a reusable function that accepts base state.",
+        "difficulty": 2,
+        "tags": [
+          "patterns"
+        ]
       }
     ],
     "edges": [
       {
         "id": "e1",
         "from": "immer",
-        "to": "package.json",
+        "to": "produce",
         "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "immer",
+        "to": "current",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "immer",
+        "to": "original",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "immer",
+        "to": "freeze",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "immer",
+        "to": "enableMapSet",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "immer",
+        "to": "patches",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "produce",
+        "to": "Draft",
+        "label": "provides"
+      },
+      {
+        "id": "e8",
+        "from": "produce",
+        "to": "curried",
+        "label": "supports"
+      },
+      {
+        "id": "e9",
+        "from": "current",
+        "to": "Draft",
+        "label": "reads"
       }
     ]
   },

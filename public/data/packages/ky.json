@@ -42,14 +42,135 @@
         "id": "ky",
         "type": "module",
         "label": "ky",
-        "summary": "Top-level module. Import as `import ky` or `from ky import ...`",
+        "summary": "Default export is the ky instance. Import as `import ky from 'ky'`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "methods",
+        "type": "function",
+        "label": "ky.get / .post / .put / .delete / .patch",
+        "summary": "HTTP methods returning a ResponsePromise. Chain .json(), .text(), .blob() to parse.",
+        "difficulty": 1,
+        "tags": [
+          "http",
+          "common"
+        ]
+      },
+      {
+        "id": "ResponsePromise",
+        "type": "class",
+        "label": "ResponsePromise",
+        "summary": "Extends Promise<Response>. Has .json<T>(), .text(), .arrayBuffer(), .blob() shorthand methods.",
+        "difficulty": 1,
+        "tags": [
+          "response"
+        ]
+      },
+      {
+        "id": "extend",
+        "type": "function",
+        "label": "ky.extend(defaults)",
+        "summary": "Create a custom ky instance with preset options: prefixUrl, headers, timeout, hooks.",
+        "difficulty": 2,
+        "tags": [
+          "config",
+          "common"
+        ]
+      },
+      {
+        "id": "hooks",
+        "type": "concept",
+        "label": "Hooks",
+        "summary": "beforeRequest, afterResponse, beforeError, beforeRetry arrays for intercepting the request lifecycle.",
+        "difficulty": 2,
+        "tags": [
+          "hooks"
+        ]
+      },
+      {
+        "id": "retry",
+        "type": "concept",
+        "label": "Retry",
+        "summary": "Built-in retry on network errors and 5xx. Options: count, limit, methods, statusCodes, backoffLimit.",
+        "difficulty": 2,
+        "tags": [
+          "reliability"
+        ]
+      },
+      {
+        "id": "timeout",
+        "type": "concept",
+        "label": "Timeout",
+        "summary": "timeout option (ms). Throws TimeoutError. Set false to disable.",
+        "difficulty": 1,
+        "tags": [
+          "reliability"
+        ]
+      },
+      {
+        "id": "searchParams",
+        "type": "concept",
+        "label": "searchParams",
+        "summary": "Pass an object/URLSearchParams for query string — auto-serialized, no manual string building.",
+        "difficulty": 1,
+        "tags": [
+          "params"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "ky",
+        "to": "methods",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "methods",
+        "to": "ResponsePromise",
+        "label": "returns"
+      },
+      {
+        "id": "e3",
+        "from": "ky",
+        "to": "extend",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "extend",
+        "to": "ky",
+        "label": "returns-new"
+      },
+      {
+        "id": "e5",
+        "from": "ky",
+        "to": "hooks",
+        "label": "supports"
+      },
+      {
+        "id": "e6",
+        "from": "ky",
+        "to": "retry",
+        "label": "supports"
+      },
+      {
+        "id": "e7",
+        "from": "ky",
+        "to": "timeout",
+        "label": "supports"
+      },
+      {
+        "id": "e8",
+        "from": "methods",
+        "to": "searchParams",
+        "label": "accepts"
+      }
+    ]
   },
   "tasks": [
     {

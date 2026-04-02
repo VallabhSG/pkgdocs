@@ -42,14 +42,232 @@
         "id": "requests",
         "type": "module",
         "label": "requests",
-        "summary": "Top-level module. Import as `import requests` or `from requests import ...`",
+        "summary": "Top-level module. Import as `import requests`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "get",
+        "type": "function",
+        "label": "requests.get()",
+        "summary": "Send a GET request. Returns a Response object.",
+        "difficulty": 1,
+        "tags": [
+          "http",
+          "common"
+        ]
+      },
+      {
+        "id": "post",
+        "type": "function",
+        "label": "requests.post()",
+        "summary": "Send a POST request with optional JSON/form body.",
+        "difficulty": 1,
+        "tags": [
+          "http",
+          "common"
+        ]
+      },
+      {
+        "id": "put",
+        "type": "function",
+        "label": "requests.put()",
+        "summary": "Send a PUT request to update a resource.",
+        "difficulty": 1,
+        "tags": [
+          "http"
+        ]
+      },
+      {
+        "id": "delete",
+        "type": "function",
+        "label": "requests.delete()",
+        "summary": "Send a DELETE request.",
+        "difficulty": 1,
+        "tags": [
+          "http"
+        ]
+      },
+      {
+        "id": "patch",
+        "type": "function",
+        "label": "requests.patch()",
+        "summary": "Send a PATCH request for partial updates.",
+        "difficulty": 1,
+        "tags": [
+          "http"
+        ]
+      },
+      {
+        "id": "head",
+        "type": "function",
+        "label": "requests.head()",
+        "summary": "Send a HEAD request (headers only, no body).",
+        "difficulty": 2,
+        "tags": [
+          "http"
+        ]
+      },
+      {
+        "id": "Session",
+        "type": "class",
+        "label": "Session",
+        "summary": "Persistent session that shares headers, cookies, and connection pool across requests.",
+        "difficulty": 2,
+        "tags": [
+          "session",
+          "common"
+        ]
+      },
+      {
+        "id": "Response",
+        "type": "class",
+        "label": "Response",
+        "summary": "HTTP response object. Key attrs: .status_code, .text, .json(), .content, .headers.",
+        "difficulty": 1,
+        "tags": [
+          "response"
+        ]
+      },
+      {
+        "id": "Request",
+        "type": "class",
+        "label": "Request",
+        "summary": "Represents a prepared HTTP request before sending.",
+        "difficulty": 2,
+        "tags": [
+          "advanced"
+        ]
+      },
+      {
+        "id": "PreparedRequest",
+        "type": "class",
+        "label": "PreparedRequest",
+        "summary": "A fully prepared request ready to be sent via Session.send().",
+        "difficulty": 3,
+        "tags": [
+          "advanced"
+        ]
+      },
+      {
+        "id": "auth",
+        "type": "module",
+        "label": "requests.auth",
+        "summary": "Auth helpers: HTTPBasicAuth, HTTPDigestAuth, AuthBase for custom auth.",
+        "difficulty": 2,
+        "tags": [
+          "auth"
+        ]
+      },
+      {
+        "id": "exceptions",
+        "type": "module",
+        "label": "requests.exceptions",
+        "summary": "Exception hierarchy: RequestException, ConnectionError, Timeout, HTTPError, TooManyRedirects.",
+        "difficulty": 2,
+        "tags": [
+          "error-handling"
+        ]
+      },
+      {
+        "id": "adapters",
+        "type": "module",
+        "label": "requests.adapters",
+        "summary": "HTTPAdapter for configuring retries, pool size, and SSL.",
+        "difficulty": 3,
+        "tags": [
+          "advanced"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "requests",
+        "to": "get",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "requests",
+        "to": "post",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "requests",
+        "to": "put",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "requests",
+        "to": "delete",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "requests",
+        "to": "patch",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "requests",
+        "to": "head",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "requests",
+        "to": "Session",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "requests",
+        "to": "Response",
+        "label": "contains"
+      },
+      {
+        "id": "e9",
+        "from": "requests",
+        "to": "auth",
+        "label": "contains"
+      },
+      {
+        "id": "e10",
+        "from": "requests",
+        "to": "exceptions",
+        "label": "contains"
+      },
+      {
+        "id": "e11",
+        "from": "requests",
+        "to": "adapters",
+        "label": "contains"
+      },
+      {
+        "id": "e12",
+        "from": "get",
+        "to": "Response",
+        "label": "returns"
+      },
+      {
+        "id": "e13",
+        "from": "post",
+        "to": "Response",
+        "label": "returns"
+      },
+      {
+        "id": "e14",
+        "from": "Session",
+        "to": "adapters",
+        "label": "uses"
+      }
+    ]
   },
   "tasks": [
     {

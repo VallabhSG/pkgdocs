@@ -34,15 +34,170 @@
       {
         "id": "typescript",
         "type": "module",
-        "label": "typescript",
-        "summary": "Top-level module. Import as `import typescript` or `from typescript import ...`",
+        "label": "typescript (compiler API)",
+        "summary": "The TypeScript compiler package. CLI: `tsc`. Programmatic API: `import ts from 'typescript'`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "tsconfig",
+        "type": "concept",
+        "label": "tsconfig.json",
+        "summary": "Project config: compilerOptions (target, module, strict, paths, baseUrl), include, exclude.",
+        "difficulty": 1,
+        "tags": [
+          "config",
+          "common"
+        ]
+      },
+      {
+        "id": "types",
+        "type": "concept",
+        "label": "Type System Primitives",
+        "summary": "string, number, boolean, null, undefined, symbol, bigint, unknown, never, any, void.",
+        "difficulty": 1,
+        "tags": [
+          "types",
+          "common"
+        ]
+      },
+      {
+        "id": "generics",
+        "type": "concept",
+        "label": "Generics",
+        "summary": "Parameterized types: `function identity<T>(x: T): T`. Constraints with extends. Default type params.",
+        "difficulty": 2,
+        "tags": [
+          "generics",
+          "common"
+        ]
+      },
+      {
+        "id": "utility_types",
+        "type": "concept",
+        "label": "Utility Types",
+        "summary": "Partial<T>, Required<T>, Readonly<T>, Pick<T,K>, Omit<T,K>, Record<K,V>, ReturnType<F>, Awaited<P>.",
+        "difficulty": 2,
+        "tags": [
+          "types",
+          "common"
+        ]
+      },
+      {
+        "id": "unions_intersections",
+        "type": "concept",
+        "label": "Union & Intersection Types",
+        "summary": "A | B (either), A & B (both). Discriminated unions with literal type tags.",
+        "difficulty": 2,
+        "tags": [
+          "types"
+        ]
+      },
+      {
+        "id": "mapped_types",
+        "type": "concept",
+        "label": "Mapped & Conditional Types",
+        "summary": "{ [K in keyof T]: ... }. T extends U ? X : Y. infer keyword for type extraction.",
+        "difficulty": 3,
+        "tags": [
+          "advanced"
+        ]
+      },
+      {
+        "id": "decorators",
+        "type": "concept",
+        "label": "Decorators",
+        "summary": "Experimental metadata annotations for classes, methods, properties. Enable with experimentalDecorators.",
+        "difficulty": 3,
+        "tags": [
+          "advanced"
+        ]
+      },
+      {
+        "id": "tsc_api",
+        "type": "concept",
+        "label": "Compiler API (ts.*)",
+        "summary": "ts.createProgram(), ts.createSourceFile(), AST traversal with ts.forEachChild(), ts.Diagnostic.",
+        "difficulty": 3,
+        "tags": [
+          "api"
+        ]
+      },
+      {
+        "id": "declaration",
+        "type": "concept",
+        "label": "Declaration Files (.d.ts)",
+        "summary": "Type-only files for JS libraries. Managed by @types/* on npm or authored manually.",
+        "difficulty": 2,
+        "tags": [
+          "declarations"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "typescript",
+        "to": "tsconfig",
+        "label": "configured-by"
+      },
+      {
+        "id": "e2",
+        "from": "typescript",
+        "to": "types",
+        "label": "provides"
+      },
+      {
+        "id": "e3",
+        "from": "typescript",
+        "to": "generics",
+        "label": "provides"
+      },
+      {
+        "id": "e4",
+        "from": "typescript",
+        "to": "utility_types",
+        "label": "provides"
+      },
+      {
+        "id": "e5",
+        "from": "typescript",
+        "to": "unions_intersections",
+        "label": "provides"
+      },
+      {
+        "id": "e6",
+        "from": "typescript",
+        "to": "mapped_types",
+        "label": "provides"
+      },
+      {
+        "id": "e7",
+        "from": "typescript",
+        "to": "decorators",
+        "label": "provides"
+      },
+      {
+        "id": "e8",
+        "from": "typescript",
+        "to": "tsc_api",
+        "label": "provides"
+      },
+      {
+        "id": "e9",
+        "from": "typescript",
+        "to": "declaration",
+        "label": "uses"
+      },
+      {
+        "id": "e10",
+        "from": "generics",
+        "to": "utility_types",
+        "label": "used-in"
+      }
+    ]
   },
   "tasks": [
     {

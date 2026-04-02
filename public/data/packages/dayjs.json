@@ -41,14 +41,185 @@
         "id": "dayjs",
         "type": "module",
         "label": "dayjs",
-        "summary": "Top-level module. Import as `import dayjs` or `from dayjs import ...`",
+        "summary": "Default export is the factory: `dayjs()` returns an immutable Day.js object.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "factory",
+        "type": "function",
+        "label": "dayjs(input?)",
+        "summary": "Parse a date: dayjs(), dayjs('2024-01-01'), dayjs(Date), dayjs(timestamp).",
+        "difficulty": 1,
+        "tags": [
+          "parsing",
+          "common"
+        ]
+      },
+      {
+        "id": "Dayjs",
+        "type": "class",
+        "label": "Dayjs (immutable)",
+        "summary": "Immutable date object. All manipulation methods return a new Dayjs instance.",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "format",
+        "type": "function",
+        "label": ".format(template)",
+        "summary": "Format a date: dayjs().format('YYYY-MM-DD HH:mm:ss'). Tokens: YYYY, MM, DD, HH, mm, ss, ddd.",
+        "difficulty": 1,
+        "tags": [
+          "format",
+          "common"
+        ]
+      },
+      {
+        "id": "manipulation",
+        "type": "concept",
+        "label": "Manipulation (.add, .subtract, .set)",
+        "summary": ".add(1, 'day'), .subtract(2, 'month'), .startOf('week'), .endOf('year').",
+        "difficulty": 1,
+        "tags": [
+          "manipulation",
+          "common"
+        ]
+      },
+      {
+        "id": "display",
+        "type": "concept",
+        "label": "Display (.toDate, .toISOString, .unix)",
+        "summary": ".toDate() → JS Date, .toISOString(), .valueOf() → ms timestamp, .unix() → seconds.",
+        "difficulty": 1,
+        "tags": [
+          "display"
+        ]
+      },
+      {
+        "id": "query",
+        "type": "concept",
+        "label": "Query (.isBefore, .isAfter, .isSame)",
+        "summary": "Compare dates: .isBefore(other), .isAfter(other), .isSame(other, 'month').",
+        "difficulty": 1,
+        "tags": [
+          "compare"
+        ]
+      },
+      {
+        "id": "diff",
+        "type": "function",
+        "label": ".diff()",
+        "summary": ".diff(other, 'day') returns numeric difference in given unit.",
+        "difficulty": 2,
+        "tags": [
+          "compare"
+        ]
+      },
+      {
+        "id": "plugins",
+        "type": "concept",
+        "label": "Plugins (extend)",
+        "summary": "dayjs.extend(plugin) adds functionality: relativeTime, utc, timezone, duration, isBetween, weekday.",
+        "difficulty": 2,
+        "tags": [
+          "plugins",
+          "common"
+        ]
+      },
+      {
+        "id": "utc",
+        "type": "concept",
+        "label": "UTC & Timezone Plugin",
+        "summary": "dayjs.extend(utc); dayjs.extend(timezone). Use .utc() and .tz('America/New_York').",
+        "difficulty": 2,
+        "tags": [
+          "timezone"
+        ]
+      },
+      {
+        "id": "locale",
+        "type": "concept",
+        "label": "Locale (i18n)",
+        "summary": "import 'dayjs/locale/fr'; dayjs.locale('fr'). Affects .format() day/month names.",
+        "difficulty": 2,
+        "tags": [
+          "i18n"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "dayjs",
+        "to": "factory",
+        "label": "exports"
+      },
+      {
+        "id": "e2",
+        "from": "factory",
+        "to": "Dayjs",
+        "label": "returns"
+      },
+      {
+        "id": "e3",
+        "from": "Dayjs",
+        "to": "format",
+        "label": "method"
+      },
+      {
+        "id": "e4",
+        "from": "Dayjs",
+        "to": "manipulation",
+        "label": "method"
+      },
+      {
+        "id": "e5",
+        "from": "Dayjs",
+        "to": "display",
+        "label": "method"
+      },
+      {
+        "id": "e6",
+        "from": "Dayjs",
+        "to": "query",
+        "label": "method"
+      },
+      {
+        "id": "e7",
+        "from": "Dayjs",
+        "to": "diff",
+        "label": "method"
+      },
+      {
+        "id": "e8",
+        "from": "dayjs",
+        "to": "plugins",
+        "label": "supports"
+      },
+      {
+        "id": "e9",
+        "from": "plugins",
+        "to": "utc",
+        "label": "includes"
+      },
+      {
+        "id": "e10",
+        "from": "plugins",
+        "to": "locale",
+        "label": "includes"
+      },
+      {
+        "id": "e11",
+        "from": "manipulation",
+        "to": "Dayjs",
+        "label": "returns"
+      }
+    ]
   },
   "tasks": [
     {

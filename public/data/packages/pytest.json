@@ -39,14 +39,186 @@
         "id": "pytest",
         "type": "module",
         "label": "pytest",
-        "summary": "Top-level module. Import as `import pytest` or `from pytest import ...`",
+        "summary": "Import as `import pytest`. Run with `pytest` or `python -m pytest`.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "test_function",
+        "type": "concept",
+        "label": "Test Functions & Classes",
+        "summary": "Any function starting with `test_` is auto-discovered. Group in `Test` classes (no __init__).",
+        "difficulty": 1,
+        "tags": [
+          "discovery",
+          "common"
+        ]
+      },
+      {
+        "id": "assert",
+        "type": "concept",
+        "label": "assert Rewriting",
+        "summary": "Use plain `assert`. pytest rewrites asserts to show rich diffs on failure. No need for assertEqual etc.",
+        "difficulty": 1,
+        "tags": [
+          "assertions",
+          "common"
+        ]
+      },
+      {
+        "id": "fixtures",
+        "type": "concept",
+        "label": "Fixtures (@pytest.fixture)",
+        "summary": "Dependency injection for tests. Yield for setup/teardown. Scopes: function, class, module, session.",
+        "difficulty": 2,
+        "tags": [
+          "fixtures",
+          "common"
+        ]
+      },
+      {
+        "id": "parametrize",
+        "type": "concept",
+        "label": "@pytest.mark.parametrize",
+        "summary": "Run a test with multiple input sets: @pytest.mark.parametrize('x,y', [(1,2),(3,4)]).",
+        "difficulty": 2,
+        "tags": [
+          "parametrize",
+          "common"
+        ]
+      },
+      {
+        "id": "marks",
+        "type": "concept",
+        "label": "Marks (@pytest.mark.*)",
+        "summary": "skip, skipif, xfail, filterwarnings, custom marks for filtering runs.",
+        "difficulty": 2,
+        "tags": [
+          "marks"
+        ]
+      },
+      {
+        "id": "raises",
+        "type": "function",
+        "label": "pytest.raises()",
+        "summary": "Assert that code raises a specific exception: `with pytest.raises(ValueError):`.",
+        "difficulty": 1,
+        "tags": [
+          "assertions",
+          "common"
+        ]
+      },
+      {
+        "id": "monkeypatch",
+        "type": "fixture",
+        "label": "monkeypatch fixture",
+        "summary": "Temporarily replace attributes, environment variables, or dict items. Auto-undone after test.",
+        "difficulty": 2,
+        "tags": [
+          "mocking"
+        ]
+      },
+      {
+        "id": "tmp_path",
+        "type": "fixture",
+        "label": "tmp_path / tmp_path_factory",
+        "summary": "Built-in fixture providing a temporary directory unique to the test invocation.",
+        "difficulty": 2,
+        "tags": [
+          "fixtures"
+        ]
+      },
+      {
+        "id": "capfd",
+        "type": "fixture",
+        "label": "capsys / capfd",
+        "summary": "Capture stdout/stderr. Use .readouterr() to get output in assertions.",
+        "difficulty": 2,
+        "tags": [
+          "capture"
+        ]
+      },
+      {
+        "id": "conftest",
+        "type": "concept",
+        "label": "conftest.py",
+        "summary": "Plugin file: define shared fixtures, hooks, and plugins. Auto-loaded by pytest from rootdir.",
+        "difficulty": 2,
+        "tags": [
+          "config"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "pytest",
+        "to": "test_function",
+        "label": "discovers"
+      },
+      {
+        "id": "e2",
+        "from": "pytest",
+        "to": "fixtures",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "pytest",
+        "to": "parametrize",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "pytest",
+        "to": "marks",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "pytest",
+        "to": "raises",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "test_function",
+        "to": "assert",
+        "label": "uses"
+      },
+      {
+        "id": "e7",
+        "from": "test_function",
+        "to": "fixtures",
+        "label": "injects"
+      },
+      {
+        "id": "e8",
+        "from": "fixtures",
+        "to": "monkeypatch",
+        "label": "includes"
+      },
+      {
+        "id": "e9",
+        "from": "fixtures",
+        "to": "tmp_path",
+        "label": "includes"
+      },
+      {
+        "id": "e10",
+        "from": "fixtures",
+        "to": "capfd",
+        "label": "includes"
+      },
+      {
+        "id": "e11",
+        "from": "conftest",
+        "to": "fixtures",
+        "label": "defines"
+      }
+    ]
   },
   "tasks": [
     {

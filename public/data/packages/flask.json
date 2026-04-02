@@ -42,14 +42,200 @@
         "id": "flask",
         "type": "module",
         "label": "flask",
-        "summary": "Top-level module. Import as `import flask` or `from flask import ...`",
+        "summary": "Top-level module. Import Flask, render_template, request, etc.",
         "difficulty": 1,
         "tags": [
           "entry-point"
         ]
+      },
+      {
+        "id": "Flask",
+        "type": "class",
+        "label": "Flask",
+        "summary": "Application factory: `app = Flask(__name__)`. Registers routes, extensions, config.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "route",
+        "type": "concept",
+        "label": "@app.route()",
+        "summary": "Decorator that binds a URL pattern to a view function. Supports variable rules like <int:id>.",
+        "difficulty": 1,
+        "tags": [
+          "routing",
+          "common"
+        ]
+      },
+      {
+        "id": "Blueprint",
+        "type": "class",
+        "label": "Blueprint",
+        "summary": "Modular component for splitting app into reusable route groups. Register with app.register_blueprint().",
+        "difficulty": 2,
+        "tags": [
+          "routing"
+        ]
+      },
+      {
+        "id": "request",
+        "type": "object",
+        "label": "request (context local)",
+        "summary": "Current HTTP request: request.args, request.form, request.json, request.files.",
+        "difficulty": 1,
+        "tags": [
+          "context",
+          "common"
+        ]
+      },
+      {
+        "id": "g",
+        "type": "object",
+        "label": "g (application context)",
+        "summary": "Request-scoped storage for sharing data across functions (e.g. db connection).",
+        "difficulty": 2,
+        "tags": [
+          "context"
+        ]
+      },
+      {
+        "id": "session",
+        "type": "object",
+        "label": "session (cookie-based)",
+        "summary": "Dict-like session backed by a signed cookie. Store small user state.",
+        "difficulty": 2,
+        "tags": [
+          "session"
+        ]
+      },
+      {
+        "id": "render_template",
+        "type": "function",
+        "label": "render_template()",
+        "summary": "Render a Jinja2 template and return an HTML response.",
+        "difficulty": 1,
+        "tags": [
+          "templates"
+        ]
+      },
+      {
+        "id": "jsonify",
+        "type": "function",
+        "label": "jsonify()",
+        "summary": "Convert a dict to a JSON response with the correct Content-Type header.",
+        "difficulty": 1,
+        "tags": [
+          "response"
+        ]
+      },
+      {
+        "id": "abort",
+        "type": "function",
+        "label": "abort() / make_response()",
+        "summary": "abort() raises HTTP errors; make_response() builds custom responses.",
+        "difficulty": 2,
+        "tags": [
+          "response"
+        ]
+      },
+      {
+        "id": "before_after",
+        "type": "concept",
+        "label": "@before_request / @after_request",
+        "summary": "Run code before/after every request (auth checks, response headers).",
+        "difficulty": 2,
+        "tags": [
+          "hooks"
+        ]
+      },
+      {
+        "id": "extensions",
+        "type": "concept",
+        "label": "Flask Extensions",
+        "summary": "Ecosystem: Flask-SQLAlchemy, Flask-Login, Flask-Migrate, Flask-WTF, Flask-JWT-Extended.",
+        "difficulty": 2,
+        "tags": [
+          "ecosystem"
+        ]
       }
     ],
-    "edges": []
+    "edges": [
+      {
+        "id": "e1",
+        "from": "flask",
+        "to": "Flask",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "flask",
+        "to": "request",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "flask",
+        "to": "g",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "flask",
+        "to": "session",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "flask",
+        "to": "render_template",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "flask",
+        "to": "jsonify",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "Flask",
+        "to": "route",
+        "label": "uses"
+      },
+      {
+        "id": "e8",
+        "from": "Flask",
+        "to": "Blueprint",
+        "label": "registers"
+      },
+      {
+        "id": "e9",
+        "from": "Flask",
+        "to": "before_after",
+        "label": "supports"
+      },
+      {
+        "id": "e10",
+        "from": "Flask",
+        "to": "extensions",
+        "label": "supports"
+      },
+      {
+        "id": "e11",
+        "from": "route",
+        "to": "render_template",
+        "label": "calls"
+      },
+      {
+        "id": "e12",
+        "from": "route",
+        "to": "jsonify",
+        "label": "calls"
+      }
+    ]
   },
   "tasks": [
     {
