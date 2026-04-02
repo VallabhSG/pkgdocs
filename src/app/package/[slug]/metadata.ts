@@ -21,7 +21,7 @@ export function buildMetadata(pkg: {
       title,
       description,
       url: `${BASE_URL}/package/${pkg.name}`,
-      images: [{ url: `/og-default.png`, width: 1200, height: 630 }],
+      images: [{ url: `/package/${pkg.name}/opengraph-image`, width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",

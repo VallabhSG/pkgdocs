@@ -31,13 +31,13 @@ export const metadata: Metadata = {
     description:
       "Interactive stories, API graphs, live demos, and copy-paste recipes for Python and npm packages.",
     url: BASE_URL,
-    images: [{ url: "/og-default.png", width: 1200, height: 630, alt: "pkgdocs" }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "pkgdocs" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "pkgdocs — Visual Package Documentation",
     description: "Interactive stories, API graphs, and copy-paste recipes for Python and npm packages.",
-    images: ["/og-default.png"],
+    images: ["/opengraph-image"],
   },
   robots: { index: true, follow: true },
 };
