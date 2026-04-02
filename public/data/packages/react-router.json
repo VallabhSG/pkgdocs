@@ -1,0 +1,235 @@
+{
+  "id": "react-router",
+  "ecosystem": "npm",
+  "name": "react-router",
+  "summary": "Declarative client-side routing for React — maps URLs to components with nested routes, loaders, and actions.",
+  "tags": [
+    "routing",
+    "react",
+    "spa",
+    "navigation",
+    "fullstack"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "A React app is a single HTML page. Clicking a link reloads the page and loses all state. You need URL changes to render different components without full reloads, while keeping the address bar in sync, supporting back/forward, and handling nested layouts.",
+    "mental_model": "React Router maps URL patterns to component trees. A <Route path='/users/:id'> renders when the URL matches. Nested routes render inside their parent's <Outlet>. v6.4+ adds loaders (fetch data before render) and actions (handle form submissions) — making it a full request/response model.",
+    "when_to_use": "Any React SPA needing URL-based navigation, nested layouts (dashboard sidebar + content), data loading tied to routes, form actions, protected routes.",
+    "when_not_to_use": "Next.js (use its file-based router). Remix (built on React Router but adds SSR). Very simple apps with only one or two views — a state variable suffices.",
+    "alternatives": [
+      {
+        "name": "tanstack-router",
+        "reason": "Fully type-safe routes, file-based or code-based, excellent TypeScript DX."
+      },
+      {
+        "name": "wouter",
+        "reason": "Tiny (1.5kB) React Router alternative, great for small projects."
+      },
+      {
+        "name": "next.js router",
+        "reason": "File-based, SSR-first. Use if you're already on Next.js."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "react-router",
+        "type": "module",
+        "label": "react-router",
+        "summary": "Import createBrowserRouter, RouterProvider, Route, Link, etc.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "createBrowserRouter",
+        "type": "function",
+        "label": "createBrowserRouter(routes)",
+        "summary": "Modern router factory. Define route tree as array of objects. Supports loaders/actions.",
+        "difficulty": 1,
+        "tags": [
+          "setup",
+          "common"
+        ]
+      },
+      {
+        "id": "RouterProvider",
+        "type": "component",
+        "label": "RouterProvider",
+        "summary": "<RouterProvider router={router} /> — mounts the router. Replaces old <BrowserRouter>.",
+        "difficulty": 1,
+        "tags": [
+          "setup"
+        ]
+      },
+      {
+        "id": "Route",
+        "type": "concept",
+        "label": "Route objects",
+        "summary": "{ path, element, loader, action, children, errorElement, index }.",
+        "difficulty": 1,
+        "tags": [
+          "route",
+          "common"
+        ]
+      },
+      {
+        "id": "Outlet",
+        "type": "component",
+        "label": "<Outlet />",
+        "summary": "Renders matched child route inside a layout component. The key to nested layouts.",
+        "difficulty": 1,
+        "tags": [
+          "layout",
+          "common"
+        ]
+      },
+      {
+        "id": "Link",
+        "type": "component",
+        "label": "<Link> / <NavLink>",
+        "summary": "<Link to='/about'> for navigation. <NavLink> adds active class when route matches.",
+        "difficulty": 1,
+        "tags": [
+          "navigation",
+          "common"
+        ]
+      },
+      {
+        "id": "hooks",
+        "type": "concept",
+        "label": "useNavigate / useParams / useLoaderData",
+        "summary": "useNavigate() for imperative nav, useParams() for :id params, useLoaderData() for loader results.",
+        "difficulty": 2,
+        "tags": [
+          "hooks",
+          "common"
+        ]
+      },
+      {
+        "id": "loader",
+        "type": "concept",
+        "label": "loader (data fetching)",
+        "summary": "async function loader({ params }) — runs before component renders. Return data, redirect, or Response.",
+        "difficulty": 2,
+        "tags": [
+          "data",
+          "common"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "react-router",
+        "to": "createBrowserRouter",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "react-router",
+        "to": "RouterProvider",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "createBrowserRouter",
+        "to": "Route",
+        "label": "accepts"
+      },
+      {
+        "id": "e4",
+        "from": "Route",
+        "to": "Outlet",
+        "label": "renders"
+      },
+      {
+        "id": "e5",
+        "from": "Route",
+        "to": "loader",
+        "label": "runs"
+      },
+      {
+        "id": "e6",
+        "from": "react-router",
+        "to": "Link",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "react-router",
+        "to": "hooks",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "loader",
+        "to": "hooks",
+        "label": "consumed-by"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Set up routing in a React app",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "npm install react-router"
+        },
+        {
+          "label": "Define routes",
+          "code": "import { createBrowserRouter, RouterProvider } from 'react-router'\n\nconst router = createBrowserRouter([\n  { path: '/', element: <Home /> },\n  { path: '/about', element: <About /> },\n  { path: '/users/:id', element: <UserProfile /> },\n])"
+        },
+        {
+          "label": "Mount",
+          "code": "ReactDOM.createRoot(document.getElementById('root')!).render(\n  <RouterProvider router={router} />\n)"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Nested layouts with Outlet",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Layout component",
+          "code": "function DashboardLayout() {\n  return (\n    <div className='flex'>\n      <Sidebar />\n      <main><Outlet /></main>  {/* child route renders here */}\n    </div>\n  )\n}"
+        },
+        {
+          "label": "Nested routes",
+          "code": "{\n  path: '/dashboard',\n  element: <DashboardLayout />,\n  children: [\n    { index: true, element: <Overview /> },\n    { path: 'settings', element: <Settings /> },\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "title": "Fetch data with a loader",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Define loader",
+          "code": "async function userLoader({ params }: LoaderFunctionArgs) {\n  const user = await fetchUser(params.id!)\n  if (!user) throw new Response('Not Found', { status: 404 })\n  return user\n}"
+        },
+        {
+          "label": "Attach to route",
+          "code": "{ path: '/users/:id', element: <UserProfile />, loader: userLoader }"
+        },
+        {
+          "label": "Consume in component",
+          "code": "function UserProfile() {\n  const user = useLoaderData() as User\n  return <h1>{user.name}</h1>\n}"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "7.1.1",
+    "weekly_downloads": 11000000,
+    "docs_url": "https://reactrouter.com/",
+    "repo_url": "https://github.com/remix-run/react-router"
+  }
+}

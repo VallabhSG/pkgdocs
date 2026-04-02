@@ -1,0 +1,218 @@
+{
+  "id": "boto3",
+  "ecosystem": "pypi",
+  "name": "boto3",
+  "summary": "Official AWS SDK for Python — interact with S3, EC2, DynamoDB, Lambda, and 200+ AWS services.",
+  "tags": [
+    "aws",
+    "s3",
+    "cloud",
+    "lambda",
+    "dynamodb"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "Your app needs to store user uploads in S3, send emails via SES, trigger a Lambda function, or read from DynamoDB. The AWS Console is for humans — you need to do this from code, with proper credentials, error handling, and pagination.",
+    "mental_model": "Boto3 has two layers: resource (high-level, Pythonic objects like `s3.Bucket`) and client (low-level, 1:1 mapping to AWS API calls). Resources are friendlier for common tasks; clients give you full control. Both share the same credential chain (env vars → ~/.aws/credentials → IAM role).",
+    "when_to_use": "Any Python code running against AWS services: uploading to S3, querying DynamoDB, invoking Lambda, sending SQS messages, managing EC2 instances.",
+    "when_not_to_use": "Infrastructure provisioning — use CDK, Terraform, or CloudFormation instead. If you're on Google Cloud or Azure, use their respective SDKs.",
+    "alternatives": [
+      {
+        "name": "aiobotocore",
+        "reason": "Async wrapper around botocore for asyncio apps."
+      },
+      {
+        "name": "s3fs",
+        "reason": "File-system interface over S3 — use it with pandas read_csv/to_csv on s3:// paths."
+      },
+      {
+        "name": "AWS CDK",
+        "reason": "Infrastructure as code, not runtime API calls. Different tool."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "boto3",
+        "type": "module",
+        "label": "boto3",
+        "summary": "Import as `import boto3`.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "client",
+        "type": "function",
+        "label": "boto3.client(service)",
+        "summary": "Low-level client: `s3 = boto3.client('s3')`. All operations map 1:1 to AWS API. Returns raw dicts.",
+        "difficulty": 1,
+        "tags": [
+          "client",
+          "common"
+        ]
+      },
+      {
+        "id": "resource",
+        "type": "function",
+        "label": "boto3.resource(service)",
+        "summary": "High-level resource: `s3 = boto3.resource('s3')`. Pythonic objects (Bucket, Object, Table).",
+        "difficulty": 1,
+        "tags": [
+          "resource",
+          "common"
+        ]
+      },
+      {
+        "id": "Session",
+        "type": "class",
+        "label": "boto3.Session",
+        "summary": "Manages credentials and region. Useful for switching profiles or assuming roles.",
+        "difficulty": 2,
+        "tags": [
+          "auth"
+        ]
+      },
+      {
+        "id": "s3",
+        "type": "concept",
+        "label": "S3 operations",
+        "summary": "upload_file(), download_file(), put_object(), get_object(), list_objects_v2(), generate_presigned_url().",
+        "difficulty": 1,
+        "tags": [
+          "s3",
+          "common"
+        ]
+      },
+      {
+        "id": "dynamodb",
+        "type": "concept",
+        "label": "DynamoDB operations",
+        "summary": "table.put_item(), table.get_item(), table.query(), table.scan(), batch_writer().",
+        "difficulty": 2,
+        "tags": [
+          "dynamodb"
+        ]
+      },
+      {
+        "id": "paginator",
+        "type": "class",
+        "label": "Paginator",
+        "summary": "Auto-paginate results: `paginator = client.get_paginator('list_objects_v2')`. Iterates all pages.",
+        "difficulty": 2,
+        "tags": [
+          "pagination"
+        ]
+      },
+      {
+        "id": "waiter",
+        "type": "class",
+        "label": "Waiter",
+        "summary": "Poll until a condition is met: `ec2.get_waiter('instance_running').wait(InstanceIds=[id])`.",
+        "difficulty": 2,
+        "tags": [
+          "async"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "boto3",
+        "to": "client",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "boto3",
+        "to": "resource",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "boto3",
+        "to": "Session",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "client",
+        "to": "s3",
+        "label": "accesses"
+      },
+      {
+        "id": "e5",
+        "from": "client",
+        "to": "dynamodb",
+        "label": "accesses"
+      },
+      {
+        "id": "e6",
+        "from": "client",
+        "to": "paginator",
+        "label": "method"
+      },
+      {
+        "id": "e7",
+        "from": "client",
+        "to": "waiter",
+        "label": "method"
+      },
+      {
+        "id": "e8",
+        "from": "Session",
+        "to": "client",
+        "label": "creates"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Upload a file to S3",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Connect",
+          "code": "import boto3\ns3 = boto3.client('s3')"
+        },
+        {
+          "label": "Upload",
+          "code": "s3.upload_file(\n    Filename='local_file.pdf',\n    Bucket='my-bucket',\n    Key='uploads/file.pdf'\n)"
+        },
+        {
+          "label": "Presigned URL",
+          "code": "url = s3.generate_presigned_url(\n    'get_object',\n    Params={'Bucket': 'my-bucket', 'Key': 'uploads/file.pdf'},\n    ExpiresIn=3600\n)"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Read and write DynamoDB items",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Get table",
+          "code": "dynamodb = boto3.resource('dynamodb')\ntable = dynamodb.Table('Users')"
+        },
+        {
+          "label": "Put item",
+          "code": "table.put_item(Item={\n    'user_id': '123',\n    'name': 'Alice',\n    'email': 'alice@example.com'\n})"
+        },
+        {
+          "label": "Get item",
+          "code": "resp = table.get_item(Key={'user_id': '123'})\nuser = resp.get('Item')"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "1.35.0",
+    "weekly_downloads": 28000000,
+    "docs_url": "https://boto3.amazonaws.com/v1/documentation/api/latest/index.html",
+    "repo_url": "https://github.com/boto/boto3",
+    "pypi_url": "https://pypi.org/project/boto3/"
+  }
+}

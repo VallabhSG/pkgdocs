@@ -1,0 +1,221 @@
+{
+  "id": "jotai",
+  "ecosystem": "npm",
+  "name": "jotai",
+  "summary": "Primitive and flexible state management for React based on atomic state units.",
+  "tags": [
+    "state",
+    "react",
+    "atoms",
+    "hooks",
+    "typescript"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "Redux has too much boilerplate. Context re-renders everything. Zustand is great but stores are global objects — you can't easily create per-component or per-instance state that still works across the tree. You want something simpler that feels like useState but works globally.",
+    "mental_model": "Jotai models state as atoms — tiny independent units, like useState but shared. Any component can read or write any atom. Atoms can derive from other atoms (like computed properties). The React tree only re-renders where the atom is actually used.",
+    "when_to_use": "React apps needing shared state without prop drilling, derived/computed state that updates automatically, fine-grained re-render control, per-route or per-feature isolated state.",
+    "when_not_to_use": "Non-React environments (Jotai is React-only). Complex state machines (use XState). Apps already committed to Redux with large middleware ecosystems.",
+    "alternatives": [
+      {
+        "name": "zustand",
+        "reason": "Store-based rather than atom-based, slightly simpler for flat state, easier devtools."
+      },
+      {
+        "name": "recoil",
+        "reason": "Facebook's atom model, similar concept but larger bundle and less maintained."
+      },
+      {
+        "name": "valtio",
+        "reason": "Proxy-based reactive state, mutable-style mutations, very simple API."
+      },
+      {
+        "name": "redux",
+        "reason": "Battle-tested, excellent devtools, best for very large apps with complex state logic."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "jotai",
+        "type": "module",
+        "label": "jotai",
+        "summary": "Import atom, useAtom, useAtomValue, useSetAtom from 'jotai'.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "atom",
+        "type": "function",
+        "label": "atom(initialValue)",
+        "summary": "Create an atom: `const countAtom = atom(0)`. Can be number, object, array, or derived.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "useAtom",
+        "type": "function",
+        "label": "useAtom(atom)",
+        "summary": "Like useState but global: `const [count, setCount] = useAtom(countAtom)`. Re-renders only this component.",
+        "difficulty": 1,
+        "tags": [
+          "hook",
+          "common"
+        ]
+      },
+      {
+        "id": "useAtomValue",
+        "type": "function",
+        "label": "useAtomValue(atom)",
+        "summary": "Read-only hook. Doesn't trigger re-render when atom is written to but value unchanged.",
+        "difficulty": 1,
+        "tags": [
+          "hook"
+        ]
+      },
+      {
+        "id": "useSetAtom",
+        "type": "function",
+        "label": "useSetAtom(atom)",
+        "summary": "Write-only hook. Doesn't subscribe to value changes — no re-render on read.",
+        "difficulty": 2,
+        "tags": [
+          "hook"
+        ]
+      },
+      {
+        "id": "derived",
+        "type": "concept",
+        "label": "Derived atoms",
+        "summary": "`atom(get => get(a) + get(b))` — computed value. Re-computes when dependencies change.",
+        "difficulty": 2,
+        "tags": [
+          "derived",
+          "common"
+        ]
+      },
+      {
+        "id": "async_atom",
+        "type": "concept",
+        "label": "Async atoms",
+        "summary": "`atom(async (get) => fetch(...))` — suspense-compatible async data. Works with React Suspense.",
+        "difficulty": 2,
+        "tags": [
+          "async"
+        ]
+      },
+      {
+        "id": "Provider",
+        "type": "component",
+        "label": "Provider (optional)",
+        "summary": "Wrap subtree to scope atoms: `<Provider>`. Without it, atoms use a global default store.",
+        "difficulty": 2,
+        "tags": [
+          "scoping"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "jotai",
+        "to": "atom",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "jotai",
+        "to": "useAtom",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "jotai",
+        "to": "useAtomValue",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "jotai",
+        "to": "useSetAtom",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "atom",
+        "to": "derived",
+        "label": "can-be"
+      },
+      {
+        "id": "e6",
+        "from": "atom",
+        "to": "async_atom",
+        "label": "can-be"
+      },
+      {
+        "id": "e7",
+        "from": "useAtom",
+        "to": "atom",
+        "label": "reads-writes"
+      },
+      {
+        "id": "e8",
+        "from": "jotai",
+        "to": "Provider",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Replace useState with a shared atom",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "npm install jotai"
+        },
+        {
+          "label": "Define atom",
+          "code": "// store.ts\nimport { atom } from 'jotai'\nexport const darkModeAtom = atom(false)"
+        },
+        {
+          "label": "Use in components",
+          "code": "import { useAtom } from 'jotai'\nimport { darkModeAtom } from './store'\n\nfunction Toggle() {\n  const [dark, setDark] = useAtom(darkModeAtom)\n  return <button onClick={() => setDark(v => !v)}>{dark ? '🌙' : '☀️'}</button>\n}\n\nfunction Page() {\n  const dark = useAtomValue(darkModeAtom)  // read-only, no re-render on write\n  return <div className={dark ? 'dark' : ''}><Toggle /></div>\n}"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Derived atom for computed state",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Base atoms",
+          "code": "const priceAtom = atom(100)\nconst quantityAtom = atom(3)"
+        },
+        {
+          "label": "Derived",
+          "code": "const totalAtom = atom(get => get(priceAtom) * get(quantityAtom))\n// totalAtom updates automatically when price or quantity changes"
+        },
+        {
+          "label": "Use",
+          "code": "function Total() {\n  const total = useAtomValue(totalAtom)\n  return <p>Total: ${total}</p>\n}"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "2.9.3",
+    "weekly_downloads": 900000,
+    "docs_url": "https://jotai.org/docs",
+    "repo_url": "https://github.com/pmndrs/jotai"
+  }
+}

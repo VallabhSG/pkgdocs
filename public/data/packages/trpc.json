@@ -1,0 +1,215 @@
+{
+  "id": "trpc",
+  "ecosystem": "npm",
+  "name": "@trpc/server",
+  "summary": "End-to-end type-safe APIs — share TypeScript types between server and client without code generation.",
+  "tags": [
+    "typescript",
+    "api",
+    "rpc",
+    "fullstack",
+    "nextjs"
+  ],
+  "difficulty": 3,
+  "story": {
+    "problem": "You write a REST endpoint and manually duplicate its input/output types in the frontend. They drift apart. A field rename breaks the client silently. You add Zod schemas for validation, then OpenAPI for docs, then a codegen step to sync types. It's a lot of ceremony for what's just a function call.",
+    "mental_model": "tRPC removes the HTTP abstraction between frontend and backend. You define procedures (queries/mutations) on the server, and call them from the client as if they were local async functions. TypeScript infers all types across the boundary — no schemas, no codegen, no REST at all.",
+    "when_to_use": "Full-stack TypeScript monorepos, Next.js apps where frontend and backend share a codebase, projects where you want type safety without REST/GraphQL ceremony.",
+    "when_not_to_use": "Public APIs consumed by third parties (use REST or GraphQL). Polyglot teams where some consumers aren't TypeScript. Microservices with many separate repos.",
+    "alternatives": [
+      {
+        "name": "GraphQL (Apollo)",
+        "reason": "Language-agnostic, great for complex data graphs, third-party consumers."
+      },
+      {
+        "name": "REST + OpenAPI",
+        "reason": "Standard, interoperable, better for public APIs."
+      },
+      {
+        "name": "ts-rest",
+        "reason": "REST with tRPC-like type safety — keeps HTTP semantics for when you need them."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "trpc",
+        "type": "module",
+        "label": "@trpc/server",
+        "summary": "Server-side package. Define router, procedures, context.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "initTRPC",
+        "type": "function",
+        "label": "initTRPC.create()",
+        "summary": "Initialize tRPC: `const t = initTRPC.context<Context>().create()`. Returns router/procedure builders.",
+        "difficulty": 1,
+        "tags": [
+          "setup",
+          "common"
+        ]
+      },
+      {
+        "id": "router",
+        "type": "function",
+        "label": "t.router()",
+        "summary": "Group procedures: `appRouter = t.router({ getUser: ..., createUser: ... })`. Routers are nestable.",
+        "difficulty": 1,
+        "tags": [
+          "router",
+          "common"
+        ]
+      },
+      {
+        "id": "procedure",
+        "type": "concept",
+        "label": "t.procedure (query/mutation)",
+        "summary": "query for reads, mutation for writes. `.input(zodSchema).query(({ input, ctx }) => ...)`.",
+        "difficulty": 1,
+        "tags": [
+          "procedure",
+          "common"
+        ]
+      },
+      {
+        "id": "context",
+        "type": "concept",
+        "label": "Context",
+        "summary": "Per-request data (user session, DB client) injected into every procedure via `createContext`.",
+        "difficulty": 2,
+        "tags": [
+          "context"
+        ]
+      },
+      {
+        "id": "middleware",
+        "type": "concept",
+        "label": "Middleware (.use)",
+        "summary": "`.use(authMiddleware)` — runs before procedure. Used for auth, logging, rate limiting.",
+        "difficulty": 2,
+        "tags": [
+          "middleware"
+        ]
+      },
+      {
+        "id": "client",
+        "type": "module",
+        "label": "@trpc/client",
+        "summary": "Client package. `createTRPCProxyClient` calls server procedures as typed async functions.",
+        "difficulty": 1,
+        "tags": [
+          "client",
+          "common"
+        ]
+      },
+      {
+        "id": "react",
+        "type": "module",
+        "label": "@trpc/react-query",
+        "summary": "React hooks integration: `trpc.getUser.useQuery({ id: 1 })` wraps React Query automatically.",
+        "difficulty": 2,
+        "tags": [
+          "react",
+          "common"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "trpc",
+        "to": "initTRPC",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "initTRPC",
+        "to": "router",
+        "label": "returns"
+      },
+      {
+        "id": "e3",
+        "from": "initTRPC",
+        "to": "procedure",
+        "label": "returns"
+      },
+      {
+        "id": "e4",
+        "from": "router",
+        "to": "procedure",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "procedure",
+        "to": "context",
+        "label": "receives"
+      },
+      {
+        "id": "e6",
+        "from": "procedure",
+        "to": "middleware",
+        "label": "uses"
+      },
+      {
+        "id": "e7",
+        "from": "trpc",
+        "to": "client",
+        "label": "pairs-with"
+      },
+      {
+        "id": "e8",
+        "from": "client",
+        "to": "react",
+        "label": "extended-by"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Define a tRPC router with queries",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "npm install @trpc/server @trpc/client zod"
+        },
+        {
+          "label": "Init",
+          "code": "import { initTRPC } from '@trpc/server'\nimport { z } from 'zod'\n\nconst t = initTRPC.create()\nexport const router = t.router\nexport const publicProcedure = t.procedure"
+        },
+        {
+          "label": "Define router",
+          "code": "export const appRouter = router({\n  getUser: publicProcedure\n    .input(z.object({ id: z.number() }))\n    .query(async ({ input }) => {\n      return db.users.findUnique({ where: { id: input.id } })\n    }),\n})\n\nexport type AppRouter = typeof appRouter"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Call procedures from a client",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Client setup",
+          "code": "import { createTRPCProxyClient, httpBatchLink } from '@trpc/client'\nimport type { AppRouter } from './server'\n\nconst trpc = createTRPCProxyClient<AppRouter>({\n  links: [httpBatchLink({ url: 'http://localhost:3000/trpc' })],\n})"
+        },
+        {
+          "label": "Call",
+          "code": "// Fully typed — TypeScript knows the return type\nconst user = await trpc.getUser.query({ id: 1 })\nconsole.log(user.name)  // TypeScript autocompletes .name"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "11.0.0",
+    "weekly_downloads": 1200000,
+    "docs_url": "https://trpc.io/docs",
+    "repo_url": "https://github.com/trpc/trpc"
+  }
+}

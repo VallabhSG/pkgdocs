@@ -1,0 +1,229 @@
+{
+  "id": "playwright",
+  "ecosystem": "npm",
+  "name": "@playwright/test",
+  "summary": "End-to-end browser testing framework that runs tests in Chromium, Firefox, and WebKit.",
+  "tags": [
+    "testing",
+    "e2e",
+    "browser",
+    "automation",
+    "typescript"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "Unit tests pass but users still hit broken flows. The checkout button works in isolation but breaks when combined with auth state and the cart. You need tests that run in a real browser, click real buttons, and verify what users actually see.",
+    "mental_model": "Playwright controls a real browser (Chromium, Firefox, or WebKit) via the DevTools protocol. You navigate pages, interact with elements using locators (resilient selectors), and assert on page state. Tests run in parallel across browsers. Failed tests auto-save screenshots and traces.",
+    "when_to_use": "Critical user flows (login, checkout, onboarding), cross-browser compatibility checks, visual regression testing, scraping JS-rendered content, accessibility audits.",
+    "when_not_to_use": "Unit or integration testing (Vitest/Jest is faster). Tests that don't need a real browser. Simple API testing (use supertest or fetch).",
+    "alternatives": [
+      {
+        "name": "cypress",
+        "reason": "Better DX, interactive test runner, but Chromium-only and slower on CI."
+      },
+      {
+        "name": "puppeteer",
+        "reason": "Google's CDP library, Chromium-only, no test runner built in."
+      },
+      {
+        "name": "selenium",
+        "reason": "Mature, multi-language, but verbose API and slower than Playwright."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "playwright",
+        "type": "module",
+        "label": "@playwright/test",
+        "summary": "Import test, expect, Browser, Page from '@playwright/test'.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "test",
+        "type": "function",
+        "label": "test(name, fn)",
+        "summary": "`test('login flow', async ({ page }) => {...})`. Page fixture is auto-provided.",
+        "difficulty": 1,
+        "tags": [
+          "test",
+          "common"
+        ]
+      },
+      {
+        "id": "expect",
+        "type": "function",
+        "label": "expect(locator)",
+        "summary": "Async assertions: `await expect(page.getByText('Welcome')).toBeVisible()`. Auto-waits.",
+        "difficulty": 1,
+        "tags": [
+          "assertion",
+          "common"
+        ]
+      },
+      {
+        "id": "Page",
+        "type": "class",
+        "label": "Page",
+        "summary": "Represents a browser tab. page.goto(), page.click(), page.fill(), page.screenshot(), page.waitFor*.",
+        "difficulty": 1,
+        "tags": [
+          "page",
+          "common"
+        ]
+      },
+      {
+        "id": "Locator",
+        "type": "class",
+        "label": "Locator",
+        "summary": "Resilient element selector. page.getByRole(), getByText(), getByLabel(), getByTestId(), locator(css).",
+        "difficulty": 1,
+        "tags": [
+          "locator",
+          "common"
+        ]
+      },
+      {
+        "id": "fixtures",
+        "type": "concept",
+        "label": "Fixtures",
+        "summary": "test.extend() to create custom fixtures (authenticated page, DB state). Shared across tests.",
+        "difficulty": 2,
+        "tags": [
+          "fixtures"
+        ]
+      },
+      {
+        "id": "config",
+        "type": "concept",
+        "label": "playwright.config.ts",
+        "summary": "Define projects (browser/device matrix), baseURL, retries, reporter, use options.",
+        "difficulty": 2,
+        "tags": [
+          "config"
+        ]
+      },
+      {
+        "id": "trace",
+        "type": "concept",
+        "label": "Trace Viewer",
+        "summary": "`--trace on` records a trace on failure. `npx playwright show-trace` shows step-by-step with screenshots.",
+        "difficulty": 1,
+        "tags": [
+          "debug"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "playwright",
+        "to": "test",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "playwright",
+        "to": "expect",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "test",
+        "to": "Page",
+        "label": "injects"
+      },
+      {
+        "id": "e4",
+        "from": "Page",
+        "to": "Locator",
+        "label": "returns"
+      },
+      {
+        "id": "e5",
+        "from": "expect",
+        "to": "Locator",
+        "label": "asserts-on"
+      },
+      {
+        "id": "e6",
+        "from": "test",
+        "to": "fixtures",
+        "label": "uses"
+      },
+      {
+        "id": "e7",
+        "from": "playwright",
+        "to": "config",
+        "label": "configured-by"
+      },
+      {
+        "id": "e8",
+        "from": "playwright",
+        "to": "trace",
+        "label": "produces"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Write your first E2E test",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "npm init playwright@latest"
+        },
+        {
+          "label": "Write test",
+          "code": "import { test, expect } from '@playwright/test'\n\ntest('homepage loads', async ({ page }) => {\n  await page.goto('https://example.com')\n  await expect(page).toHaveTitle(/Example/)\n  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()\n})"
+        },
+        {
+          "label": "Run",
+          "code": "npx playwright test\nnpx playwright test --ui  # interactive mode"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Test a login form",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Fill and submit",
+          "code": "test('login', async ({ page }) => {\n  await page.goto('/login')\n  await page.getByLabel('Email').fill('user@example.com')\n  await page.getByLabel('Password').fill('secret')\n  await page.getByRole('button', { name: 'Sign in' }).click()\n  await expect(page).toHaveURL('/dashboard')\n})"
+        },
+        {
+          "label": "Screenshot on pass",
+          "code": "  await page.screenshot({ path: 'dashboard.png', fullPage: true })"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "title": "Create an authenticated page fixture",
+      "difficulty": "advanced",
+      "steps": [
+        {
+          "label": "Fixture",
+          "code": "import { test as base } from '@playwright/test'\n\nconst test = base.extend<{ authedPage: Page }>({\n  authedPage: async ({ page }, use) => {\n    await page.goto('/login')\n    await page.getByLabel('Email').fill('user@test.com')\n    await page.getByLabel('Password').fill('password')\n    await page.getByRole('button', { name: 'Sign in' }).click()\n    await use(page)\n  },\n})"
+        },
+        {
+          "label": "Use fixture",
+          "code": "test('dashboard shows username', async ({ authedPage }) => {\n  await authedPage.goto('/dashboard')\n  await expect(authedPage.getByText('Welcome, User')).toBeVisible()\n})"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "1.47.2",
+    "weekly_downloads": 5200000,
+    "docs_url": "https://playwright.dev/docs",
+    "repo_url": "https://github.com/microsoft/playwright"
+  }
+}

@@ -1,0 +1,230 @@
+{
+  "id": "tailwindcss",
+  "ecosystem": "npm",
+  "name": "tailwindcss",
+  "summary": "Utility-first CSS framework — compose designs directly in markup with small, single-purpose class names.",
+  "tags": [
+    "css",
+    "styling",
+    "utility",
+    "design",
+    "frontend"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "Writing CSS means constantly context-switching between HTML and CSS files, naming things (what do you call this div?), and fighting specificity wars. Component-scoped CSS still means maintaining a separate styling system. Designs drift as CSS grows.",
+    "mental_model": "Tailwind replaces CSS files with a vocabulary of utility classes directly in your HTML. Instead of `.card { padding: 1rem; border-radius: 0.5rem; }` you write `class='p-4 rounded-lg'`. The design system (spacing, colors, typography) is defined once in config — every class enforces it.",
+    "when_to_use": "Any web project where you control the markup. Especially powerful with component frameworks (React, Vue, Svelte). Rapid prototyping, design systems, teams that want consistency without writing CSS.",
+    "when_not_to_use": "When you don't control the HTML (CMS-generated content). Projects with existing CSS codebases where a migration isn't worth it. Developers who strongly prefer semantic CSS.",
+    "alternatives": [
+      {
+        "name": "CSS Modules",
+        "reason": "Scoped CSS files without the utility class approach. Less opinionated."
+      },
+      {
+        "name": "styled-components",
+        "reason": "CSS-in-JS, keeps styles co-located with components."
+      },
+      {
+        "name": "UnoCSS",
+        "reason": "Tailwind-compatible utility engine but faster and more customizable."
+      },
+      {
+        "name": "Bootstrap",
+        "reason": "Component-first, pre-styled. Faster for prototypes, less flexible for custom designs."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "tailwindcss",
+        "type": "module",
+        "label": "tailwindcss",
+        "summary": "PostCSS plugin and CLI. `@import 'tailwindcss'` in CSS or use CLI.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "config",
+        "type": "concept",
+        "label": "tailwind.config.js",
+        "summary": "Customize theme (colors, spacing, fonts), extend with new values, add plugins. v4 uses CSS config.",
+        "difficulty": 2,
+        "tags": [
+          "config"
+        ]
+      },
+      {
+        "id": "utilities",
+        "type": "concept",
+        "label": "Utility classes",
+        "summary": "p-4, m-2, text-lg, font-bold, flex, grid, bg-blue-500, text-white, rounded-xl, shadow-md, etc.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "responsive",
+        "type": "concept",
+        "label": "Responsive prefixes",
+        "summary": "sm:, md:, lg:, xl: — `class='text-sm md:text-base lg:text-lg'`. Mobile-first breakpoints.",
+        "difficulty": 1,
+        "tags": [
+          "responsive",
+          "common"
+        ]
+      },
+      {
+        "id": "states",
+        "type": "concept",
+        "label": "State variants",
+        "summary": "hover:, focus:, active:, disabled:, dark:, group-hover: — `hover:bg-blue-700`.",
+        "difficulty": 1,
+        "tags": [
+          "states",
+          "common"
+        ]
+      },
+      {
+        "id": "arbitrary",
+        "type": "concept",
+        "label": "Arbitrary values",
+        "summary": "[value] syntax: `top-[117px]`, `text-[#1da1f2]`, `grid-cols-[1fr_2fr]`. Escape hatch for one-offs.",
+        "difficulty": 2,
+        "tags": [
+          "advanced"
+        ]
+      },
+      {
+        "id": "components",
+        "type": "concept",
+        "label": "@apply directive",
+        "summary": "Extract repeated utility combinations into CSS class: `.btn { @apply px-4 py-2 rounded font-bold; }`.",
+        "difficulty": 2,
+        "tags": [
+          "extract"
+        ]
+      },
+      {
+        "id": "plugins",
+        "type": "concept",
+        "label": "Plugins (typography, forms, animate)",
+        "summary": "@tailwindcss/typography for prose, @tailwindcss/forms for styled form elements, tailwindcss-animate.",
+        "difficulty": 2,
+        "tags": [
+          "plugins"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "tailwindcss",
+        "to": "config",
+        "label": "configured-by"
+      },
+      {
+        "id": "e2",
+        "from": "tailwindcss",
+        "to": "utilities",
+        "label": "provides"
+      },
+      {
+        "id": "e3",
+        "from": "utilities",
+        "to": "responsive",
+        "label": "prefixed-by"
+      },
+      {
+        "id": "e4",
+        "from": "utilities",
+        "to": "states",
+        "label": "prefixed-by"
+      },
+      {
+        "id": "e5",
+        "from": "utilities",
+        "to": "arbitrary",
+        "label": "extended-by"
+      },
+      {
+        "id": "e6",
+        "from": "tailwindcss",
+        "to": "components",
+        "label": "provides"
+      },
+      {
+        "id": "e7",
+        "from": "tailwindcss",
+        "to": "plugins",
+        "label": "supports"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Install Tailwind CSS v4 in a Next.js project",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "npm install tailwindcss @tailwindcss/postcss"
+        },
+        {
+          "label": "postcss.config.mjs",
+          "code": "export default { plugins: { '@tailwindcss/postcss': {} } }"
+        },
+        {
+          "label": "globals.css",
+          "code": "@import 'tailwindcss';"
+        },
+        {
+          "label": "Use",
+          "code": "<button className='bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors'>\n  Click me\n</button>"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Build a responsive card component",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Card",
+          "code": "<div className='bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow'>\n  <h3 className='text-lg font-bold text-slate-900 mb-2'>Card Title</h3>\n  <p className='text-slate-500 text-sm leading-relaxed'>Card description text.</p>\n  <button className='mt-4 text-sm font-medium text-indigo-600 hover:text-indigo-800'>Learn more →</button>\n</div>"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "title": "Dark mode with dark: variant",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Config (v3)",
+          "code": "// tailwind.config.js\nmodule.exports = { darkMode: 'class' }"
+        },
+        {
+          "label": "Toggle",
+          "code": "// Toggle dark class on <html>\ndocument.documentElement.classList.toggle('dark')"
+        },
+        {
+          "label": "Use dark: prefix",
+          "code": "<div className='bg-white dark:bg-slate-900 text-slate-900 dark:text-white'>\n  Adapts to dark mode\n</div>"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "4.0.0",
+    "weekly_downloads": 11000000,
+    "docs_url": "https://tailwindcss.com/docs",
+    "repo_url": "https://github.com/tailwindlabs/tailwindcss"
+  }
+}

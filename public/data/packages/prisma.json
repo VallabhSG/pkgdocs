@@ -1,0 +1,263 @@
+{
+  "id": "prisma",
+  "ecosystem": "npm",
+  "name": "prisma",
+  "summary": "Next-generation Node.js and TypeScript ORM with type-safe queries, migrations, and a visual schema editor.",
+  "tags": [
+    "orm",
+    "database",
+    "typescript",
+    "sql",
+    "migrations"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "Writing raw SQL is tedious and error-prone. Traditional ORMs like Sequelize give you objects but lose TypeScript types as soon as you query. You end up casting `any` everywhere and discovering schema mismatches at runtime.",
+    "mental_model": "Prisma has three parts: Schema (define models in schema.prisma), Migrate (generate SQL migrations from schema diffs), and Client (auto-generated, fully type-safe query builder). When you run `prisma generate`, it reads your schema and generates a `PrismaClient` with exact types for every model and query.",
+    "when_to_use": "TypeScript backends with relational DBs (PostgreSQL, MySQL, SQLite, SQL Server). Projects where type safety and DX matter. Next.js full-stack apps.",
+    "when_not_to_use": "If you need very complex SQL that Prisma can't express — you can fall back to $queryRaw. Pure NoSQL (use Mongoose for MongoDB). Extreme performance-critical paths (Prisma adds overhead vs raw SQL).",
+    "alternatives": [
+      {
+        "name": "drizzle-orm",
+        "reason": "Lighter, SQL-first, no code generation. Faster queries, smaller bundle, growing fast."
+      },
+      {
+        "name": "typeorm",
+        "reason": "Decorator-based ORM, similar to Java Hibernate. More mature, more complex."
+      },
+      {
+        "name": "kysely",
+        "reason": "Type-safe SQL query builder without ORM abstractions. Full SQL control with types."
+      },
+      {
+        "name": "sequelize",
+        "reason": "Older, battle-tested ORM. Less TypeScript-friendly but has a huge ecosystem."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "prisma",
+        "type": "module",
+        "label": "prisma",
+        "summary": "CLI tool: `npx prisma generate`, `prisma migrate dev`, `prisma studio`.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point",
+          "cli"
+        ]
+      },
+      {
+        "id": "schema",
+        "type": "concept",
+        "label": "schema.prisma",
+        "summary": "Declarative schema file: datasource (DB connection), generator (client config), model (table definitions).",
+        "difficulty": 1,
+        "tags": [
+          "schema",
+          "common"
+        ]
+      },
+      {
+        "id": "PrismaClient",
+        "type": "class",
+        "label": "PrismaClient",
+        "summary": "Auto-generated type-safe client. `const prisma = new PrismaClient()`. One instance per app.",
+        "difficulty": 1,
+        "tags": [
+          "client",
+          "common"
+        ]
+      },
+      {
+        "id": "find",
+        "type": "concept",
+        "label": "find* queries",
+        "summary": "prisma.user.findUnique(), findFirst(), findMany(). Accept where, select, include, orderBy, skip, take.",
+        "difficulty": 1,
+        "tags": [
+          "query",
+          "common"
+        ]
+      },
+      {
+        "id": "write",
+        "type": "concept",
+        "label": "Write operations",
+        "summary": "create(), update(), upsert(), delete(), createMany(), updateMany(), deleteMany().",
+        "difficulty": 1,
+        "tags": [
+          "mutation",
+          "common"
+        ]
+      },
+      {
+        "id": "relations",
+        "type": "concept",
+        "label": "Relations & include",
+        "summary": "Define 1:1, 1:N, N:M in schema. Query with `include: { posts: true }` for eager loading.",
+        "difficulty": 2,
+        "tags": [
+          "relations"
+        ]
+      },
+      {
+        "id": "migrate",
+        "type": "command",
+        "label": "prisma migrate dev",
+        "summary": "Compares schema to DB, generates SQL migration file, applies it. Tracks migration history.",
+        "difficulty": 1,
+        "tags": [
+          "migrations",
+          "common"
+        ]
+      },
+      {
+        "id": "studio",
+        "type": "tool",
+        "label": "Prisma Studio",
+        "summary": "`npx prisma studio` — visual DB browser in the browser. Browse, filter, edit records.",
+        "difficulty": 1,
+        "tags": [
+          "devtools"
+        ]
+      },
+      {
+        "id": "transactions",
+        "type": "concept",
+        "label": "$transaction",
+        "summary": "prisma.$transaction([...ops]) for sequential atomic ops. Or callback form for interactive transactions.",
+        "difficulty": 3,
+        "tags": [
+          "advanced"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "prisma",
+        "to": "schema",
+        "label": "reads"
+      },
+      {
+        "id": "e2",
+        "from": "prisma",
+        "to": "PrismaClient",
+        "label": "generates"
+      },
+      {
+        "id": "e3",
+        "from": "prisma",
+        "to": "migrate",
+        "label": "cli"
+      },
+      {
+        "id": "e4",
+        "from": "prisma",
+        "to": "studio",
+        "label": "cli"
+      },
+      {
+        "id": "e5",
+        "from": "PrismaClient",
+        "to": "find",
+        "label": "method"
+      },
+      {
+        "id": "e6",
+        "from": "PrismaClient",
+        "to": "write",
+        "label": "method"
+      },
+      {
+        "id": "e7",
+        "from": "PrismaClient",
+        "to": "transactions",
+        "label": "method"
+      },
+      {
+        "id": "e8",
+        "from": "schema",
+        "to": "relations",
+        "label": "defines"
+      },
+      {
+        "id": "e9",
+        "from": "find",
+        "to": "relations",
+        "label": "via-include"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Set up Prisma with PostgreSQL",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "npm install prisma @prisma/client\nnpx prisma init"
+        },
+        {
+          "label": "Schema",
+          "code": "// prisma/schema.prisma\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id    Int    @id @default(autoincrement())\n  email String @unique\n  name  String?\n}"
+        },
+        {
+          "label": "Migrate",
+          "code": "npx prisma migrate dev --name init"
+        },
+        {
+          "label": "Generate client",
+          "code": "npx prisma generate"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "CRUD operations with PrismaClient",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Setup",
+          "code": "import { PrismaClient } from '@prisma/client'\nconst prisma = new PrismaClient()"
+        },
+        {
+          "label": "Create",
+          "code": "const user = await prisma.user.create({\n  data: { email: 'alice@example.com', name: 'Alice' }\n})"
+        },
+        {
+          "label": "Read",
+          "code": "const users = await prisma.user.findMany({\n  where: { name: { contains: 'Alice' } },\n  orderBy: { id: 'desc' },\n  take: 10\n})"
+        },
+        {
+          "label": "Update",
+          "code": "await prisma.user.update({\n  where: { id: user.id },\n  data: { name: 'Alice Smith' }\n})"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "title": "Query with relations (include)",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Schema relation",
+          "code": "model Post {\n  id     Int  @id @default(autoincrement())\n  title  String\n  author User @relation(fields: [authorId], references: [id])\n  authorId Int\n}"
+        },
+        {
+          "label": "Query with include",
+          "code": "const usersWithPosts = await prisma.user.findMany({\n  include: { posts: true }\n})\n// Each user has a typed posts: Post[] array"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "5.19.1",
+    "weekly_downloads": 4800000,
+    "docs_url": "https://www.prisma.io/docs",
+    "repo_url": "https://github.com/prisma/prisma"
+  }
+}

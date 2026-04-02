@@ -1,0 +1,195 @@
+{
+  "id": "uvicorn",
+  "ecosystem": "pypi",
+  "name": "uvicorn",
+  "summary": "Lightning-fast ASGI server for running async Python web apps (FastAPI, Starlette).",
+  "tags": [
+    "asgi",
+    "server",
+    "fastapi",
+    "async",
+    "production"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "You've built a FastAPI or Starlette app. Now how do you actually run it? Flask had Flask run, but ASGI apps need an ASGI server. And when you deploy to production, you need something that handles concurrency, workers, and doesn't crash under load.",
+    "mental_model": "Uvicorn is the engine under your ASGI app. It handles TCP connections, HTTP parsing, and translates them into ASGI scope/receive/send calls that your app understands. Pair with Gunicorn (uvicorn workers) in production for multi-core scaling.",
+    "when_to_use": "Running any ASGI framework: FastAPI, Starlette, Django Channels, Litestar. Development server with hot reload. Production with Gunicorn+uvicorn workers.",
+    "when_not_to_use": "WSGI apps (Flask, Django without Channels) — use gunicorn with sync workers instead.",
+    "alternatives": [
+      {
+        "name": "gunicorn",
+        "reason": "WSGI server, but pairs with uvicorn workers for production ASGI deployments."
+      },
+      {
+        "name": "hypercorn",
+        "reason": "ASGI server with HTTP/2 and HTTP/3 support out of the box."
+      },
+      {
+        "name": "daphne",
+        "reason": "Django Channels' official ASGI server, tightly integrated with Django."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "uvicorn",
+        "type": "module",
+        "label": "uvicorn",
+        "summary": "CLI and programmatic ASGI server.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "run",
+        "type": "function",
+        "label": "uvicorn.run(app, host, port)",
+        "summary": "Programmatic start: `uvicorn.run('main:app', host='0.0.0.0', port=8000, reload=True)`.",
+        "difficulty": 1,
+        "tags": [
+          "start",
+          "common"
+        ]
+      },
+      {
+        "id": "cli",
+        "type": "command",
+        "label": "uvicorn CLI",
+        "summary": "`uvicorn main:app --reload --workers 4 --host 0.0.0.0 --port 8000`.",
+        "difficulty": 1,
+        "tags": [
+          "cli",
+          "common"
+        ]
+      },
+      {
+        "id": "reload",
+        "type": "concept",
+        "label": "--reload (dev mode)",
+        "summary": "Hot-reloads on file changes. Only use in development — not safe for production.",
+        "difficulty": 1,
+        "tags": [
+          "dev"
+        ]
+      },
+      {
+        "id": "workers",
+        "type": "concept",
+        "label": "--workers (multi-process)",
+        "summary": "Fork N worker processes. Use with Gunicorn in production: `gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app`.",
+        "difficulty": 2,
+        "tags": [
+          "production"
+        ]
+      },
+      {
+        "id": "ssl",
+        "type": "concept",
+        "label": "SSL/TLS",
+        "summary": "`--ssl-keyfile key.pem --ssl-certfile cert.pem`. In production, usually handled by nginx/load balancer.",
+        "difficulty": 2,
+        "tags": [
+          "ssl"
+        ]
+      },
+      {
+        "id": "lifespan",
+        "type": "concept",
+        "label": "Lifespan events",
+        "summary": "Uvicorn calls ASGI lifespan startup/shutdown events. FastAPI's @asynccontextmanager lifespan.",
+        "difficulty": 2,
+        "tags": [
+          "lifecycle"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "uvicorn",
+        "to": "run",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "uvicorn",
+        "to": "cli",
+        "label": "provides"
+      },
+      {
+        "id": "e3",
+        "from": "cli",
+        "to": "reload",
+        "label": "flag"
+      },
+      {
+        "id": "e4",
+        "from": "cli",
+        "to": "workers",
+        "label": "flag"
+      },
+      {
+        "id": "e5",
+        "from": "cli",
+        "to": "ssl",
+        "label": "flag"
+      },
+      {
+        "id": "e6",
+        "from": "run",
+        "to": "lifespan",
+        "label": "triggers"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Run a FastAPI app for development",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "pip install uvicorn[standard]"
+        },
+        {
+          "label": "CLI",
+          "code": "uvicorn main:app --reload --port 8000"
+        },
+        {
+          "label": "Programmatic",
+          "code": "# main.py\nimport uvicorn\nif __name__ == '__main__':\n    uvicorn.run('main:app', host='0.0.0.0', port=8000, reload=True)"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Production deploy with Gunicorn + Uvicorn workers",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "pip install gunicorn uvicorn[standard]"
+        },
+        {
+          "label": "Run",
+          "code": "gunicorn main:app \\\n  --workers 4 \\\n  --worker-class uvicorn.workers.UvicornWorker \\\n  --bind 0.0.0.0:8000"
+        },
+        {
+          "label": "Rule of thumb",
+          "code": "# workers = (2 × CPU cores) + 1\n# For 2-core machine: --workers 5"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "0.30.6",
+    "weekly_downloads": 7200000,
+    "docs_url": "https://www.uvicorn.org",
+    "repo_url": "https://github.com/encode/uvicorn",
+    "pypi_url": "https://pypi.org/project/uvicorn/"
+  }
+}

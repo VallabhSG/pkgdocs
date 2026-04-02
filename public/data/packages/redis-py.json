@@ -1,0 +1,248 @@
+{
+  "id": "redis-py",
+  "ecosystem": "pypi",
+  "name": "redis",
+  "summary": "Python client for Redis — the in-memory data store for caching, pub/sub, and queues.",
+  "tags": [
+    "redis",
+    "cache",
+    "pubsub",
+    "database",
+    "async"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "Your app hits the database on every request. Pages are slow, DB load spikes, repeated queries fetch identical data. You need a fast in-memory layer to cache results, share state between processes, or power real-time features like notifications.",
+    "mental_model": "Redis is a giant dict in RAM shared across all your processes. redis-py is the Python key to that dict. You get/set strings, hashes, lists, sorted sets, and streams — all in microseconds. Think of it as a supercharged global variable that survives restarts.",
+    "when_to_use": "Caching API responses or DB queries, session storage, rate limiting counters, pub/sub messaging, leaderboards (sorted sets), task queues (BLPOP), distributed locks.",
+    "when_not_to_use": "Primary persistent storage — Redis is RAM-first and can evict data. Complex relational queries. Large blobs (Redis excels at small, fast values).",
+    "alternatives": [
+      {
+        "name": "memcached",
+        "reason": "Simpler, faster for pure key-value caching, but no persistence or advanced data types."
+      },
+      {
+        "name": "valkey",
+        "reason": "Open-source Redis fork, fully compatible, growing after Redis license change."
+      },
+      {
+        "name": "aioredis",
+        "reason": "Merged into redis-py 4.x. Use redis.asyncio for async support now."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "redis",
+        "type": "module",
+        "label": "redis",
+        "summary": "Top-level package. Import Redis, ConnectionPool, asyncio variants.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "Redis",
+        "type": "class",
+        "label": "Redis(host, port, db)",
+        "summary": "Sync client. Thread-safe. `r = redis.Redis(host='localhost')`. All commands are methods.",
+        "difficulty": 1,
+        "tags": [
+          "client",
+          "common"
+        ]
+      },
+      {
+        "id": "asyncio_client",
+        "type": "class",
+        "label": "redis.asyncio.Redis",
+        "summary": "Async client for use with asyncio/FastAPI/aiohttp. Same API as sync client, but awaitable.",
+        "difficulty": 2,
+        "tags": [
+          "async",
+          "common"
+        ]
+      },
+      {
+        "id": "strings",
+        "type": "concept",
+        "label": "Strings (GET/SET/INCR)",
+        "summary": "r.set('key', 'val', ex=60), r.get('key'), r.incr('counter'), r.mget(['k1','k2']).",
+        "difficulty": 1,
+        "tags": [
+          "strings",
+          "common"
+        ]
+      },
+      {
+        "id": "hashes",
+        "type": "concept",
+        "label": "Hashes (HSET/HGET)",
+        "summary": "Store objects: r.hset('user:1', mapping={'name':'Alice'}), r.hgetall('user:1').",
+        "difficulty": 2,
+        "tags": [
+          "hashes"
+        ]
+      },
+      {
+        "id": "lists",
+        "type": "concept",
+        "label": "Lists (LPUSH/RPOP)",
+        "summary": "Queue pattern: LPUSH to push, RPOP/BLPOP to consume. Also LRANGE for paging.",
+        "difficulty": 2,
+        "tags": [
+          "lists"
+        ]
+      },
+      {
+        "id": "sorted_sets",
+        "type": "concept",
+        "label": "Sorted Sets (ZADD/ZRANGE)",
+        "summary": "Leaderboards: zadd('scores', {'alice': 100}), zrange('scores', 0, 9, withscores=True, rev=True).",
+        "difficulty": 2,
+        "tags": [
+          "sorted-sets"
+        ]
+      },
+      {
+        "id": "pubsub",
+        "type": "class",
+        "label": "PubSub",
+        "summary": "r.pubsub(); p.subscribe('channel'); p.get_message(). For real-time notifications.",
+        "difficulty": 3,
+        "tags": [
+          "pubsub"
+        ]
+      },
+      {
+        "id": "pipeline",
+        "type": "class",
+        "label": "Pipeline (transactions)",
+        "summary": "r.pipeline(): batch commands into one round-trip. Use with watch() for optimistic locking.",
+        "difficulty": 3,
+        "tags": [
+          "pipeline",
+          "perf"
+        ]
+      },
+      {
+        "id": "pool",
+        "type": "class",
+        "label": "ConnectionPool",
+        "summary": "Shared connection pool: `pool = redis.ConnectionPool(...); r = redis.Redis(connection_pool=pool)`.",
+        "difficulty": 2,
+        "tags": [
+          "perf"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "redis",
+        "to": "Redis",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "redis",
+        "to": "asyncio_client",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "Redis",
+        "to": "strings",
+        "label": "method"
+      },
+      {
+        "id": "e4",
+        "from": "Redis",
+        "to": "hashes",
+        "label": "method"
+      },
+      {
+        "id": "e5",
+        "from": "Redis",
+        "to": "lists",
+        "label": "method"
+      },
+      {
+        "id": "e6",
+        "from": "Redis",
+        "to": "sorted_sets",
+        "label": "method"
+      },
+      {
+        "id": "e7",
+        "from": "Redis",
+        "to": "pubsub",
+        "label": "method"
+      },
+      {
+        "id": "e8",
+        "from": "Redis",
+        "to": "pipeline",
+        "label": "method"
+      },
+      {
+        "id": "e9",
+        "from": "Redis",
+        "to": "pool",
+        "label": "uses"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Cache a slow function result",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Connect",
+          "code": "import redis, json\nr = redis.Redis(host='localhost', decode_responses=True)"
+        },
+        {
+          "label": "Cache wrapper",
+          "code": "def get_user(user_id):\n    key = f'user:{user_id}'\n    cached = r.get(key)\n    if cached:\n        return json.loads(cached)\n    user = db.fetch_user(user_id)  # slow\n    r.set(key, json.dumps(user), ex=300)  # 5min TTL\n    return user"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Rate limiting with INCR + EXPIRE",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Rate limiter",
+          "code": "def is_rate_limited(ip: str, limit=100, window=60) -> bool:\n    key = f'rl:{ip}'\n    count = r.incr(key)\n    if count == 1:\n        r.expire(key, window)  # set TTL on first hit\n    return count > limit"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "title": "Async Redis with FastAPI",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Async client",
+          "code": "import redis.asyncio as aioredis\nfrom fastapi import FastAPI\n\napp = FastAPI()\nr = aioredis.Redis(host='localhost', decode_responses=True)"
+        },
+        {
+          "label": "Use in route",
+          "code": "@app.get('/cache/{key}')\nasync def get_cache(key: str):\n    value = await r.get(key)\n    return {'value': value}"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "5.0.8",
+    "weekly_downloads": 8500000,
+    "docs_url": "https://redis-py.readthedocs.io",
+    "repo_url": "https://github.com/redis/redis-py",
+    "pypi_url": "https://pypi.org/project/redis/"
+  }
+}

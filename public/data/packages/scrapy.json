@@ -1,0 +1,223 @@
+{
+  "id": "scrapy",
+  "ecosystem": "pypi",
+  "name": "Scrapy",
+  "summary": "Fast, batteries-included web scraping and crawling framework for Python.",
+  "tags": [
+    "scraping",
+    "crawling",
+    "spider",
+    "async",
+    "pipelines"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "requests + BeautifulSoup works for one page, but you need to scrape 10,000 product pages, follow pagination, handle retries, avoid getting banned, store results to a database, and run it on a schedule. Doing all that by hand is a full project in itself.",
+    "mental_model": "Scrapy is a framework, not a library. You define Spiders (what to crawl and how to parse), Items (what data to extract), and Pipelines (what to do with it). Scrapy's async engine handles concurrency, retries, politeness delays, and deduplication — you just write the parsing logic.",
+    "when_to_use": "Large-scale crawling, production spiders that run regularly, structured data extraction with pipelines (to DB, CSV, JSON), sites with pagination or login.",
+    "when_not_to_use": "Single-page quick scrapes (use requests+BS4). JavaScript-heavy sites (use Playwright; or scrapy-playwright to integrate). When a proper API exists.",
+    "alternatives": [
+      {
+        "name": "requests + BS4",
+        "reason": "Simpler for one-off scrapes, but no concurrency, retries, or pipelines built in."
+      },
+      {
+        "name": "playwright",
+        "reason": "Required for JS-rendered pages; can be integrated with Scrapy via scrapy-playwright."
+      },
+      {
+        "name": "apify",
+        "reason": "Managed scraping platform — handles infrastructure, proxies, and scheduling for you."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "scrapy",
+        "type": "module",
+        "label": "scrapy",
+        "summary": "Framework package. Import Spider, Item, Field, Request, etc.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "Spider",
+        "type": "class",
+        "label": "scrapy.Spider",
+        "summary": "Base class for all spiders. Define name, start_urls, and parse() to extract data and yield more Requests.",
+        "difficulty": 1,
+        "tags": [
+          "spider",
+          "common"
+        ]
+      },
+      {
+        "id": "CrawlSpider",
+        "type": "class",
+        "label": "CrawlSpider + Rules",
+        "summary": "Auto-follows links matching Rules/LinkExtractors. Good for crawling whole sites.",
+        "difficulty": 2,
+        "tags": [
+          "spider"
+        ]
+      },
+      {
+        "id": "Request",
+        "type": "class",
+        "label": "scrapy.Request",
+        "summary": "Represents a URL to fetch. Yield from parse() to queue more pages. Supports callback, meta, headers.",
+        "difficulty": 1,
+        "tags": [
+          "request"
+        ]
+      },
+      {
+        "id": "Response",
+        "type": "class",
+        "label": "Response",
+        "summary": "Scrapy response object. .css(), .xpath() for selecting. .follow() for relative links. .text, .url.",
+        "difficulty": 1,
+        "tags": [
+          "response",
+          "common"
+        ]
+      },
+      {
+        "id": "Item",
+        "type": "class",
+        "label": "scrapy.Item",
+        "summary": "Dict-like container for scraped data. Defines allowed fields. Passed through Pipelines.",
+        "difficulty": 1,
+        "tags": [
+          "data"
+        ]
+      },
+      {
+        "id": "Pipeline",
+        "type": "concept",
+        "label": "Item Pipelines",
+        "summary": "Process Items after extraction: validate, deduplicate, save to DB or file. Defined in pipelines.py.",
+        "difficulty": 2,
+        "tags": [
+          "pipeline"
+        ]
+      },
+      {
+        "id": "Middleware",
+        "type": "concept",
+        "label": "Middlewares",
+        "summary": "Downloader middlewares: user-agent rotation, proxy handling, retry logic, cookies.",
+        "difficulty": 3,
+        "tags": [
+          "middleware"
+        ]
+      },
+      {
+        "id": "settings",
+        "type": "concept",
+        "label": "Settings",
+        "summary": "settings.py controls: DOWNLOAD_DELAY, CONCURRENT_REQUESTS, ROBOTSTXT_OBEY, pipelines, middlewares.",
+        "difficulty": 2,
+        "tags": [
+          "config"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "scrapy",
+        "to": "Spider",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "scrapy",
+        "to": "CrawlSpider",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "Spider",
+        "to": "Request",
+        "label": "yields"
+      },
+      {
+        "id": "e4",
+        "from": "Request",
+        "to": "Response",
+        "label": "produces"
+      },
+      {
+        "id": "e5",
+        "from": "Response",
+        "to": "Item",
+        "label": "yields"
+      },
+      {
+        "id": "e6",
+        "from": "Item",
+        "to": "Pipeline",
+        "label": "passes-through"
+      },
+      {
+        "id": "e7",
+        "from": "scrapy",
+        "to": "Middleware",
+        "label": "supports"
+      },
+      {
+        "id": "e8",
+        "from": "scrapy",
+        "to": "settings",
+        "label": "configured-by"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Build a basic spider",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Create project",
+          "code": "scrapy startproject myproject\ncd myproject\nscrapy genspider quotes quotes.toscrape.com"
+        },
+        {
+          "label": "Write spider",
+          "code": "import scrapy\n\nclass QuotesSpider(scrapy.Spider):\n    name = 'quotes'\n    start_urls = ['https://quotes.toscrape.com']\n\n    def parse(self, response):\n        for q in response.css('div.quote'):\n            yield {\n                'text': q.css('span.text::text').get(),\n                'author': q.css('small.author::text').get(),\n            }\n        next_page = response.css('li.next a::attr(href)').get()\n        if next_page:\n            yield response.follow(next_page, self.parse)"
+        },
+        {
+          "label": "Run",
+          "code": "scrapy crawl quotes -o quotes.json"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Save items to a database via Pipeline",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Pipeline",
+          "code": "# pipelines.py\nclass DatabasePipeline:\n    def open_spider(self, spider):\n        self.db = connect_db()\n\n    def process_item(self, item, spider):\n        self.db.insert(item)\n        return item\n\n    def close_spider(self, spider):\n        self.db.close()"
+        },
+        {
+          "label": "Enable",
+          "code": "# settings.py\nITEM_PIPELINES = {'myproject.pipelines.DatabasePipeline': 300}"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "2.11.2",
+    "weekly_downloads": 1400000,
+    "docs_url": "https://docs.scrapy.org",
+    "repo_url": "https://github.com/scrapy/scrapy",
+    "pypi_url": "https://pypi.org/project/Scrapy/"
+  }
+}

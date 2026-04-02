@@ -1,0 +1,215 @@
+{
+  "id": "beautifulsoup4",
+  "ecosystem": "pypi",
+  "name": "beautifulsoup4",
+  "summary": "HTML and XML parsing library for extracting data from web pages with a simple Pythonic API.",
+  "tags": [
+    "scraping",
+    "html",
+    "parsing",
+    "web",
+    "xml"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "You've fetched HTML from a web page with requests. Now you're staring at a wall of tags, trying to extract product prices, article text, or table rows with regex. Regex breaks the moment the site adds a CSS class. You need a proper HTML tree parser.",
+    "mental_model": "BeautifulSoup turns an HTML string into a traversable tree. Every tag becomes an object with .text, .attrs, and child/parent navigation. You find elements by tag name, CSS class, id, or attribute — like jQuery selectors but in Python.",
+    "when_to_use": "Scraping static HTML pages, extracting data from email templates, parsing HTML in tests, processing XML feeds, cleaning up messy HTML.",
+    "when_not_to_use": "JavaScript-rendered pages (use Playwright or Selenium). High-volume scraping at scale (use Scrapy). When the site has a proper API — always prefer the API.",
+    "alternatives": [
+      {
+        "name": "lxml",
+        "reason": "Much faster for large documents. BS4 can use lxml as its parser backend."
+      },
+      {
+        "name": "parsel",
+        "reason": "Scrapy's selector library — XPath and CSS selectors, faster than BS4."
+      },
+      {
+        "name": "playwright",
+        "reason": "Needed for JS-rendered pages; can extract from the live DOM."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "bs4",
+        "type": "module",
+        "label": "bs4",
+        "summary": "Import as `from bs4 import BeautifulSoup`.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "BeautifulSoup",
+        "type": "class",
+        "label": "BeautifulSoup(html, parser)",
+        "summary": "Main class. `soup = BeautifulSoup(html, 'html.parser')`. Parsers: html.parser, lxml, html5lib.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "find",
+        "type": "function",
+        "label": ".find(tag, attrs)",
+        "summary": "Find first matching element: `soup.find('h1')`, `soup.find('div', class_='price')`.",
+        "difficulty": 1,
+        "tags": [
+          "search",
+          "common"
+        ]
+      },
+      {
+        "id": "find_all",
+        "type": "function",
+        "label": ".find_all(tag, attrs)",
+        "summary": "Find all matching elements. Returns a list. Accepts tag, attrs dict, CSS class, id, string.",
+        "difficulty": 1,
+        "tags": [
+          "search",
+          "common"
+        ]
+      },
+      {
+        "id": "select",
+        "type": "function",
+        "label": ".select(css_selector)",
+        "summary": "CSS selector syntax: `soup.select('table.data tr td')`. Returns list like find_all.",
+        "difficulty": 2,
+        "tags": [
+          "search",
+          "common"
+        ]
+      },
+      {
+        "id": "Tag",
+        "type": "class",
+        "label": "Tag object",
+        "summary": "Represents an HTML element. .text (inner text), .attrs (dict), .get('href'), .children, .parent.",
+        "difficulty": 1,
+        "tags": [
+          "element"
+        ]
+      },
+      {
+        "id": "NavigableString",
+        "type": "class",
+        "label": "NavigableString",
+        "summary": "A text node inside a tag. Accessed via tag.string or iterating tag.children.",
+        "difficulty": 2,
+        "tags": [
+          "element"
+        ]
+      },
+      {
+        "id": "navigate",
+        "type": "concept",
+        "label": "Tree Navigation",
+        "summary": ".parent, .children, .next_sibling, .previous_sibling, .descendants for walking the tree.",
+        "difficulty": 2,
+        "tags": [
+          "navigation"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "bs4",
+        "to": "BeautifulSoup",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "BeautifulSoup",
+        "to": "find",
+        "label": "method"
+      },
+      {
+        "id": "e3",
+        "from": "BeautifulSoup",
+        "to": "find_all",
+        "label": "method"
+      },
+      {
+        "id": "e4",
+        "from": "BeautifulSoup",
+        "to": "select",
+        "label": "method"
+      },
+      {
+        "id": "e5",
+        "from": "find",
+        "to": "Tag",
+        "label": "returns"
+      },
+      {
+        "id": "e6",
+        "from": "find_all",
+        "to": "Tag",
+        "label": "returns"
+      },
+      {
+        "id": "e7",
+        "from": "Tag",
+        "to": "NavigableString",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "Tag",
+        "to": "navigate",
+        "label": "supports"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Scrape article titles from a news page",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Fetch",
+          "code": "import requests\nfrom bs4 import BeautifulSoup\n\nhtml = requests.get('https://news.ycombinator.com').text\nsoup = BeautifulSoup(html, 'html.parser')"
+        },
+        {
+          "label": "Extract",
+          "code": "titles = soup.select('span.titleline > a')\nfor t in titles:\n    print(t.text, t['href'])"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Parse a table into a list of dicts",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Find table",
+          "code": "table = soup.find('table', id='data-table')\nrows = table.find_all('tr')"
+        },
+        {
+          "label": "Extract headers",
+          "code": "headers = [th.text.strip() for th in rows[0].find_all('th')]"
+        },
+        {
+          "label": "Extract rows",
+          "code": "data = []\nfor row in rows[1:]:\n    cells = [td.text.strip() for td in row.find_all('td')]\n    data.append(dict(zip(headers, cells)))"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "4.12.3",
+    "weekly_downloads": 9000000,
+    "docs_url": "https://www.crummy.com/software/BeautifulSoup/bs4/doc/",
+    "repo_url": "https://github.com/waylan/beautifulsoup",
+    "pypi_url": "https://pypi.org/project/beautifulsoup4/"
+  }
+}

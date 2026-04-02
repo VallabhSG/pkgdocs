@@ -1,0 +1,278 @@
+{
+  "id": "celery",
+  "ecosystem": "pypi",
+  "name": "celery",
+  "summary": "Distributed task queue for async and scheduled background jobs in Python.",
+  "tags": [
+    "async",
+    "queue",
+    "tasks",
+    "background",
+    "distributed"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "Web requests need to return fast. Sending emails, resizing images, calling slow APIs, or running ML inference inside a request handler blocks the server and degrades UX. You need a way to hand off work to a separate process and respond immediately.",
+    "mental_model": "Celery is like a post office. Your web app drops tasks into a mailbox (broker — usually Redis or RabbitMQ). Worker processes pick them up, execute them, and optionally drop results in a result backend. The web app never waits.",
+    "when_to_use": "Sending emails or notifications, processing uploads, running scheduled cron-style jobs, chaining multi-step workflows, fan-out parallel processing.",
+    "when_not_to_use": "Simple scripts that don't serve web traffic — just use asyncio or threading. If you need sub-millisecond latency, Celery's overhead is too high. For tiny projects, consider RQ (simpler) or FastAPI BackgroundTasks.",
+    "alternatives": [
+      {
+        "name": "RQ",
+        "reason": "Simpler Redis-backed queue, no broker config, great for smaller projects."
+      },
+      {
+        "name": "Dramatiq",
+        "reason": "More reliable at-least-once semantics, simpler API, growing popularity."
+      },
+      {
+        "name": "arq",
+        "reason": "Async-first, asyncio-native, minimal overhead. Good for FastAPI/aiohttp stacks."
+      },
+      {
+        "name": "Huey",
+        "reason": "Lightweight, single-file, Redis-backed. Easy to embed in small Django/Flask apps."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "celery",
+        "type": "module",
+        "label": "celery",
+        "summary": "Top-level package. Import Celery app class.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "Celery",
+        "type": "class",
+        "label": "Celery(app)",
+        "summary": "App factory: `app = Celery('myapp', broker='redis://...')`. Holds config, task registry, beat scheduler.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "task",
+        "type": "decorator",
+        "label": "@app.task",
+        "summary": "Turn any function into a Celery task. Adds .delay(), .apply_async(), .s() methods.",
+        "difficulty": 1,
+        "tags": [
+          "task",
+          "common"
+        ]
+      },
+      {
+        "id": "delay",
+        "type": "function",
+        "label": ".delay(*args)",
+        "summary": "Shortcut to enqueue a task: `add.delay(1, 2)`. Returns AsyncResult.",
+        "difficulty": 1,
+        "tags": [
+          "enqueue",
+          "common"
+        ]
+      },
+      {
+        "id": "apply_async",
+        "type": "function",
+        "label": ".apply_async(args, kwargs, countdown, eta)",
+        "summary": "Full task dispatch with options: delay countdown, ETA, expiry, queue routing.",
+        "difficulty": 2,
+        "tags": [
+          "enqueue"
+        ]
+      },
+      {
+        "id": "AsyncResult",
+        "type": "class",
+        "label": "AsyncResult",
+        "summary": "Handle to a running/completed task. .get() blocks for result, .state, .ready(), .failed().",
+        "difficulty": 2,
+        "tags": [
+          "result"
+        ]
+      },
+      {
+        "id": "chain",
+        "type": "function",
+        "label": "chain / chord / group",
+        "summary": "Canvas primitives: chain(a, b) pipes output, group([a, b]) runs in parallel, chord waits for group.",
+        "difficulty": 3,
+        "tags": [
+          "workflow"
+        ]
+      },
+      {
+        "id": "beat",
+        "type": "concept",
+        "label": "Celery Beat (scheduler)",
+        "summary": "Periodic task scheduler. Define CELERYBEAT_SCHEDULE or use django-celery-beat for DB-backed schedules.",
+        "difficulty": 2,
+        "tags": [
+          "scheduling"
+        ]
+      },
+      {
+        "id": "broker",
+        "type": "concept",
+        "label": "Broker (Redis/RabbitMQ)",
+        "summary": "Message transport. Redis is easiest; RabbitMQ is more durable. Set via broker_url.",
+        "difficulty": 2,
+        "tags": [
+          "config"
+        ]
+      },
+      {
+        "id": "worker",
+        "type": "concept",
+        "label": "Worker process",
+        "summary": "`celery -A myapp worker`. Executes tasks. Concurrency via prefork, eventlet, or gevent.",
+        "difficulty": 1,
+        "tags": [
+          "runtime"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "celery",
+        "to": "Celery",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "Celery",
+        "to": "task",
+        "label": "decorator"
+      },
+      {
+        "id": "e3",
+        "from": "task",
+        "to": "delay",
+        "label": "method"
+      },
+      {
+        "id": "e4",
+        "from": "task",
+        "to": "apply_async",
+        "label": "method"
+      },
+      {
+        "id": "e5",
+        "from": "delay",
+        "to": "AsyncResult",
+        "label": "returns"
+      },
+      {
+        "id": "e6",
+        "from": "apply_async",
+        "to": "AsyncResult",
+        "label": "returns"
+      },
+      {
+        "id": "e7",
+        "from": "Celery",
+        "to": "chain",
+        "label": "supports"
+      },
+      {
+        "id": "e8",
+        "from": "Celery",
+        "to": "beat",
+        "label": "includes"
+      },
+      {
+        "id": "e9",
+        "from": "Celery",
+        "to": "broker",
+        "label": "connects-to"
+      },
+      {
+        "id": "e10",
+        "from": "broker",
+        "to": "worker",
+        "label": "feeds"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Define and run your first background task",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "pip install celery redis",
+          "explanation": "Also install a broker — Redis is the simplest choice."
+        },
+        {
+          "label": "Create app",
+          "code": "from celery import Celery\napp = Celery('tasks', broker='redis://localhost:6379/0')"
+        },
+        {
+          "label": "Define task",
+          "code": "@app.task\ndef send_email(to, subject):\n    # your email logic\n    print(f'Sending {subject} to {to}')"
+        },
+        {
+          "label": "Enqueue",
+          "code": "# In your web handler:\nsend_email.delay('user@example.com', 'Welcome!')"
+        },
+        {
+          "label": "Start worker",
+          "code": "celery -A tasks worker --loglevel=info"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Schedule a periodic task with Celery Beat",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Config",
+          "code": "from celery.schedules import crontab\napp.conf.beat_schedule = {\n    'daily-report': {\n        'task': 'tasks.generate_report',\n        'schedule': crontab(hour=9, minute=0),\n    },\n}"
+        },
+        {
+          "label": "Define task",
+          "code": "@app.task\ndef generate_report():\n    print('Generating daily report...')"
+        },
+        {
+          "label": "Start beat",
+          "code": "celery -A tasks beat --loglevel=info"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "title": "Chain tasks into a pipeline",
+      "difficulty": "advanced",
+      "steps": [
+        {
+          "label": "Define tasks",
+          "code": "@app.task\ndef fetch_data(url): ...\n\n@app.task\ndef process(data): ...\n\n@app.task\ndef save(result): ..."
+        },
+        {
+          "label": "Chain",
+          "code": "from celery import chain\nresult = chain(fetch_data.s(url), process.s(), save.s()).delay()\nprint(result.get())"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "5.4.0",
+    "weekly_downloads": 3200000,
+    "docs_url": "https://docs.celeryq.dev",
+    "repo_url": "https://github.com/celery/celery",
+    "pypi_url": "https://pypi.org/project/celery/"
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "id": "drizzle-orm",
+  "ecosystem": "npm",
+  "name": "drizzle-orm",
+  "summary": "Lightweight TypeScript ORM with SQL-first design, zero magic, and edge-runtime support.",
+  "tags": [
+    "orm",
+    "typescript",
+    "sql",
+    "database",
+    "edge"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "Prisma's generated client adds bundle weight and requires a sidecar query engine. You want type-safe SQL queries that are transparent (you can see the SQL), work at the edge, and don't have a heavy codegen step.",
+    "mental_model": "Drizzle is a thin TypeScript layer over SQL. You define tables as TypeScript objects, and queries look almost like SQL. `db.select().from(users).where(eq(users.id, 1))` compiles to `SELECT * FROM users WHERE id = 1`. No magic, no query engine — just your DB driver.",
+    "when_to_use": "Edge runtimes (Cloudflare Workers, Vercel Edge), projects where you want full SQL control with types, lighter bundle size than Prisma, serverless environments.",
+    "when_not_to_use": "If you prefer Prisma's schema-first DX and Studio. Complex ORM features like polymorphism. Teams more comfortable with ActiveRecord-style ORMs.",
+    "alternatives": [
+      {
+        "name": "prisma",
+        "reason": "More DX polish, visual Studio, better for traditional Node.js backends."
+      },
+      {
+        "name": "kysely",
+        "reason": "Even more SQL-first, no schema definition layer, just a type-safe query builder."
+      },
+      {
+        "name": "typeorm",
+        "reason": "Decorator-based, more features but heavier and less type-safe."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "drizzle-orm",
+        "type": "module",
+        "label": "drizzle-orm",
+        "summary": "Core package. Provides query builder and schema definition utilities.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "schema",
+        "type": "concept",
+        "label": "Schema definition (pgTable / sqliteTable)",
+        "summary": "Define tables as TS objects: `const users = pgTable('users', { id: serial('id').primaryKey() })`.",
+        "difficulty": 1,
+        "tags": [
+          "schema",
+          "common"
+        ]
+      },
+      {
+        "id": "drizzle",
+        "type": "function",
+        "label": "drizzle(driver)",
+        "summary": "Create DB instance: `const db = drizzle(pool)`. Wraps your DB driver (pg, better-sqlite3, libsql).",
+        "difficulty": 1,
+        "tags": [
+          "connection",
+          "common"
+        ]
+      },
+      {
+        "id": "select",
+        "type": "function",
+        "label": "db.select()",
+        "summary": "Type-safe SELECT: `db.select().from(users).where(eq(users.id, 1)).limit(10)`.",
+        "difficulty": 1,
+        "tags": [
+          "query",
+          "common"
+        ]
+      },
+      {
+        "id": "insert",
+        "type": "function",
+        "label": "db.insert()",
+        "summary": "`db.insert(users).values({ name: 'Alice' }).returning()`.",
+        "difficulty": 1,
+        "tags": [
+          "mutation"
+        ]
+      },
+      {
+        "id": "update_delete",
+        "type": "function",
+        "label": "db.update() / db.delete()",
+        "summary": "Type-safe updates and deletes with where clauses.",
+        "difficulty": 1,
+        "tags": [
+          "mutation"
+        ]
+      },
+      {
+        "id": "relations",
+        "type": "concept",
+        "label": "relations() helper",
+        "summary": "Define JS-side relations for query joins: `relations(users, ({ many }) => ({ posts: many(posts) }))`.",
+        "difficulty": 2,
+        "tags": [
+          "relations"
+        ]
+      },
+      {
+        "id": "migrate",
+        "type": "concept",
+        "label": "drizzle-kit migrate",
+        "summary": "`drizzle-kit generate` creates SQL migration files from schema. `drizzle-kit push` for dev.",
+        "difficulty": 2,
+        "tags": [
+          "migrations"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "drizzle-orm",
+        "to": "schema",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "drizzle-orm",
+        "to": "drizzle",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "drizzle",
+        "to": "select",
+        "label": "method"
+      },
+      {
+        "id": "e4",
+        "from": "drizzle",
+        "to": "insert",
+        "label": "method"
+      },
+      {
+        "id": "e5",
+        "from": "drizzle",
+        "to": "update_delete",
+        "label": "method"
+      },
+      {
+        "id": "e6",
+        "from": "schema",
+        "to": "relations",
+        "label": "uses"
+      },
+      {
+        "id": "e7",
+        "from": "drizzle-orm",
+        "to": "migrate",
+        "label": "tooling"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Define a schema and query it",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Install",
+          "code": "npm install drizzle-orm pg\nnpm install -D drizzle-kit @types/pg"
+        },
+        {
+          "label": "Schema",
+          "code": "import { pgTable, serial, text, integer } from 'drizzle-orm/pg-core'\n\nexport const users = pgTable('users', {\n  id: serial('id').primaryKey(),\n  name: text('name').notNull(),\n  age: integer('age'),\n})"
+        },
+        {
+          "label": "Connect + query",
+          "code": "import { drizzle } from 'drizzle-orm/node-postgres'\nimport { Pool } from 'pg'\nimport { users } from './schema'\nimport { eq } from 'drizzle-orm'\n\nconst pool = new Pool({ connectionString: process.env.DATABASE_URL })\nconst db = drizzle(pool)\n\nconst result = await db.select().from(users).where(eq(users.id, 1))"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Insert and update records",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Insert",
+          "code": "const newUser = await db.insert(users)\n  .values({ name: 'Alice', age: 30 })\n  .returning()"
+        },
+        {
+          "label": "Update",
+          "code": "await db.update(users)\n  .set({ age: 31 })\n  .where(eq(users.id, newUser[0].id))"
+        },
+        {
+          "label": "Delete",
+          "code": "await db.delete(users).where(eq(users.id, 99))"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "0.33.0",
+    "weekly_downloads": 1900000,
+    "docs_url": "https://orm.drizzle.team",
+    "repo_url": "https://github.com/drizzle-team/drizzle-orm"
+  }
+}

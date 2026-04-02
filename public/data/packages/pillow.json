@@ -1,0 +1,223 @@
+{
+  "id": "pillow",
+  "ecosystem": "pypi",
+  "name": "Pillow",
+  "summary": "Friendly Python Imaging Library fork for opening, manipulating, and saving image files.",
+  "tags": [
+    "image",
+    "PIL",
+    "graphics",
+    "thumbnail",
+    "convert"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "You need to resize user avatars, add watermarks, convert uploaded PNGs to WebP, extract EXIF data, or generate thumbnails — all server-side without a heavy graphics toolkit.",
+    "mental_model": "Pillow represents any image as an Image object with a mode (RGB, RGBA, L), size (width, height), and pixel data. Operations return new Image objects (immutable pipeline). When done, call .save() or .tobytes().",
+    "when_to_use": "Resizing/cropping/converting images, compositing overlays, generating thumbnails, basic drawing, reading EXIF metadata, converting between formats.",
+    "when_not_to_use": "High-performance batch processing at scale (use ImageMagick or libvips/pyvips). Video processing. Complex image recognition (use OpenCV or ML models).",
+    "alternatives": [
+      {
+        "name": "pyvips",
+        "reason": "10-100x faster for large images, low memory. Steeper API but worth it for scale."
+      },
+      {
+        "name": "opencv-python",
+        "reason": "Computer vision operations, real-time video, more ML-friendly."
+      },
+      {
+        "name": "wand",
+        "reason": "Python bindings for ImageMagick — broader format support, more effects."
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "PIL",
+        "type": "module",
+        "label": "PIL (Pillow)",
+        "summary": "Import from PIL: `from PIL import Image, ImageDraw, ImageFilter`.",
+        "difficulty": 1,
+        "tags": [
+          "entry-point"
+        ]
+      },
+      {
+        "id": "Image",
+        "type": "module",
+        "label": "PIL.Image",
+        "summary": "Core module. Image.open(), Image.new(), Image.fromarray(). Returns Image objects.",
+        "difficulty": 1,
+        "tags": [
+          "core",
+          "common"
+        ]
+      },
+      {
+        "id": "Image_obj",
+        "type": "class",
+        "label": "Image object",
+        "summary": "Represents a raster image. .size, .mode, .format, .resize(), .crop(), .rotate(), .convert(), .save().",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "ImageDraw",
+        "type": "module",
+        "label": "PIL.ImageDraw",
+        "summary": "Draw lines, rectangles, ellipses, text on an image. `draw = ImageDraw.Draw(img)`.",
+        "difficulty": 2,
+        "tags": [
+          "draw"
+        ]
+      },
+      {
+        "id": "ImageFilter",
+        "type": "module",
+        "label": "PIL.ImageFilter",
+        "summary": "Filters: BLUR, SHARPEN, EDGE_ENHANCE, GaussianBlur(radius). Apply with img.filter(...).",
+        "difficulty": 2,
+        "tags": [
+          "filter"
+        ]
+      },
+      {
+        "id": "ImageFont",
+        "type": "module",
+        "label": "PIL.ImageFont",
+        "summary": "Load fonts for text rendering: ImageFont.truetype('font.ttf', 24).",
+        "difficulty": 2,
+        "tags": [
+          "text"
+        ]
+      },
+      {
+        "id": "ImageOps",
+        "type": "module",
+        "label": "PIL.ImageOps",
+        "summary": "High-level operations: fit(), contain(), grayscale(), invert(), autocontrast().",
+        "difficulty": 2,
+        "tags": [
+          "ops"
+        ]
+      },
+      {
+        "id": "ExifTags",
+        "type": "module",
+        "label": "PIL.ExifTags",
+        "summary": "Read EXIF metadata: `img._getexif()` returns raw EXIF dict; use ExifTags.TAGS to decode keys.",
+        "difficulty": 3,
+        "tags": [
+          "exif"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "PIL",
+        "to": "Image",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "PIL",
+        "to": "ImageDraw",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "PIL",
+        "to": "ImageFilter",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "PIL",
+        "to": "ImageFont",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "PIL",
+        "to": "ImageOps",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "Image",
+        "to": "Image_obj",
+        "label": "returns"
+      },
+      {
+        "id": "e7",
+        "from": "Image_obj",
+        "to": "ImageFilter",
+        "label": "uses"
+      },
+      {
+        "id": "e8",
+        "from": "ImageDraw",
+        "to": "ImageFont",
+        "label": "uses"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Resize and save a thumbnail",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Open",
+          "code": "from PIL import Image\nimg = Image.open('photo.jpg')"
+        },
+        {
+          "label": "Thumbnail",
+          "code": "img.thumbnail((400, 400))  # preserves aspect ratio\nimg.save('thumb.jpg', quality=85, optimize=True)"
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "title": "Add a text watermark",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Setup",
+          "code": "from PIL import Image, ImageDraw, ImageFont\nimg = Image.open('photo.jpg').convert('RGBA')"
+        },
+        {
+          "label": "Overlay",
+          "code": "overlay = Image.new('RGBA', img.size, (0,0,0,0))\ndraw = ImageDraw.Draw(overlay)\nfont = ImageFont.truetype('arial.ttf', 36)\ndraw.text((20, 20), '© MyBrand', fill=(255,255,255,128), font=font)"
+        },
+        {
+          "label": "Merge",
+          "code": "result = Image.alpha_composite(img, overlay)\nresult.convert('RGB').save('watermarked.jpg')"
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "title": "Batch convert PNG to WebP",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Batch",
+          "code": "from pathlib import Path\nfrom PIL import Image\n\nfor p in Path('images').glob('*.png'):\n    img = Image.open(p)\n    img.save(p.with_suffix('.webp'), 'WEBP', quality=80)"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "version": "10.4.0",
+    "weekly_downloads": 12000000,
+    "docs_url": "https://pillow.readthedocs.io",
+    "repo_url": "https://github.com/python-pillow/Pillow",
+    "pypi_url": "https://pypi.org/project/Pillow/"
+  }
+}
