@@ -3,6 +3,7 @@
 import { use, useEffect, useState, useCallback } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
+import { BookOpen, Play, Map, Zap, ChevronLeft } from "lucide-react";
 import type { Package, ViewMode } from "@/lib/types";
 import PackageSidebar from "@/components/PackageSidebar";
 import StoryView from "@/components/StoryView";
@@ -13,25 +14,64 @@ const ApiMapView = dynamic(() => import("@/components/ApiMapView"), { ssr: false
 const DemoView   = dynamic(() => import("@/components/DemoView"),   { ssr: false });
 
 const viewVariants = {
-  enter: (dir: number) => ({ opacity: 0, x: dir * 40 }),
-  center: { opacity: 1, x: 0 },
-  exit: (dir: number) => ({ opacity: 0, x: dir * -40 }),
+  enter: (dir: number) => ({ opacity: 0, x: dir * 32, filter: "blur(4px)" }),
+  center: { opacity: 1, x: 0, filter: "blur(0px)" },
+  exit:  (dir: number) => ({ opacity: 0, x: dir * -32, filter: "blur(4px)" }),
 };
 
 const viewOrder: ViewMode[] = ["story", "demo", "graph", "tasks"];
 
-const mobileViewConfig: { id: ViewMode; label: string; icon: string }[] = [
-  { id: "story", label: "Story",   icon: "📖" },
-  { id: "demo",  label: "Demo",    icon: "▶" },
-  { id: "graph", label: "API Map", icon: "🗺" },
-  { id: "tasks", label: "Recipes", icon: "⚡" },
+const mobileViewConfig: { id: ViewMode; label: string; icon: React.ReactNode }[] = [
+  { id: "story", label: "Story",   icon: <BookOpen className="w-4 h-4" /> },
+  { id: "demo",  label: "Demo",    icon: <Play className="w-4 h-4" /> },
+  { id: "graph", label: "API Map", icon: <Map className="w-4 h-4" /> },
+  { id: "tasks", label: "Recipes", icon: <Zap className="w-4 h-4" /> },
 ];
 
-export default function PackagePage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+function Skeleton() {
+  return (
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-slate-50">
+      {/* Sidebar skeleton */}
+      <div className="hidden md:flex w-64 flex-shrink-0 flex-col bg-white border-r border-slate-200">
+        <div className="bg-slate-950 px-5 pt-5 pb-6 space-y-3">
+          <div className="h-3 w-20 bg-slate-800 rounded animate-pulse" />
+          <div className="h-5 w-16 bg-slate-700 rounded-full animate-pulse" />
+          <div className="h-6 w-32 bg-slate-700 rounded animate-pulse" />
+          <div className="h-3 w-full bg-slate-800 rounded animate-pulse" />
+          <div className="h-3 w-3/4 bg-slate-800 rounded animate-pulse" />
+          <div className="flex gap-3 pt-1">
+            <div className="h-3 w-16 bg-slate-800 rounded animate-pulse" />
+            <div className="h-3 w-12 bg-slate-800 rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="px-3 py-4 space-y-2 border-b border-slate-100">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-9 bg-slate-100 rounded-lg animate-pulse" />
+          ))}
+        </div>
+        <div className="px-5 py-4 space-y-2">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-3 bg-slate-100 rounded animate-pulse" />
+          ))}
+        </div>
+      </div>
+      {/* Content skeleton */}
+      <div className="flex-1 p-8 space-y-5">
+        <div className="h-8 w-48 bg-slate-200 rounded animate-pulse" />
+        <div className="h-4 w-full bg-slate-100 rounded animate-pulse" />
+        <div className="h-4 w-5/6 bg-slate-100 rounded animate-pulse" />
+        <div className="h-4 w-4/6 bg-slate-100 rounded animate-pulse" />
+        <div className="mt-8 grid grid-cols-2 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-24 bg-slate-100 rounded-xl animate-pulse" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function PackagePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const [pkg, setPkg] = useState<Package | null | undefined>(undefined);
   const [activeView, setActiveView] = useState<ViewMode>("story");
@@ -40,47 +80,39 @@ export default function PackagePage({
 
   useEffect(() => {
     fetch(`/api/packages/${slug}`)
-      .then((r) => {
-        if (!r.ok) throw new Error("Not found");
-        return r.json();
-      })
+      .then((r) => { if (!r.ok) throw new Error("Not found"); return r.json(); })
       .then(setPkg)
       .catch(() => setPkg(null));
   }, [slug]);
 
-  const changeView = useCallback(
-    (v: ViewMode) => {
-      setPrevView(activeView);
-      setActiveView(v);
-    },
-    [activeView]
-  );
+  const changeView = useCallback((v: ViewMode) => {
+    setPrevView(activeView);
+    setActiveView(v);
+  }, [activeView]);
 
-  const handleNodeFocus = useCallback(
-    (nodeId: string) => {
-      setFocusNodeId(nodeId);
-      changeView("graph");
-    },
-    [changeView]
-  );
+  const handleNodeFocus = useCallback((nodeId: string) => {
+    setFocusNodeId(nodeId);
+    changeView("graph");
+  }, [changeView]);
 
-  const direction =
-    viewOrder.indexOf(activeView) > viewOrder.indexOf(prevView) ? 1 : -1;
+  const direction = viewOrder.indexOf(activeView) > viewOrder.indexOf(prevView) ? 1 : -1;
 
-  if (pkg === undefined) {
-    return (
-      <div className="flex h-screen items-center justify-center text-slate-400 text-sm">
-        Loading…
-      </div>
-    );
-  }
+  if (pkg === undefined) return <Skeleton />;
 
   if (pkg === null) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center gap-4 text-slate-400">
-        <p className="text-lg font-medium">Package not found.</p>
-        <Link href="/" className="text-sm text-indigo-600 hover:underline">
-          ← Back to all packages
+      <div className="flex h-screen flex-col items-center justify-center gap-5 bg-slate-50">
+        <div className="text-5xl">📦</div>
+        <h1 className="text-xl font-bold text-slate-800">Package not found</h1>
+        <p className="text-sm text-slate-500">
+          <span className="font-mono bg-slate-100 px-2 py-0.5 rounded">{slug}</span> doesn&apos;t exist in pkgdocs yet.
+        </p>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          Back to all packages
         </Link>
       </div>
     );
@@ -88,46 +120,57 @@ export default function PackagePage({
 
   return (
     <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-slate-50">
-      {/* Sidebar — desktop only */}
+
+      {/* ── Sidebar (desktop) ── */}
       <div className="hidden md:block">
         <PackageSidebar pkg={pkg} activeView={activeView} onViewChange={changeView} />
       </div>
 
-      {/* Mobile top bar */}
-      <div className="md:hidden flex-shrink-0 bg-white border-b border-slate-200">
-        <div className="flex items-center gap-3 px-4 py-3">
-          <Link
-            href="/"
-            className="text-slate-400 hover:text-slate-700 transition-colors"
-            aria-label="Back to all packages"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+      {/* ── Mobile top bar ── */}
+      <div className="md:hidden flex-shrink-0 bg-slate-950 text-white">
+        {/* Package header row */}
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800">
+          <Link href="/" className="text-slate-400 hover:text-white transition-colors" aria-label="Back">
+            <ChevronLeft className="w-5 h-5" />
           </Link>
-          <span className="font-bold font-mono text-slate-900">{pkg.name}</span>
-          <span className="text-xs text-slate-400 font-mono">{pkg.meta.version}</span>
+          <div className="flex items-center gap-2 min-w-0">
+            <span className={`flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+              pkg.ecosystem === "npm"
+                ? "bg-rose-900/40 text-rose-300 border-rose-700/50"
+                : "bg-blue-900/40 text-blue-300 border-blue-700/50"
+            }`}>
+              {pkg.ecosystem === "npm" ? "npm" : "Python"}
+            </span>
+            <span className="font-bold font-mono text-sm text-white truncate">{pkg.name}</span>
+            <span className="text-xs text-slate-500 font-mono flex-shrink-0">v{pkg.meta.version}</span>
+          </div>
         </div>
         {/* Mobile view tabs */}
-        <div className="flex border-t border-slate-100">
+        <div className="flex">
           {mobileViewConfig.map((v) => (
             <button
               key={v.id}
               onClick={() => changeView(v.id)}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-colors ${
+              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 text-[11px] font-medium transition-all relative ${
                 activeView === v.id
-                  ? "text-indigo-600 border-b-2 border-indigo-600"
-                  : "text-slate-500 hover:text-slate-700"
+                  ? "text-indigo-400"
+                  : "text-slate-500 hover:text-slate-300"
               }`}
             >
-              <span>{v.icon}</span>
+              {activeView === v.id && (
+                <motion.div
+                  layoutId="mobile-tab-indicator"
+                  className="absolute bottom-0 left-1 right-1 h-0.5 bg-indigo-500 rounded-full"
+                />
+              )}
+              {v.icon}
               {v.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Main content */}
+      {/* ── Main content area ── */}
       <main className="flex-1 overflow-hidden relative">
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
@@ -137,7 +180,7 @@ export default function PackagePage({
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.25, ease: "easeInOut" }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
             className="absolute inset-0 overflow-auto"
           >
             {activeView === "story" && (
@@ -146,20 +189,22 @@ export default function PackagePage({
 
             {activeView === "graph" && (
               <>
-                {/* Desktop graph */}
                 <div className="hidden md:block h-full p-4">
                   <ApiMapView pkg={pkg} focusNodeId={focusNodeId} />
                 </div>
-                {/* Mobile fallback */}
-                <div className="md:hidden flex flex-col items-center justify-center h-full px-8 text-center gap-4">
-                  <div className="text-4xl">🗺</div>
-                  <h3 className="font-semibold text-slate-800">API Map is best on desktop</h3>
-                  <p className="text-sm text-slate-500 max-w-xs">
-                    The interactive graph needs a larger screen. Switch to Recipes for copy-paste code on mobile.
-                  </p>
+                <div className="md:hidden flex flex-col items-center justify-center h-full px-8 text-center gap-5">
+                  <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center">
+                    <Map className="w-8 h-8 text-indigo-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-800 mb-1">API Map needs a bigger screen</h3>
+                    <p className="text-sm text-slate-500 max-w-xs">
+                      The interactive graph works best on desktop. Try Recipes for copy-paste code on mobile.
+                    </p>
+                  </div>
                   <button
                     onClick={() => changeView("tasks")}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
                   >
                     View Recipes instead
                   </button>
@@ -172,6 +217,7 @@ export default function PackagePage({
           </motion.div>
         </AnimatePresence>
       </main>
+
     </div>
   );
 }
