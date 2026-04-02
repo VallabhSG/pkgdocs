@@ -1,0 +1,156 @@
+"use client";
+
+import { useState, useCallback } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
+import { BookOpen, Play, Map, Zap, ChevronLeft } from "lucide-react";
+import type { Package, ViewMode } from "@/lib/types";
+import PackageSidebar from "@/components/PackageSidebar";
+import StoryView from "@/components/StoryView";
+import TaskFlowView from "@/components/TaskFlowView";
+import dynamic from "next/dynamic";
+
+const ApiMapView = dynamic(() => import("@/components/ApiMapView"), { ssr: false });
+const DemoView   = dynamic(() => import("@/components/DemoView"),   { ssr: false });
+
+const viewVariants = {
+  enter:  (dir: number) => ({ opacity: 0, x: dir * 32, filter: "blur(4px)" }),
+  center: { opacity: 1, x: 0, filter: "blur(0px)" },
+  exit:   (dir: number) => ({ opacity: 0, x: dir * -32, filter: "blur(4px)" }),
+};
+
+const viewOrder: ViewMode[] = ["story", "demo", "graph", "tasks"];
+
+const mobileViewConfig: { id: ViewMode; label: string; icon: React.ReactNode }[] = [
+  { id: "story", label: "Story",   icon: <BookOpen className="w-4 h-4" /> },
+  { id: "demo",  label: "Demo",    icon: <Play className="w-4 h-4" /> },
+  { id: "graph", label: "API Map", icon: <Map className="w-4 h-4" /> },
+  { id: "tasks", label: "Recipes", icon: <Zap className="w-4 h-4" /> },
+];
+
+interface RelatedCard {
+  id: string;
+  name: string;
+  ecosystem: string;
+  summary: string;
+  tags: string[];
+}
+
+interface Props {
+  pkg: Package;
+  related: RelatedCard[];
+}
+
+export default function PackagePageClient({ pkg, related }: Props) {
+  const [activeView, setActiveView] = useState<ViewMode>("story");
+  const [prevView,   setPrevView]   = useState<ViewMode>("story");
+  const [focusNodeId, setFocusNodeId] = useState<string | null>(null);
+
+  const changeView = useCallback((v: ViewMode) => {
+    setPrevView(activeView);
+    setActiveView(v);
+  }, [activeView]);
+
+  const handleNodeFocus = useCallback((nodeId: string) => {
+    setFocusNodeId(nodeId);
+    changeView("graph");
+  }, [changeView]);
+
+  const direction = viewOrder.indexOf(activeView) > viewOrder.indexOf(prevView) ? 1 : -1;
+
+  return (
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-slate-50">
+
+      {/* ── Sidebar (desktop) ── */}
+      <div className="hidden md:block">
+        <PackageSidebar pkg={pkg} activeView={activeView} onViewChange={changeView} related={related} />
+      </div>
+
+      {/* ── Mobile top bar ── */}
+      <div className="md:hidden flex-shrink-0 bg-slate-950 text-white">
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800">
+          <Link href="/" className="text-slate-400 hover:text-white transition-colors" aria-label="Back">
+            <ChevronLeft className="w-5 h-5" />
+          </Link>
+          <div className="flex items-center gap-2 min-w-0">
+            <span className={`flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+              pkg.ecosystem === "npm"
+                ? "bg-rose-900/40 text-rose-300 border-rose-700/50"
+                : "bg-blue-900/40 text-blue-300 border-blue-700/50"
+            }`}>
+              {pkg.ecosystem === "npm" ? "npm" : "Python"}
+            </span>
+            <span className="font-bold font-mono text-sm text-white truncate">{pkg.name}</span>
+            <span className="text-xs text-slate-500 font-mono flex-shrink-0">v{pkg.meta.version}</span>
+          </div>
+        </div>
+        <div className="flex">
+          {mobileViewConfig.map((v) => (
+            <button
+              key={v.id}
+              onClick={() => changeView(v.id)}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 text-[11px] font-medium transition-all relative ${
+                activeView === v.id ? "text-indigo-400" : "text-slate-500 hover:text-slate-300"
+              }`}
+            >
+              {activeView === v.id && (
+                <motion.div
+                  layoutId="mobile-tab-indicator"
+                  className="absolute bottom-0 left-1 right-1 h-0.5 bg-indigo-500 rounded-full"
+                />
+              )}
+              {v.icon}
+              {v.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Main content area ── */}
+      <main className="flex-1 overflow-hidden relative">
+        <AnimatePresence custom={direction} mode="wait">
+          <motion.div
+            key={activeView}
+            custom={direction}
+            variants={viewVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="absolute inset-0 overflow-auto"
+          >
+            {activeView === "story" && <StoryView pkg={pkg} onNodeFocus={handleNodeFocus} />}
+
+            {activeView === "graph" && (
+              <>
+                <div className="hidden md:block h-full p-4">
+                  <ApiMapView pkg={pkg} focusNodeId={focusNodeId} />
+                </div>
+                <div className="md:hidden flex flex-col items-center justify-center h-full px-8 text-center gap-5">
+                  <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center">
+                    <Map className="w-8 h-8 text-indigo-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-800 mb-1">API Map needs a bigger screen</h3>
+                    <p className="text-sm text-slate-500 max-w-xs">
+                      The interactive graph works best on desktop. Try Recipes for copy-paste code on mobile.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => changeView("tasks")}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+                  >
+                    View Recipes instead
+                  </button>
+                </div>
+              </>
+            )}
+
+            {activeView === "demo"  && <DemoView pkg={pkg} />}
+            {activeView === "tasks" && <TaskFlowView pkg={pkg} />}
+          </motion.div>
+        </AnimatePresence>
+      </main>
+    </div>
+  );
+}
