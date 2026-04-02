@@ -1,0 +1,198 @@
+{
+  "id": "d3",
+  "ecosystem": "npm",
+  "name": "d3",
+  "summary": "The most powerful data visualization library for the web — bind data to SVG/Canvas elements and transform them with scales, axes, and layouts.",
+  "tags": [
+    "visualization",
+    "svg",
+    "charts",
+    "data-science",
+    "animation"
+  ],
+  "difficulty": 3,
+  "story": {
+    "problem": "You need a chart that no charting library supports, or you want complete control over every pixel of your visualization. Libraries like Chart.js or Recharts are constrained — d3 gives you the raw building blocks.",
+    "mental_model": "d3 is not a charting library — it's a DOM manipulation + data transformation toolkit. The core pattern: select elements, bind data (.data()), then enter/update/exit the joined selection. Built-in: scales (map data domain → visual range), axes, shape generators, and force/tree/hierarchy layouts.",
+    "when_to_use": "Custom visualizations that no library supports, journalism/scrollytelling data stories, network graphs, geo maps, animated transitions between data states, or when you need to own every detail.",
+    "when_not_to_use": "Standard bar/line/pie charts in a product (use Recharts or Chart.js — they're 10x faster to implement). d3's learning curve is steep.",
+    "alternatives": [
+      {
+        "name": "recharts",
+        "reason": "React chart library built on d3, much easier for standard charts"
+      },
+      {
+        "name": "chart.js",
+        "reason": "Canvas-based, easy to use, standard chart types"
+      },
+      {
+        "name": "observable-plot",
+        "reason": "From d3 creator, high-level grammar-of-graphics API"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "d3_mod",
+        "type": "module",
+        "label": "d3",
+        "summary": "Umbrella package re-exporting all d3 submodules",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "select",
+        "type": "function",
+        "label": "d3.select() / selectAll()",
+        "summary": "Select DOM elements, returns d3 selection",
+        "difficulty": 1,
+        "tags": [
+          "dom"
+        ]
+      },
+      {
+        "id": "data_join",
+        "type": "concept",
+        "label": "Data Join",
+        "summary": ".data() binds array to selection, .enter()/.exit() handle add/remove",
+        "difficulty": 3,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "scale",
+        "type": "function",
+        "label": "d3.scaleLinear() etc.",
+        "summary": "Map data domain to visual range (px, color, etc.)",
+        "difficulty": 2,
+        "tags": [
+          "scales"
+        ]
+      },
+      {
+        "id": "axis",
+        "type": "function",
+        "label": "d3.axisBottom() etc.",
+        "summary": "Generate SVG axis from a scale",
+        "difficulty": 2,
+        "tags": [
+          "axes"
+        ]
+      },
+      {
+        "id": "line_gen",
+        "type": "function",
+        "label": "d3.line()",
+        "summary": "Generate SVG path d attribute from data array",
+        "difficulty": 2,
+        "tags": [
+          "shapes"
+        ]
+      },
+      {
+        "id": "transition",
+        "type": "function",
+        "label": ".transition()",
+        "summary": "Animate changes smoothly with easing functions",
+        "difficulty": 2,
+        "tags": [
+          "animation"
+        ]
+      },
+      {
+        "id": "force",
+        "type": "function",
+        "label": "d3.forceSimulation()",
+        "summary": "Physics-based force layout for network graphs",
+        "difficulty": 3,
+        "tags": [
+          "layout"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "d3_mod",
+        "to": "select",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "select",
+        "to": "data_join",
+        "label": "uses"
+      },
+      {
+        "id": "e3",
+        "from": "d3_mod",
+        "to": "scale",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "d3_mod",
+        "to": "axis",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "axis",
+        "to": "scale",
+        "label": "uses"
+      },
+      {
+        "id": "e6",
+        "from": "d3_mod",
+        "to": "line_gen",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "line_gen",
+        "to": "scale",
+        "label": "uses"
+      },
+      {
+        "id": "e8",
+        "from": "select",
+        "to": "transition",
+        "label": "contains"
+      },
+      {
+        "id": "e9",
+        "from": "d3_mod",
+        "to": "force",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "bar-chart",
+      "title": "Build a bar chart from data",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Set up SVG and scales",
+          "code": "import * as d3 from 'd3';\n\nconst data = [30, 80, 45, 60, 20, 90, 55];\nconst width = 400, height = 200, margin = { top: 10, right: 10, bottom: 20, left: 30 };\n\nconst svg = d3.select('#chart').append('svg')\n  .attr('width', width).attr('height', height);\n\nconst x = d3.scaleBand().domain(d3.range(data.length)).range([margin.left, width - margin.right]).padding(0.1);\nconst y = d3.scaleLinear().domain([0, d3.max(data)]).range([height - margin.bottom, margin.top]);"
+        },
+        {
+          "label": "Draw bars and axes",
+          "code": "// Bars\nsvg.selectAll('rect')\n  .data(data)\n  .join('rect')\n    .attr('x', (d, i) => x(i))\n    .attr('y', d => y(d))\n    .attr('width', x.bandwidth())\n    .attr('height', d => y(0) - y(d))\n    .attr('fill', 'steelblue');\n\n// Axes\nsvg.append('g').attr('transform', `translate(0,${height - margin.bottom})`).call(d3.axisBottom(x));\nsvg.append('g').attr('transform', `translate(${margin.left},0)`).call(d3.axisLeft(y));"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 5000000,
+    "version": "7.9.0",
+    "repo_url": "https://github.com/d3/d3",
+    "docs_url": "https://d3js.org/",
+    "npm_url": "https://www.npmjs.com/package/d3"
+  }
+}

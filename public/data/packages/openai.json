@@ -1,0 +1,218 @@
+{
+  "id": "openai",
+  "ecosystem": "pypi",
+  "name": "openai",
+  "summary": "Official Python SDK for the OpenAI API — call GPT-4, DALL-E, Whisper, and Embeddings with a clean async-first interface.",
+  "tags": [
+    "ai",
+    "llm",
+    "gpt",
+    "api-client",
+    "async"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "You want to add AI capabilities — text generation, image creation, speech recognition, or embeddings — to your Python application without managing HTTP requests and response parsing yourself.",
+    "mental_model": "The SDK wraps REST endpoints in typed Python objects. Create an OpenAI client, then call client.chat.completions.create() with a list of message dicts. The response is a structured object with .choices[0].message.content. Everything has an async equivalent.",
+    "when_to_use": "Integrating GPT-4/3.5 into apps, generating embeddings for semantic search, transcribing audio with Whisper, generating images with DALL-E, or building agentic workflows with tool calling.",
+    "when_not_to_use": "When you need to run models locally (use ollama or transformers), when cost is a hard constraint for high-volume tasks, or when you need a specific open-source model.",
+    "alternatives": [
+      {
+        "name": "anthropic",
+        "reason": "Claude models — often better for long documents and coding"
+      },
+      {
+        "name": "litellm",
+        "reason": "Unified interface to 100+ LLM providers"
+      },
+      {
+        "name": "langchain",
+        "reason": "Orchestration framework for complex LLM pipelines"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "openai",
+        "type": "module",
+        "label": "openai",
+        "summary": "Top-level package",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "client",
+        "type": "class",
+        "label": "OpenAI",
+        "summary": "Sync client — instantiate once, reuse everywhere",
+        "difficulty": 1,
+        "tags": [
+          "client"
+        ]
+      },
+      {
+        "id": "asyncclient",
+        "type": "class",
+        "label": "AsyncOpenAI",
+        "summary": "Async version for FastAPI, asyncio apps",
+        "difficulty": 2,
+        "tags": [
+          "async"
+        ]
+      },
+      {
+        "id": "chat",
+        "type": "function",
+        "label": "chat.completions.create()",
+        "summary": "Send messages, get back a completion",
+        "signature": "create(model, messages, temperature=1.0)",
+        "difficulty": 1,
+        "tags": [
+          "text"
+        ]
+      },
+      {
+        "id": "embeddings",
+        "type": "function",
+        "label": "embeddings.create()",
+        "summary": "Convert text to vector representation",
+        "signature": "create(model, input)",
+        "difficulty": 2,
+        "tags": [
+          "embeddings"
+        ]
+      },
+      {
+        "id": "images",
+        "type": "function",
+        "label": "images.generate()",
+        "summary": "Generate images with DALL-E",
+        "signature": "generate(prompt, model='dall-e-3', size='1024x1024')",
+        "difficulty": 1,
+        "tags": [
+          "images"
+        ]
+      },
+      {
+        "id": "audio",
+        "type": "function",
+        "label": "audio.transcriptions.create()",
+        "summary": "Transcribe audio with Whisper",
+        "signature": "create(model='whisper-1', file=audio_file)",
+        "difficulty": 2,
+        "tags": [
+          "audio"
+        ]
+      },
+      {
+        "id": "streaming",
+        "type": "concept",
+        "label": "Streaming",
+        "summary": "Stream tokens as they're generated with stream=True",
+        "difficulty": 2,
+        "tags": [
+          "streaming"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "openai",
+        "to": "client",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "openai",
+        "to": "asyncclient",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "client",
+        "to": "chat",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "client",
+        "to": "embeddings",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "client",
+        "to": "images",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "client",
+        "to": "audio",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "chat",
+        "to": "streaming",
+        "label": "uses"
+      },
+      {
+        "id": "e8",
+        "from": "asyncclient",
+        "to": "chat",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "chat-completion",
+      "title": "Send a chat message and get a response",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Basic chat completion",
+          "code": "from openai import OpenAI\n\nclient = OpenAI()  # reads OPENAI_API_KEY from env\n\nresponse = client.chat.completions.create(\n    model='gpt-4o',\n    messages=[\n        {'role': 'system', 'content': 'You are a helpful assistant.'},\n        {'role': 'user', 'content': 'Explain async/await in Python in one paragraph.'}\n    ]\n)\nprint(response.choices[0].message.content)"
+        }
+      ]
+    },
+    {
+      "id": "streaming",
+      "title": "Stream tokens as they arrive",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Stream response tokens",
+          "code": "with client.chat.completions.stream(\n    model='gpt-4o',\n    messages=[{'role': 'user', 'content': 'Write a haiku about Python.'}]\n) as stream:\n    for text in stream.text_stream:\n        print(text, end='', flush=True)\nprint()  # newline at end"
+        }
+      ]
+    },
+    {
+      "id": "embeddings",
+      "title": "Generate embeddings for semantic search",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Create embeddings",
+          "code": "import numpy as np\n\ntexts = ['Python is great', 'I love async programming', 'Coffee is essential']\nresponse = client.embeddings.create(model='text-embedding-3-small', input=texts)\nvectors = [r.embedding for r in response.data]  # list of 1536-dim float lists"
+        },
+        {
+          "label": "Find most similar",
+          "code": "query = client.embeddings.create(\n    model='text-embedding-3-small',\n    input='What language should I learn?'\n).data[0].embedding\n\n# Cosine similarity\ndef cosine(a, b):\n    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))\n\nscores = [(texts[i], cosine(query, v)) for i, v in enumerate(vectors)]\nprint(sorted(scores, key=lambda x: -x[1])[0])"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 9000000,
+    "version": "1.54.0",
+    "repo_url": "https://github.com/openai/openai-python",
+    "docs_url": "https://platform.openai.com/docs",
+    "pypi_url": "https://pypi.org/project/openai/"
+  }
+}

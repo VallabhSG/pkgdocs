@@ -1,0 +1,199 @@
+{
+  "id": "framer-motion",
+  "ecosystem": "npm",
+  "name": "framer-motion",
+  "summary": "Production-ready animations and gestures for React — declarative, physics-based, with layout animations and exit transitions.",
+  "tags": [
+    "animation",
+    "react",
+    "gestures",
+    "ui",
+    "motion"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "CSS animations are hard to coordinate with React state. You want animations that respond to data changes, animate elements in/out, drag gestures, shared element transitions, and scroll-linked effects — all without managing timelines manually.",
+    "mental_model": "Replace any HTML element with its motion equivalent: <motion.div>. Add animate={{ opacity: 1, x: 0 }} and initial={{ opacity: 0, x: -20 }} and framer-motion handles the tween. AnimatePresence wraps conditionally rendered children to give them exit animations. layoutId enables shared element transitions.",
+    "when_to_use": "React apps needing UI animations: page transitions, list reordering, drag-and-drop, hover effects, scroll-triggered reveals, and exit animations.",
+    "when_not_to_use": "Non-React projects, performance-critical animations running at 120fps with many particles (use CSS or WebGL), or very simple opacity/transform transitions where CSS is sufficient.",
+    "alternatives": [
+      {
+        "name": "motion",
+        "reason": "The newer, framework-agnostic version of framer-motion (same team)"
+      },
+      {
+        "name": "react-spring",
+        "reason": "Physics-based, no keyframes — different mental model"
+      },
+      {
+        "name": "gsap",
+        "reason": "Framework-agnostic, more control, better for complex timelines"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "fm_mod",
+        "type": "module",
+        "label": "framer-motion",
+        "summary": "Package root",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "motion",
+        "type": "function",
+        "label": "motion.*",
+        "summary": "Motion-enhanced HTML/SVG elements",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "animate_presence",
+        "type": "class",
+        "label": "AnimatePresence",
+        "summary": "Enable exit animations for conditionally rendered children",
+        "difficulty": 2,
+        "tags": [
+          "mounting"
+        ]
+      },
+      {
+        "id": "use_animation",
+        "type": "function",
+        "label": "useAnimation()",
+        "summary": "Programmatically control animations via a controls object",
+        "difficulty": 2,
+        "tags": [
+          "control"
+        ]
+      },
+      {
+        "id": "use_scroll",
+        "type": "function",
+        "label": "useScroll()",
+        "summary": "Track scroll position as a MotionValue",
+        "difficulty": 2,
+        "tags": [
+          "scroll"
+        ]
+      },
+      {
+        "id": "layout_id",
+        "type": "concept",
+        "label": "layoutId",
+        "summary": "Shared element transition between route/state changes",
+        "difficulty": 3,
+        "tags": [
+          "layout"
+        ]
+      },
+      {
+        "id": "drag",
+        "type": "concept",
+        "label": "drag prop",
+        "summary": "Make any element draggable with constraints",
+        "difficulty": 2,
+        "tags": [
+          "gestures"
+        ]
+      },
+      {
+        "id": "variants",
+        "type": "concept",
+        "label": "Variants",
+        "summary": "Named animation states that cascade to children",
+        "difficulty": 2,
+        "tags": [
+          "orchestration"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "fm_mod",
+        "to": "motion",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "fm_mod",
+        "to": "animate_presence",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "motion",
+        "to": "variants",
+        "label": "uses"
+      },
+      {
+        "id": "e4",
+        "from": "motion",
+        "to": "drag",
+        "label": "uses"
+      },
+      {
+        "id": "e5",
+        "from": "motion",
+        "to": "layout_id",
+        "label": "uses"
+      },
+      {
+        "id": "e6",
+        "from": "animate_presence",
+        "to": "motion",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "use_scroll",
+        "to": "motion",
+        "label": "uses"
+      },
+      {
+        "id": "e8",
+        "from": "use_animation",
+        "to": "motion",
+        "label": "uses"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "fade-slide",
+      "title": "Fade and slide in on mount",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Basic motion element",
+          "code": "import { motion } from 'framer-motion';\n\nexport function Card({ title, content }) {\n  return (\n    <motion.div\n      initial={{ opacity: 0, y: 20 }}\n      animate={{ opacity: 1, y: 0 }}\n      transition={{ duration: 0.4, ease: 'easeOut' }}\n      className=\"bg-white rounded-xl p-6 shadow\"\n    >\n      <h2>{title}</h2>\n      <p>{content}</p>\n    </motion.div>\n  );\n}"
+        }
+      ]
+    },
+    {
+      "id": "list-animation",
+      "title": "Stagger-animate a list of items",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Variants with stagger",
+          "code": "import { motion, AnimatePresence } from 'framer-motion';\n\nconst container = {\n  hidden: {},\n  show: { transition: { staggerChildren: 0.08 } }\n};\nconst item = {\n  hidden: { opacity: 0, x: -16 },\n  show:   { opacity: 1, x: 0 }\n};\n\nexport function List({ items }) {\n  return (\n    <motion.ul variants={container} initial='hidden' animate='show'>\n      <AnimatePresence>\n        {items.map(i => (\n          <motion.li key={i.id} variants={item} exit={{ opacity: 0, x: 16 }}>\n            {i.label}\n          </motion.li>\n        ))}\n      </AnimatePresence>\n    </motion.ul>\n  );\n}"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 7000000,
+    "version": "12.6.2",
+    "repo_url": "https://github.com/framer/motion",
+    "docs_url": "https://motion.dev/docs",
+    "npm_url": "https://www.npmjs.com/package/framer-motion"
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "id": "mongoose",
+  "ecosystem": "npm",
+  "name": "mongoose",
+  "summary": "Elegant MongoDB object modeling for Node.js — schemas, validation, middleware, and type-safe queries.",
+  "tags": [
+    "database",
+    "mongodb",
+    "nosql",
+    "orm",
+    "schema"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "MongoDB is schemaless, but your application needs structure — consistent field types, required fields, default values, and relationships. Writing raw MongoDB driver code for every query is repetitive and error-prone.",
+    "mental_model": "Mongoose adds a schema layer on top of MongoDB. Define a Schema (field types, validation, defaults), create a Model from it, and query with Model.find(), Model.create(). Middleware (pre/post hooks) run before/after operations. Virtuals compute fields without storing them.",
+    "when_to_use": "Node.js apps using MongoDB that need schema validation, relationships (populate), timestamps, virtuals, or reusable query helpers.",
+    "when_not_to_use": "Schema-free documents where flexibility is intentional, TypeScript-first projects (consider Prisma + MongoDB or Typegoose), high-performance scenarios where the ODM overhead matters.",
+    "alternatives": [
+      {
+        "name": "prisma",
+        "reason": "Type-safe ORM with MongoDB adapter, excellent TypeScript support"
+      },
+      {
+        "name": "typegoose",
+        "reason": "TypeScript decorator-based mongoose schemas"
+      },
+      {
+        "name": "pymongo",
+        "reason": "Python equivalent — direct MongoDB driver"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "mongoose_mod",
+        "type": "module",
+        "label": "mongoose",
+        "summary": "Package root",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "connect",
+        "type": "function",
+        "label": "mongoose.connect()",
+        "summary": "Connect to MongoDB",
+        "difficulty": 1,
+        "tags": [
+          "connection"
+        ]
+      },
+      {
+        "id": "schema",
+        "type": "class",
+        "label": "Schema",
+        "summary": "Define document structure, types, and validation",
+        "difficulty": 1,
+        "tags": [
+          "schema"
+        ]
+      },
+      {
+        "id": "model",
+        "type": "class",
+        "label": "Model",
+        "summary": "Compiled schema — the interface for CRUD operations",
+        "difficulty": 1,
+        "tags": [
+          "model"
+        ]
+      },
+      {
+        "id": "query",
+        "type": "class",
+        "label": "Query",
+        "summary": "Chainable query builder: .where().sort().limit().exec()",
+        "difficulty": 2,
+        "tags": [
+          "querying"
+        ]
+      },
+      {
+        "id": "populate",
+        "type": "function",
+        "label": ".populate()",
+        "summary": "Join referenced documents (like SQL JOIN)",
+        "difficulty": 2,
+        "tags": [
+          "relations"
+        ]
+      },
+      {
+        "id": "middleware",
+        "type": "concept",
+        "label": "Middleware (hooks)",
+        "summary": "pre/post hooks on save, find, delete operations",
+        "difficulty": 3,
+        "tags": [
+          "hooks"
+        ]
+      },
+      {
+        "id": "virtual",
+        "type": "concept",
+        "label": "Virtuals",
+        "summary": "Computed properties not stored in MongoDB",
+        "difficulty": 2,
+        "tags": [
+          "computed"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "mongoose_mod",
+        "to": "connect",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "mongoose_mod",
+        "to": "schema",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "schema",
+        "to": "model",
+        "label": "returns"
+      },
+      {
+        "id": "e4",
+        "from": "model",
+        "to": "query",
+        "label": "returns"
+      },
+      {
+        "id": "e5",
+        "from": "query",
+        "to": "populate",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "schema",
+        "to": "middleware",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "schema",
+        "to": "virtual",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "model",
+        "to": "middleware",
+        "label": "uses"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "define-model",
+      "title": "Define a schema and model",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Schema definition",
+          "code": "import mongoose, { Schema, Document } from 'mongoose';\n\ninterface IUser extends Document {\n  name: string;\n  email: string;\n  createdAt: Date;\n}\n\nconst UserSchema = new Schema<IUser>({\n  name:  { type: String, required: true, trim: true },\n  email: { type: String, required: true, unique: true, lowercase: true },\n}, { timestamps: true });\n\nexport const User = mongoose.model<IUser>('User', UserSchema);"
+        },
+        {
+          "label": "CRUD operations",
+          "code": "await mongoose.connect(process.env.MONGODB_URI!);\n\n// Create\nconst alice = await User.create({ name: 'Alice', email: 'alice@example.com' });\n\n// Query\nconst users = await User.find({ name: /alice/i }).sort('-createdAt').limit(10);\n\n// Update\nawait User.updateOne({ _id: alice._id }, { $set: { name: 'Alice B.' } });\n\n// Delete\nawait User.deleteOne({ _id: alice._id });"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 2500000,
+    "version": "8.9.0",
+    "repo_url": "https://github.com/Automattic/mongoose",
+    "docs_url": "https://mongoosejs.com/docs/",
+    "npm_url": "https://www.npmjs.com/package/mongoose"
+  }
+}

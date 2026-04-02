@@ -1,0 +1,221 @@
+{
+  "id": "scikit-learn",
+  "ecosystem": "pypi",
+  "name": "scikit-learn",
+  "summary": "The standard machine learning library for Python — clean API for classification, regression, clustering, and preprocessing.",
+  "tags": [
+    "machine-learning",
+    "data-science",
+    "classification",
+    "regression",
+    "clustering"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "You have labeled data and want to build a predictive model. Or unlabeled data you want to cluster. Or features you need to preprocess. scikit-learn gives you consistent, well-tested implementations of hundreds of ML algorithms without having to implement them from scratch.",
+    "mental_model": "Everything follows the same pattern: create an estimator (model), call .fit(X, y) to train, call .predict(X) to infer. Transformers additionally have .transform() and .fit_transform(). Pipelines chain these steps so preprocessing + model become one object.",
+    "when_to_use": "Classical ML (not deep learning): tabular data, structured features, interpretable models, baseline modeling, feature engineering, cross-validation, and hyperparameter tuning.",
+    "when_not_to_use": "Deep learning / neural networks (use PyTorch or TensorFlow), unstructured data like images or text at scale, real-time inference at very high throughput.",
+    "alternatives": [
+      {
+        "name": "xgboost",
+        "reason": "Faster gradient boosting, often wins Kaggle competitions"
+      },
+      {
+        "name": "lightgbm",
+        "reason": "Memory-efficient boosting for large datasets"
+      },
+      {
+        "name": "pytorch",
+        "reason": "Deep learning, neural networks"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "sklearn",
+        "type": "module",
+        "label": "sklearn",
+        "summary": "Root package with submodules per ML category",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "estimator",
+        "type": "concept",
+        "label": "Estimator protocol",
+        "summary": "Any object with fit() — the core sklearn contract",
+        "difficulty": 1,
+        "tags": [
+          "api"
+        ]
+      },
+      {
+        "id": "pipeline",
+        "type": "class",
+        "label": "Pipeline",
+        "summary": "Chain transformers + final estimator into one object",
+        "difficulty": 2,
+        "tags": [
+          "workflow"
+        ]
+      },
+      {
+        "id": "randomforest",
+        "type": "class",
+        "label": "RandomForestClassifier",
+        "summary": "Ensemble of decision trees — robust baseline",
+        "difficulty": 2,
+        "tags": [
+          "classification"
+        ]
+      },
+      {
+        "id": "cross_val",
+        "type": "function",
+        "label": "cross_val_score()",
+        "summary": "K-fold cross-validation in one line",
+        "signature": "cross_val_score(estimator, X, y, cv=5)",
+        "difficulty": 2,
+        "tags": [
+          "evaluation"
+        ]
+      },
+      {
+        "id": "scaler",
+        "type": "class",
+        "label": "StandardScaler",
+        "summary": "Standardize features to zero mean, unit variance",
+        "difficulty": 1,
+        "tags": [
+          "preprocessing"
+        ]
+      },
+      {
+        "id": "train_test",
+        "type": "function",
+        "label": "train_test_split()",
+        "summary": "Split arrays into train and test sets",
+        "signature": "train_test_split(X, y, test_size=0.2)",
+        "difficulty": 1,
+        "tags": [
+          "data"
+        ]
+      },
+      {
+        "id": "gridsearch",
+        "type": "class",
+        "label": "GridSearchCV",
+        "summary": "Exhaustive hyperparameter search with cross-validation",
+        "difficulty": 3,
+        "tags": [
+          "tuning"
+        ]
+      },
+      {
+        "id": "metrics",
+        "type": "module",
+        "label": "sklearn.metrics",
+        "summary": "Accuracy, F1, confusion matrix, ROC-AUC, etc.",
+        "difficulty": 2,
+        "tags": [
+          "evaluation"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "sklearn",
+        "to": "estimator",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "estimator",
+        "to": "pipeline",
+        "label": "uses"
+      },
+      {
+        "id": "e3",
+        "from": "pipeline",
+        "to": "scaler",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "pipeline",
+        "to": "randomforest",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "train_test",
+        "to": "cross_val",
+        "label": "uses"
+      },
+      {
+        "id": "e6",
+        "from": "cross_val",
+        "to": "metrics",
+        "label": "uses"
+      },
+      {
+        "id": "e7",
+        "from": "gridsearch",
+        "to": "pipeline",
+        "label": "uses"
+      },
+      {
+        "id": "e8",
+        "from": "sklearn",
+        "to": "train_test",
+        "label": "contains"
+      },
+      {
+        "id": "e9",
+        "from": "sklearn",
+        "to": "metrics",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "classify",
+      "title": "Train a classifier with a pipeline",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Build pipeline",
+          "code": "from sklearn.pipeline import Pipeline\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import classification_report\nimport numpy as np\n\n# Load your data\nX, y = np.random.randn(500, 10), np.random.randint(0, 2, 500)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)"
+        },
+        {
+          "label": "Fit and evaluate",
+          "code": "pipe = Pipeline([\n    ('scaler', StandardScaler()),\n    ('clf', RandomForestClassifier(n_estimators=100, random_state=42))\n])\n\npipe.fit(X_train, y_train)\ny_pred = pipe.predict(X_test)\nprint(classification_report(y_test, y_pred))"
+        }
+      ]
+    },
+    {
+      "id": "crossval",
+      "title": "Cross-validate and tune hyperparameters",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Grid search with CV",
+          "code": "from sklearn.model_selection import GridSearchCV\n\nparam_grid = {\n    'clf__n_estimators': [50, 100, 200],\n    'clf__max_depth': [None, 5, 10],\n}\ngs = GridSearchCV(pipe, param_grid, cv=5, scoring='f1', n_jobs=-1)\ngs.fit(X_train, y_train)\nprint('Best params:', gs.best_params_)\nprint('Best CV F1:', gs.best_score_.round(3))"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 12000000,
+    "version": "1.5.2",
+    "repo_url": "https://github.com/scikit-learn/scikit-learn",
+    "docs_url": "https://scikit-learn.org/stable/",
+    "pypi_url": "https://pypi.org/project/scikit-learn/"
+  }
+}

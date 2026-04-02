@@ -1,0 +1,186 @@
+{
+  "id": "arrow",
+  "ecosystem": "pypi",
+  "name": "arrow",
+  "summary": "Better dates and times in Python — timezone-aware by default, human-friendly API, and natural language parsing.",
+  "tags": [
+    "datetime",
+    "timezone",
+    "parsing",
+    "utilities"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "Python's datetime module is powerful but verbose and error-prone — especially with timezones, parsing, and humanizing. Getting 'now in UTC' requires three lines; parsing 'next Monday' is not built-in at all.",
+    "mental_model": "Arrow wraps Python datetime into a single object that's always timezone-aware. You use arrow.now() instead of datetime.now(timezone.utc). Shifting time uses .shift(hours=+3). Converting to string is .format() or .humanize() ('3 hours ago').",
+    "when_to_use": "Any application dealing with dates across timezones, relative time displays ('posted 2 days ago'), date parsing from strings, date range iteration, or when you want less boilerplate than stdlib datetime.",
+    "when_not_to_use": "High-frequency numerical date computations (use numpy datetime64 or pandas Timestamp which are faster). Arrow adds overhead per operation.",
+    "alternatives": [
+      {
+        "name": "pendulum",
+        "reason": "Similar API but stricter, better DST handling"
+      },
+      {
+        "name": "dateutil",
+        "reason": "Powerful parsing and relative dates, stdlib-compatible"
+      },
+      {
+        "name": "datetime",
+        "reason": "Zero dependency, fine for simple UTC-only work"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "arrow_mod",
+        "type": "module",
+        "label": "arrow",
+        "summary": "Package root",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "arrowtype",
+        "type": "class",
+        "label": "Arrow",
+        "summary": "The main datetime object — timezone-aware always",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "now",
+        "type": "function",
+        "label": "arrow.now()",
+        "summary": "Current time in any timezone",
+        "signature": "now(tz='local')",
+        "difficulty": 1,
+        "tags": [
+          "creation"
+        ]
+      },
+      {
+        "id": "get",
+        "type": "function",
+        "label": "arrow.get()",
+        "summary": "Parse from string, timestamp, datetime, etc.",
+        "signature": "get(*args, **kwargs)",
+        "difficulty": 1,
+        "tags": [
+          "parsing"
+        ]
+      },
+      {
+        "id": "shift",
+        "type": "function",
+        "label": ".shift()",
+        "summary": "Add or subtract time units",
+        "signature": "shift(years=0, months=0, days=0, hours=0)",
+        "difficulty": 1,
+        "tags": [
+          "arithmetic"
+        ]
+      },
+      {
+        "id": "humanize",
+        "type": "function",
+        "label": ".humanize()",
+        "summary": "Convert to human-readable relative string",
+        "signature": "humanize(other=None, locale='en')",
+        "difficulty": 1,
+        "tags": [
+          "formatting"
+        ]
+      },
+      {
+        "id": "convert",
+        "type": "function",
+        "label": ".to()",
+        "summary": "Convert to another timezone",
+        "signature": "to(tz)",
+        "difficulty": 1,
+        "tags": [
+          "timezone"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "arrow_mod",
+        "to": "arrowtype",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "arrow_mod",
+        "to": "now",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "arrow_mod",
+        "to": "get",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "now",
+        "to": "arrowtype",
+        "label": "returns"
+      },
+      {
+        "id": "e5",
+        "from": "get",
+        "to": "arrowtype",
+        "label": "returns"
+      },
+      {
+        "id": "e6",
+        "from": "arrowtype",
+        "to": "shift",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "arrowtype",
+        "to": "humanize",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "arrowtype",
+        "to": "convert",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "basic",
+      "title": "Common date operations",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Create and manipulate dates",
+          "code": "import arrow\n\nnow = arrow.now('UTC')           # 2024-01-15T10:30:00+00:00\nnow_local = arrow.now('US/Eastern')  # auto timezone-aware\n\npast = now.shift(days=-7)        # one week ago\nfuture = now.shift(months=+2, days=+3)\n\nprint(now.format('YYYY-MM-DD HH:mm:ss ZZ'))\nprint(past.humanize())           # 'a week ago'\nprint(future.humanize())         # 'in 2 months'"
+        },
+        {
+          "label": "Parse from string",
+          "code": "dt = arrow.get('2024-01-15 10:30', 'YYYY-MM-DD HH:mm')\nutc = dt.to('UTC')\nnew_york = dt.to('America/New_York')\ntokyo = dt.to('Asia/Tokyo')\nprint(new_york.format(), '→', tokyo.format())"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 2500000,
+    "version": "1.3.0",
+    "repo_url": "https://github.com/arrow-py/arrow",
+    "docs_url": "https://arrow.readthedocs.io/",
+    "pypi_url": "https://pypi.org/project/arrow/"
+  }
+}

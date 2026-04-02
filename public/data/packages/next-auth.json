@@ -1,0 +1,182 @@
+{
+  "id": "next-auth",
+  "ecosystem": "npm",
+  "name": "next-auth",
+  "summary": "Complete authentication for Next.js — OAuth providers (Google, GitHub, etc.), email magic links, JWT sessions, and database adapters in one package.",
+  "tags": [
+    "authentication",
+    "oauth",
+    "nextjs",
+    "jwt",
+    "security"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "Auth is complex to get right: OAuth flows, CSRF protection, session management, refresh tokens, secure cookies. Rolling your own is weeks of work and a security minefield.",
+    "mental_model": "NextAuth exposes a catch-all API route (/api/auth/[...nextauth]) that handles all OAuth callbacks and session endpoints. Configure providers (Google, GitHub, credentials) and an adapter (database). Use useSession() in client components or getServerSession() in server components to access the authenticated user.",
+    "when_to_use": "Any Next.js app needing auth — social login, email magic links, or username/password. It's the standard choice for Next.js auth.",
+    "when_not_to_use": "Non-Next.js projects, when you need very complex RBAC that next-auth doesn't support natively, or when your team owns an existing auth service.",
+    "alternatives": [
+      {
+        "name": "clerk",
+        "reason": "Managed auth service — zero backend code, beautiful UI components"
+      },
+      {
+        "name": "lucia",
+        "reason": "Lightweight, framework-agnostic, you own the database"
+      },
+      {
+        "name": "supabase auth",
+        "reason": "If already using Supabase — built-in auth with row-level security"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "nextauth_mod",
+        "type": "module",
+        "label": "next-auth",
+        "summary": "Package root",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "nextauth_handler",
+        "type": "function",
+        "label": "NextAuth()",
+        "summary": "Creates the API route handler — configure providers, callbacks, adapter",
+        "difficulty": 1,
+        "tags": [
+          "setup"
+        ]
+      },
+      {
+        "id": "providers",
+        "type": "concept",
+        "label": "Providers",
+        "summary": "GoogleProvider, GitHubProvider, CredentialsProvider, EmailProvider",
+        "difficulty": 1,
+        "tags": [
+          "oauth"
+        ]
+      },
+      {
+        "id": "use_session",
+        "type": "function",
+        "label": "useSession()",
+        "summary": "Client-side hook — returns { data: session, status }",
+        "difficulty": 1,
+        "tags": [
+          "client"
+        ]
+      },
+      {
+        "id": "get_session",
+        "type": "function",
+        "label": "getServerSession()",
+        "summary": "Server-side session access — use in server components, API routes",
+        "difficulty": 2,
+        "tags": [
+          "server"
+        ]
+      },
+      {
+        "id": "adapter",
+        "type": "concept",
+        "label": "Database Adapter",
+        "summary": "Persist users/sessions to DB — Prisma, Drizzle, Supabase adapters available",
+        "difficulty": 2,
+        "tags": [
+          "database"
+        ]
+      },
+      {
+        "id": "callbacks",
+        "type": "concept",
+        "label": "Callbacks",
+        "summary": "jwt(), session(), signIn() — customize token/session shape and access control",
+        "difficulty": 3,
+        "tags": [
+          "customization"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "nextauth_mod",
+        "to": "nextauth_handler",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "nextauth_handler",
+        "to": "providers",
+        "label": "uses"
+      },
+      {
+        "id": "e3",
+        "from": "nextauth_handler",
+        "to": "adapter",
+        "label": "uses"
+      },
+      {
+        "id": "e4",
+        "from": "nextauth_handler",
+        "to": "callbacks",
+        "label": "uses"
+      },
+      {
+        "id": "e5",
+        "from": "nextauth_mod",
+        "to": "use_session",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "nextauth_mod",
+        "to": "get_session",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "callbacks",
+        "to": "use_session",
+        "label": "uses"
+      },
+      {
+        "id": "e8",
+        "from": "callbacks",
+        "to": "get_session",
+        "label": "uses"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "setup",
+      "title": "Add Google + GitHub login to Next.js",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Create auth route",
+          "code": "// src/app/api/auth/[...nextauth]/route.ts\nimport NextAuth from 'next-auth';\nimport Google from 'next-auth/providers/google';\nimport GitHub from 'next-auth/providers/github';\n\nconst handler = NextAuth({\n  providers: [\n    Google({ clientId: process.env.GOOGLE_ID!, clientSecret: process.env.GOOGLE_SECRET! }),\n    GitHub({ clientId: process.env.GITHUB_ID!, clientSecret: process.env.GITHUB_SECRET! }),\n  ],\n  pages: { signIn: '/login' },\n});\n\nexport { handler as GET, handler as POST };"
+        },
+        {
+          "label": "Protect a server component",
+          "code": "// Any server component\nimport { getServerSession } from 'next-auth';\nimport { redirect } from 'next/navigation';\n\nexport default async function DashboardPage() {\n  const session = await getServerSession();\n  if (!session) redirect('/login');\n\n  return <div>Welcome, {session.user?.name}</div>;\n}"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 1500000,
+    "version": "4.24.11",
+    "repo_url": "https://github.com/nextauthjs/next-auth",
+    "docs_url": "https://next-auth.js.org/",
+    "npm_url": "https://www.npmjs.com/package/next-auth"
+  }
+}

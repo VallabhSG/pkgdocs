@@ -1,0 +1,202 @@
+{
+  "id": "pymongo",
+  "ecosystem": "pypi",
+  "name": "pymongo",
+  "summary": "Official MongoDB driver for Python — insert, query, update, and aggregate documents with a Pythonic API.",
+  "tags": [
+    "database",
+    "mongodb",
+    "nosql",
+    "async"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "You're using MongoDB and need to interact with it from Python. Whether it's inserting documents, running complex aggregation pipelines, or managing indexes, you need a driver that maps naturally to Python dicts.",
+    "mental_model": "MongoDB documents are JSON objects. pymongo maps them to Python dicts. A MongoClient connects to the cluster, you select a database and collection like attribute access (client.mydb.users), then call methods like .insert_one(), .find(), .update_many(). Aggregation pipelines are just lists of stage dicts.",
+    "when_to_use": "Applications already using MongoDB, document-oriented data (nested objects, variable schemas), rapid prototyping where schema flexibility matters, storing unstructured data like logs or events.",
+    "when_not_to_use": "When you need strong ACID transactions across many documents (use PostgreSQL), when your data is highly relational, or when you want an ORM-style interface (use Motor + Beanie for async).",
+    "alternatives": [
+      {
+        "name": "motor",
+        "reason": "Async MongoDB driver built on pymongo, for FastAPI/asyncio apps"
+      },
+      {
+        "name": "mongoengine",
+        "reason": "ODM (ORM-like) layer on top of pymongo"
+      },
+      {
+        "name": "beanie",
+        "reason": "Async ODM built on Motor, Pydantic integration"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "pymongo",
+        "type": "module",
+        "label": "pymongo",
+        "summary": "Package root",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "mongoclient",
+        "type": "class",
+        "label": "MongoClient",
+        "summary": "Connection to MongoDB server or cluster",
+        "difficulty": 1,
+        "tags": [
+          "connection"
+        ]
+      },
+      {
+        "id": "database",
+        "type": "class",
+        "label": "Database",
+        "summary": "Accessed via client.dbname",
+        "difficulty": 1,
+        "tags": [
+          "schema"
+        ]
+      },
+      {
+        "id": "collection",
+        "type": "class",
+        "label": "Collection",
+        "summary": "A set of documents — accessed via db.collname",
+        "difficulty": 1,
+        "tags": [
+          "schema"
+        ]
+      },
+      {
+        "id": "insert",
+        "type": "function",
+        "label": "insert_one/many()",
+        "summary": "Insert one or multiple documents",
+        "difficulty": 1,
+        "tags": [
+          "write"
+        ]
+      },
+      {
+        "id": "find",
+        "type": "function",
+        "label": "find() / find_one()",
+        "summary": "Query documents with filter dict",
+        "difficulty": 1,
+        "tags": [
+          "read"
+        ]
+      },
+      {
+        "id": "update",
+        "type": "function",
+        "label": "update_one/many()",
+        "summary": "Update documents matching a filter",
+        "difficulty": 2,
+        "tags": [
+          "write"
+        ]
+      },
+      {
+        "id": "aggregate",
+        "type": "function",
+        "label": "aggregate()",
+        "summary": "Run aggregation pipeline — group, sort, join, etc.",
+        "difficulty": 3,
+        "tags": [
+          "aggregation"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "pymongo",
+        "to": "mongoclient",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "mongoclient",
+        "to": "database",
+        "label": "returns"
+      },
+      {
+        "id": "e3",
+        "from": "database",
+        "to": "collection",
+        "label": "returns"
+      },
+      {
+        "id": "e4",
+        "from": "collection",
+        "to": "insert",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "collection",
+        "to": "find",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "collection",
+        "to": "update",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "collection",
+        "to": "aggregate",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "aggregate",
+        "to": "find",
+        "label": "uses"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "crud",
+      "title": "Basic CRUD operations",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Connect and insert",
+          "code": "from pymongo import MongoClient\n\nclient = MongoClient('mongodb://localhost:27017/')\ndb = client.myapp\nusers = db.users\n\n# Insert\nresult = users.insert_one({'name': 'Alice', 'email': 'alice@example.com', 'age': 30})\nprint(result.inserted_id)"
+        },
+        {
+          "label": "Query and update",
+          "code": "# Find one\nuser = users.find_one({'email': 'alice@example.com'})\nprint(user['name'])\n\n# Find many\nfor u in users.find({'age': {'$gte': 18}}).sort('name').limit(10):\n    print(u['name'])\n\n# Update\nusers.update_one(\n    {'email': 'alice@example.com'},\n    {'$set': {'age': 31}, '$push': {'logins': '2024-01-15'}}\n)"
+        }
+      ]
+    },
+    {
+      "id": "aggregation",
+      "title": "Aggregation pipeline",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Group and count",
+          "code": "pipeline = [\n    {'$match': {'status': 'active'}},\n    {'$group': {\n        '_id': '$country',\n        'count': {'$sum': 1},\n        'avg_age': {'$avg': '$age'}\n    }},\n    {'$sort': {'count': -1}},\n    {'$limit': 10}\n]\n\nfor result in users.aggregate(pipeline):\n    print(f\"{result['_id']}: {result['count']} users, avg age {result['avg_age']:.1f}\")"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 3500000,
+    "version": "4.10.1",
+    "repo_url": "https://github.com/mongodb/mongo-python-driver",
+    "docs_url": "https://pymongo.readthedocs.io/",
+    "pypi_url": "https://pypi.org/project/pymongo/"
+  }
+}

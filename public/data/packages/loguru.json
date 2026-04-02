@@ -1,0 +1,185 @@
+{
+  "id": "loguru",
+  "ecosystem": "pypi",
+  "name": "loguru",
+  "summary": "Python logging that doesn't make you want to cry — structured, colorful, zero-config, with automatic exception tracebacks.",
+  "tags": [
+    "logging",
+    "debugging",
+    "devtools",
+    "async"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "Python's built-in logging module requires boilerplate setup (handlers, formatters, loggers) just to print a colored timestamp. It's powerful but the API is from 2003 and shows its age.",
+    "mental_model": "Loguru has a single pre-configured logger object. You import it and call logger.info(). Under the hood it handles formatting, colors, log rotation, JSON output, and exception capture. Add sinks (files, services) with logger.add().",
+    "when_to_use": "Any Python application that needs logging — scripts, APIs, workers. Especially good for: colorized console output during development, structured JSON logs for production, automatic exception tracing.",
+    "when_not_to_use": "If your team's infrastructure is already built around stdlib logging and you can't change it easily — loguru can interop but it adds complexity.",
+    "alternatives": [
+      {
+        "name": "structlog",
+        "reason": "Structured logging with stdlib compatibility, better for large teams"
+      },
+      {
+        "name": "logging",
+        "reason": "stdlib, no dependency, required by some frameworks"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "loguru",
+        "type": "module",
+        "label": "loguru",
+        "summary": "Package root",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "logger",
+        "type": "class",
+        "label": "logger",
+        "summary": "Pre-configured singleton — just import and use",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "add",
+        "type": "function",
+        "label": "logger.add()",
+        "summary": "Add a sink (file, stderr, function, service)",
+        "signature": "add(sink, level='DEBUG', format=None, rotation=None)",
+        "difficulty": 2,
+        "tags": [
+          "config"
+        ]
+      },
+      {
+        "id": "catch",
+        "type": "function",
+        "label": "logger.catch()",
+        "summary": "Decorator/context manager that captures exceptions with full traceback",
+        "signature": "@logger.catch",
+        "difficulty": 1,
+        "tags": [
+          "exceptions"
+        ]
+      },
+      {
+        "id": "bind",
+        "type": "function",
+        "label": "logger.bind()",
+        "summary": "Add structured context to all subsequent log calls",
+        "signature": "bind(**kwargs) -> Logger",
+        "difficulty": 2,
+        "tags": [
+          "structured"
+        ]
+      },
+      {
+        "id": "serialize",
+        "type": "concept",
+        "label": "serialize=True",
+        "summary": "Output logs as JSON — great for production log aggregators",
+        "difficulty": 2,
+        "tags": [
+          "production"
+        ]
+      },
+      {
+        "id": "rotation",
+        "type": "concept",
+        "label": "Log rotation",
+        "summary": "Auto-rotate log files by size, time, or count",
+        "difficulty": 2,
+        "tags": [
+          "files"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "loguru",
+        "to": "logger",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "logger",
+        "to": "add",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "logger",
+        "to": "catch",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "logger",
+        "to": "bind",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "add",
+        "to": "serialize",
+        "label": "uses"
+      },
+      {
+        "id": "e6",
+        "from": "add",
+        "to": "rotation",
+        "label": "uses"
+      },
+      {
+        "id": "e7",
+        "from": "bind",
+        "to": "logger",
+        "label": "returns"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "basic-setup",
+      "title": "Replace print statements with proper logging",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Zero-config usage",
+          "code": "from loguru import logger\n\nlogger.debug('Debugging value: {}', some_var)\nlogger.info('Server started on port {}', 8000)\nlogger.warning('Cache miss — fetching from DB')\nlogger.error('Failed to connect: {}', exc)\nlogger.success('All 42 records processed')"
+        },
+        {
+          "label": "Add file sink with rotation",
+          "code": "logger.add(\n    'logs/app.log',\n    level='INFO',\n    rotation='10 MB',   # new file when this size is hit\n    retention='7 days', # delete old files\n    compression='zip',  # compress rotated files\n)"
+        }
+      ]
+    },
+    {
+      "id": "structured",
+      "title": "Structured JSON logging for production",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "JSON sink for log aggregators",
+          "code": "import sys\nfrom loguru import logger\n\nlogger.remove()  # remove default stderr handler\nlogger.add(sys.stderr, serialize=True, level='INFO')  # JSON output\nlogger.add('logs/app.json', serialize=True, rotation='1 day')\n\n# Bind request context\nreq_logger = logger.bind(request_id='abc-123', user_id=42)\nreq_logger.info('Processing payment', amount=99.99)"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 4000000,
+    "version": "0.7.2",
+    "repo_url": "https://github.com/Delgan/loguru",
+    "docs_url": "https://loguru.readthedocs.io/",
+    "pypi_url": "https://pypi.org/project/loguru/"
+  }
+}

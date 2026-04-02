@@ -1,0 +1,181 @@
+{
+  "id": "tenacity",
+  "ecosystem": "pypi",
+  "name": "tenacity",
+  "summary": "Retry any Python function with exponential backoff, jitter, and custom stop conditions — three decorator lines replace 30 lines of retry logic.",
+  "tags": [
+    "retry",
+    "resilience",
+    "async",
+    "networking",
+    "devtools"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "External APIs fail. Network calls time out. Databases hiccup. Without retry logic, your application crashes on the first transient failure. Writing retry loops by hand is repetitive, error-prone, and hard to configure correctly.",
+    "mental_model": "tenacity decorates your function with retry behavior. You declare when to stop (max attempts, timeout), how to wait between attempts (fixed, exponential, random), and what to retry on (exception types, return values). The decorator handles the loop, logging, and re-raising.",
+    "when_to_use": "Any I/O that can fail transiently: HTTP calls, database queries, queue operations, cloud API calls, file system operations on network drives.",
+    "when_not_to_use": "Don't retry non-idempotent operations (POST that creates resources) without careful thought. Don't retry errors that won't resolve with time (auth failures, 400 Bad Request).",
+    "alternatives": [
+      {
+        "name": "backoff",
+        "reason": "Similar purpose, slightly simpler API"
+      },
+      {
+        "name": "stamina",
+        "reason": "Newer, opinionated, includes instrumentation"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "tenacity",
+        "type": "module",
+        "label": "tenacity",
+        "summary": "Package root",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "retry",
+        "type": "function",
+        "label": "@retry",
+        "summary": "Main decorator — wraps a function with retry logic",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "stop_after_attempt",
+        "type": "function",
+        "label": "stop_after_attempt()",
+        "summary": "Stop after N failures",
+        "difficulty": 1,
+        "tags": [
+          "stop"
+        ]
+      },
+      {
+        "id": "wait_exponential",
+        "type": "function",
+        "label": "wait_exponential()",
+        "summary": "Exponential backoff — doubles wait each attempt",
+        "signature": "wait_exponential(multiplier=1, min=1, max=10)",
+        "difficulty": 1,
+        "tags": [
+          "wait"
+        ]
+      },
+      {
+        "id": "retry_if_exception",
+        "type": "function",
+        "label": "retry_if_exception_type()",
+        "summary": "Only retry on specific exception types",
+        "difficulty": 2,
+        "tags": [
+          "condition"
+        ]
+      },
+      {
+        "id": "wait_random",
+        "type": "function",
+        "label": "wait_random()",
+        "summary": "Random jitter — prevents thundering herd",
+        "signature": "wait_random(min=0, max=2)",
+        "difficulty": 2,
+        "tags": [
+          "wait"
+        ]
+      },
+      {
+        "id": "before_sleep",
+        "type": "concept",
+        "label": "before_sleep callback",
+        "summary": "Hook called before each sleep — good for logging",
+        "difficulty": 2,
+        "tags": [
+          "observability"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "tenacity",
+        "to": "retry",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "retry",
+        "to": "stop_after_attempt",
+        "label": "uses"
+      },
+      {
+        "id": "e3",
+        "from": "retry",
+        "to": "wait_exponential",
+        "label": "uses"
+      },
+      {
+        "id": "e4",
+        "from": "retry",
+        "to": "retry_if_exception",
+        "label": "uses"
+      },
+      {
+        "id": "e5",
+        "from": "wait_exponential",
+        "to": "wait_random",
+        "label": "uses"
+      },
+      {
+        "id": "e6",
+        "from": "retry",
+        "to": "before_sleep",
+        "label": "uses"
+      },
+      {
+        "id": "e7",
+        "from": "retry",
+        "to": "wait_random",
+        "label": "uses"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "basic-retry",
+      "title": "Retry an API call with exponential backoff",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Basic retry decorator",
+          "code": "from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type\nimport httpx\n\n@retry(\n    stop=stop_after_attempt(3),\n    wait=wait_exponential(multiplier=1, min=1, max=10),\n    retry=retry_if_exception_type(httpx.HTTPError),\n)\ndef fetch_data(url: str) -> dict:\n    response = httpx.get(url, timeout=5)\n    response.raise_for_status()\n    return response.json()\n\n# Will retry up to 3 times with 1s, 2s, 4s delays\ndata = fetch_data('https://api.example.com/data')"
+        }
+      ]
+    },
+    {
+      "id": "async-retry",
+      "title": "Retry an async function",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Async retry",
+          "code": "from tenacity import retry, stop_after_attempt, wait_random_exponential, before_sleep_log\nimport logging\nimport asyncio\nimport httpx\n\nlogger = logging.getLogger(__name__)\n\n@retry(\n    stop=stop_after_attempt(5),\n    wait=wait_random_exponential(min=1, max=30),  # jitter prevents thundering herd\n    before_sleep=before_sleep_log(logger, logging.WARNING),\n)\nasync def fetch_async(url: str) -> dict:\n    async with httpx.AsyncClient() as client:\n        r = await client.get(url, timeout=10)\n        r.raise_for_status()\n        return r.json()"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 5000000,
+    "version": "8.5.0",
+    "repo_url": "https://github.com/jd/tenacity",
+    "docs_url": "https://tenacity.readthedocs.io/",
+    "pypi_url": "https://pypi.org/project/tenacity/"
+  }
+}

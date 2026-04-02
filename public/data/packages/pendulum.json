@@ -1,0 +1,177 @@
+{
+  "id": "pendulum",
+  "ecosystem": "pypi",
+  "name": "pendulum",
+  "summary": "Drop-in datetime replacement with first-class timezone support, DST awareness, and intuitive arithmetic.",
+  "tags": [
+    "datetime",
+    "timezone",
+    "utilities",
+    "parsing"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "Timezone handling in Python is notoriously tricky — DST transitions, ambiguous local times, and converting between zones are error-prone with stdlib. You want a datetime object that just does the right thing.",
+    "mental_model": "pendulum.DateTime is a subclass of Python's datetime — so it works anywhere datetime does. pendulum.now() always returns a timezone-aware object. Arithmetic respects DST. You get .diff() for precise durations and .in_timezone() for safe conversions.",
+    "when_to_use": "Scheduling apps, calendar features, time-series data across timezones, any app where DST bugs would be costly.",
+    "when_not_to_use": "Simple UTC-only timestamps where datetime.now(timezone.utc) is sufficient. pendulum is heavier than stdlib.",
+    "alternatives": [
+      {
+        "name": "arrow",
+        "reason": "More humanize features, slightly simpler API"
+      },
+      {
+        "name": "dateutil",
+        "reason": "Stdlib-compatible, great for parsing"
+      },
+      {
+        "name": "datetime",
+        "reason": "Zero dep for simple cases"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "pendulum_mod",
+        "type": "module",
+        "label": "pendulum",
+        "summary": "Package root",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "datetime_cls",
+        "type": "class",
+        "label": "DateTime",
+        "summary": "Enhanced datetime subclass — always timezone-aware",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "now",
+        "type": "function",
+        "label": "pendulum.now()",
+        "summary": "Current time, always timezone-aware",
+        "difficulty": 1,
+        "tags": [
+          "creation"
+        ]
+      },
+      {
+        "id": "parse",
+        "type": "function",
+        "label": "pendulum.parse()",
+        "summary": "Parse ISO 8601 strings strictly",
+        "difficulty": 1,
+        "tags": [
+          "parsing"
+        ]
+      },
+      {
+        "id": "in_timezone",
+        "type": "function",
+        "label": ".in_timezone()",
+        "summary": "Convert to another timezone safely",
+        "difficulty": 1,
+        "tags": [
+          "timezone"
+        ]
+      },
+      {
+        "id": "diff",
+        "type": "function",
+        "label": ".diff()",
+        "summary": "Precise difference as a Duration object",
+        "difficulty": 2,
+        "tags": [
+          "arithmetic"
+        ]
+      },
+      {
+        "id": "period",
+        "type": "class",
+        "label": "Period",
+        "summary": "Represents a span between two datetimes, iterable by unit",
+        "difficulty": 2,
+        "tags": [
+          "range"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "pendulum_mod",
+        "to": "datetime_cls",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "pendulum_mod",
+        "to": "now",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "pendulum_mod",
+        "to": "parse",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "now",
+        "to": "datetime_cls",
+        "label": "returns"
+      },
+      {
+        "id": "e5",
+        "from": "parse",
+        "to": "datetime_cls",
+        "label": "returns"
+      },
+      {
+        "id": "e6",
+        "from": "datetime_cls",
+        "to": "in_timezone",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "datetime_cls",
+        "to": "diff",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "diff",
+        "to": "period",
+        "label": "returns"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "timezone",
+      "title": "Work with timezones safely",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Create and convert",
+          "code": "import pendulum\n\nnow_utc = pendulum.now('UTC')\nnow_nyc = now_utc.in_timezone('America/New_York')\nnow_tok = now_utc.in_timezone('Asia/Tokyo')\n\nprint(now_utc.to_iso8601_string())\nprint(now_nyc.format('ddd MMM D, h:mm A zz'))\n\n# Arithmetic respects DST\nmeetingtime = pendulum.datetime(2024, 3, 10, 12, 0, 0, tz='America/New_York')\nday_later = meetingtime.add(days=1)  # correctly crosses DST boundary"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 2000000,
+    "version": "3.0.0",
+    "repo_url": "https://github.com/sdispater/pendulum",
+    "docs_url": "https://pendulum.eustace.io/docs/",
+    "pypi_url": "https://pypi.org/project/pendulum/"
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "id": "recharts",
+  "ecosystem": "npm",
+  "name": "recharts",
+  "summary": "Composable charting components for React — build line, bar, pie, and area charts from SVG with a declarative JSX API.",
+  "tags": [
+    "charts",
+    "visualization",
+    "react",
+    "svg",
+    "data"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "You need standard charts (line, bar, pie) in a React app. d3 is too complex. Chart.js requires imperative setup and doesn't integrate with React state naturally. You want JSX components that accept your data arrays directly.",
+    "mental_model": "Recharts uses React's composability. A chart is a container (LineChart, BarChart) that accepts component children: <Line>, <Bar>, <XAxis>, <YAxis>, <Tooltip>, <Legend>. Pass your data array to the container, and specify which data key each series maps to. React handles re-renders.",
+    "when_to_use": "Dashboards, analytics pages, standard business charts in React apps, any time you want good-looking charts without a steep learning curve.",
+    "when_not_to_use": "Custom/unusual visualizations (use d3), non-React projects (use Chart.js), performance-critical charts with 100k+ data points (Canvas-based charts are faster).",
+    "alternatives": [
+      {
+        "name": "chart.js",
+        "reason": "Canvas-based, framework-agnostic, fast with large datasets"
+      },
+      {
+        "name": "victory",
+        "reason": "Also React-first, more customizable but more complex"
+      },
+      {
+        "name": "d3",
+        "reason": "Full control over every pixel, steeper learning curve"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "recharts_mod",
+        "type": "module",
+        "label": "recharts",
+        "summary": "Package root",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "linechart",
+        "type": "class",
+        "label": "LineChart",
+        "summary": "Container for line/area chart composition",
+        "difficulty": 1,
+        "tags": [
+          "charts"
+        ]
+      },
+      {
+        "id": "barchart",
+        "type": "class",
+        "label": "BarChart",
+        "summary": "Container for bar chart composition",
+        "difficulty": 1,
+        "tags": [
+          "charts"
+        ]
+      },
+      {
+        "id": "piechart",
+        "type": "class",
+        "label": "PieChart",
+        "summary": "Container for pie/donut chart composition",
+        "difficulty": 1,
+        "tags": [
+          "charts"
+        ]
+      },
+      {
+        "id": "line",
+        "type": "class",
+        "label": "Line / Area",
+        "summary": "Individual line or filled area series",
+        "difficulty": 1,
+        "tags": [
+          "series"
+        ]
+      },
+      {
+        "id": "axes",
+        "type": "class",
+        "label": "XAxis / YAxis",
+        "summary": "Configurable chart axes with tick formatting",
+        "difficulty": 1,
+        "tags": [
+          "axes"
+        ]
+      },
+      {
+        "id": "tooltip",
+        "type": "class",
+        "label": "Tooltip",
+        "summary": "Hover tooltip with customizable content renderer",
+        "difficulty": 1,
+        "tags": [
+          "interaction"
+        ]
+      },
+      {
+        "id": "responsive",
+        "type": "class",
+        "label": "ResponsiveContainer",
+        "summary": "Wrapper that makes charts fill their parent",
+        "difficulty": 1,
+        "tags": [
+          "layout"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "recharts_mod",
+        "to": "linechart",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "recharts_mod",
+        "to": "barchart",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "recharts_mod",
+        "to": "piechart",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "linechart",
+        "to": "line",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "linechart",
+        "to": "axes",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "linechart",
+        "to": "tooltip",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "responsive",
+        "to": "linechart",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "responsive",
+        "to": "barchart",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "line-chart",
+      "title": "Responsive line chart with tooltip",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Basic line chart",
+          "code": "import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';\n\nconst data = [\n  { month: 'Jan', revenue: 4200 },\n  { month: 'Feb', revenue: 5800 },\n  { month: 'Mar', revenue: 4900 },\n  { month: 'Apr', revenue: 7200 },\n];\n\nexport function RevenueChart() {\n  return (\n    <ResponsiveContainer width='100%' height={300}>\n      <LineChart data={data} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>\n        <CartesianGrid strokeDasharray='3 3' stroke='#f0f0f0' />\n        <XAxis dataKey='month' />\n        <YAxis tickFormatter={(v) => `$${v.toLocaleString()}`} />\n        <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, 'Revenue']} />\n        <Line type='monotone' dataKey='revenue' stroke='#6366f1' strokeWidth={2} dot={false} />\n      </LineChart>\n    </ResponsiveContainer>\n  );\n}"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 3200000,
+    "version": "2.15.0",
+    "repo_url": "https://github.com/recharts/recharts",
+    "docs_url": "https://recharts.org/en-US/api",
+    "npm_url": "https://www.npmjs.com/package/recharts"
+  }
+}

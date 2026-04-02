@@ -1,0 +1,255 @@
+{
+  "id": "matplotlib",
+  "ecosystem": "pypi",
+  "name": "matplotlib",
+  "summary": "The go-to plotting library for Python — create static, animated, and interactive visualizations with a MATLAB-like API.",
+  "tags": [
+    "visualization",
+    "plotting",
+    "data-science",
+    "charts",
+    "graphs"
+  ],
+  "difficulty": 2,
+  "story": {
+    "problem": "You have data — arrays, dataframes, model outputs — and you need to see it. Whether it's a quick line chart to check a trend or a publication-quality figure with subplots, you need a library that can do both without switching tools.",
+    "mental_model": "Think of matplotlib as a canvas + paintbrush system. The Figure is the canvas, Axes are individual plot areas, and everything (lines, labels, ticks, colors) is an Artist you can configure. The pyplot interface is a shortcut for common operations, but the object-oriented API gives you full control.",
+    "when_to_use": "Scientific plots, publication figures, embedding charts in reports, quick data exploration, custom visualizations that seaborn can't express, or when you need pixel-level control over a chart.",
+    "when_not_to_use": "Interactive web dashboards (use Plotly or Bokeh), real-time streaming charts, or when you just want something beautiful fast (try seaborn first).",
+    "alternatives": [
+      {
+        "name": "seaborn",
+        "reason": "Higher-level statistical plots with better defaults, built on top of matplotlib"
+      },
+      {
+        "name": "plotly",
+        "reason": "Interactive web-first charts, great for dashboards"
+      },
+      {
+        "name": "altair",
+        "reason": "Declarative grammar-of-graphics approach, clean API"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "matplotlib",
+        "type": "module",
+        "label": "matplotlib",
+        "summary": "Top-level package",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "pyplot",
+        "type": "module",
+        "label": "matplotlib.pyplot",
+        "summary": "MATLAB-like state-machine interface for quick plots",
+        "difficulty": 1,
+        "tags": [
+          "plotting"
+        ]
+      },
+      {
+        "id": "figure",
+        "type": "class",
+        "label": "Figure",
+        "summary": "Top-level container for all plot elements",
+        "difficulty": 2,
+        "tags": [
+          "container"
+        ]
+      },
+      {
+        "id": "axes",
+        "type": "class",
+        "label": "Axes",
+        "summary": "The actual plot area — most drawing happens here",
+        "difficulty": 2,
+        "tags": [
+          "plotting"
+        ]
+      },
+      {
+        "id": "plot",
+        "type": "function",
+        "label": "ax.plot()",
+        "summary": "Draw lines or markers",
+        "signature": "plot(x, y, fmt='', **kwargs)",
+        "difficulty": 1,
+        "tags": [
+          "line"
+        ]
+      },
+      {
+        "id": "scatter",
+        "type": "function",
+        "label": "ax.scatter()",
+        "summary": "Scatter plot with optional color/size mapping",
+        "signature": "scatter(x, y, c=None, s=None)",
+        "difficulty": 1,
+        "tags": [
+          "scatter"
+        ]
+      },
+      {
+        "id": "subplots",
+        "type": "function",
+        "label": "plt.subplots()",
+        "summary": "Create a figure with one or more subplots",
+        "signature": "subplots(nrows=1, ncols=1, **kwargs)",
+        "difficulty": 2,
+        "tags": [
+          "layout"
+        ]
+      },
+      {
+        "id": "savefig",
+        "type": "function",
+        "label": "fig.savefig()",
+        "summary": "Save figure to file (PNG, PDF, SVG…)",
+        "signature": "savefig(fname, dpi=None, format=None)",
+        "difficulty": 1,
+        "tags": [
+          "output"
+        ]
+      },
+      {
+        "id": "colormap",
+        "type": "concept",
+        "label": "Colormap",
+        "summary": "Map scalar values to colors (viridis, plasma, etc.)",
+        "difficulty": 2,
+        "tags": [
+          "color"
+        ]
+      },
+      {
+        "id": "artist",
+        "type": "concept",
+        "label": "Artist",
+        "summary": "Base class for everything drawn on a figure",
+        "difficulty": 3,
+        "tags": [
+          "internals"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "matplotlib",
+        "to": "pyplot",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "pyplot",
+        "to": "figure",
+        "label": "returns"
+      },
+      {
+        "id": "e3",
+        "from": "figure",
+        "to": "axes",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "axes",
+        "to": "plot",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "axes",
+        "to": "scatter",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "pyplot",
+        "to": "subplots",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "subplots",
+        "to": "figure",
+        "label": "returns"
+      },
+      {
+        "id": "e8",
+        "from": "figure",
+        "to": "savefig",
+        "label": "contains"
+      },
+      {
+        "id": "e9",
+        "from": "colormap",
+        "to": "scatter",
+        "label": "uses"
+      },
+      {
+        "id": "e10",
+        "from": "artist",
+        "to": "axes",
+        "label": "contains"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "line-chart",
+      "title": "Plot a line chart",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import and create data",
+          "code": "import matplotlib.pyplot as plt\nimport numpy as np\n\nx = np.linspace(0, 10, 100)\ny = np.sin(x)"
+        },
+        {
+          "label": "Plot and show",
+          "code": "fig, ax = plt.subplots(figsize=(8, 4))\nax.plot(x, y, color='steelblue', linewidth=2, label='sin(x)')\nax.set_xlabel('x')\nax.set_ylabel('y')\nax.set_title('Sine Wave')\nax.legend()\nax.grid(alpha=0.3)\nplt.tight_layout()\nplt.show()",
+          "explanation": "Always use the object-oriented ax.plot() style rather than plt.plot() for production code — it's clearer when you have multiple subplots."
+        }
+      ]
+    },
+    {
+      "id": "subplots",
+      "title": "Create a multi-panel figure",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Create subplot grid",
+          "code": "fig, axes = plt.subplots(2, 2, figsize=(10, 8))\naxes = axes.flatten()  # easier indexing"
+        },
+        {
+          "label": "Plot in each panel",
+          "code": "for i, ax in enumerate(axes):\n    x = np.random.randn(100)\n    ax.hist(x, bins=20, color=f'C{i}', alpha=0.7)\n    ax.set_title(f'Panel {i+1}')\n\nfig.suptitle('Four Histograms', fontsize=14)\nplt.tight_layout()\nplt.savefig('figure.png', dpi=150, bbox_inches='tight')"
+        }
+      ]
+    },
+    {
+      "id": "heatmap",
+      "title": "Plot a heatmap / 2D matrix",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Create and show heatmap",
+          "code": "data = np.random.rand(8, 8)\nfig, ax = plt.subplots(figsize=(6, 5))\nim = ax.imshow(data, cmap='viridis', aspect='auto')\nplt.colorbar(im, ax=ax, label='Value')\nax.set_title('Random Heatmap')\nplt.tight_layout()\nplt.show()"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 25000000,
+    "version": "3.9.2",
+    "repo_url": "https://github.com/matplotlib/matplotlib",
+    "docs_url": "https://matplotlib.org/stable/",
+    "pypi_url": "https://pypi.org/project/matplotlib/"
+  }
+}

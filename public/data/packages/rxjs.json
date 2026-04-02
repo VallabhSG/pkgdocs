@@ -1,0 +1,178 @@
+{
+  "id": "rxjs",
+  "ecosystem": "npm",
+  "name": "rxjs",
+  "summary": "Reactive programming for JavaScript — compose async event streams with a rich set of operators for transforming, filtering, and combining data over time.",
+  "tags": [
+    "reactive",
+    "async",
+    "streams",
+    "observables",
+    "angular"
+  ],
+  "difficulty": 3,
+  "story": {
+    "problem": "Promises handle one async value. Arrays handle multiple sync values. But multiple async values over time — WebSocket messages, mouse events, polling — don't fit either model. Managing subscriptions, cancellation, and complex event coordination with callbacks leads to spaghetti.",
+    "mental_model": "Observable is the core primitive: a lazy push collection. Subscribe to it to receive values. Operators (map, filter, mergeMap, debounceTime) transform streams in a functional pipeline style. Think of it as array methods (.map, .filter) but for values that arrive over time. Subject is both Observable and Observer — useful for multicasting.",
+    "when_to_use": "Angular apps (where it's built-in), complex event handling (drag-and-drop, real-time updates), WebSocket streams, coordinating multiple async operations, auto-completing search inputs with cancellation.",
+    "when_not_to_use": "Simple one-off async operations (use async/await), React apps where hooks + SWR/react-query are more idiomatic, or when the team isn't familiar with reactive programming (steep learning curve).",
+    "alternatives": [
+      {
+        "name": "xstate",
+        "reason": "State machines for complex stateful async — more explicit"
+      },
+      {
+        "name": "most.js",
+        "reason": "Faster, lighter reactive library"
+      },
+      {
+        "name": "Promise/async-await",
+        "reason": "Simpler for one-shot async operations"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "rxjs_mod",
+        "type": "module",
+        "label": "rxjs",
+        "summary": "Package root — Observable, Subject, operators",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "observable",
+        "type": "class",
+        "label": "Observable",
+        "summary": "Lazy push data source — subscribe to receive values",
+        "difficulty": 2,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "subject",
+        "type": "class",
+        "label": "Subject",
+        "summary": "Observable + Observer — push values to multiple subscribers",
+        "difficulty": 2,
+        "tags": [
+          "multicasting"
+        ]
+      },
+      {
+        "id": "operators",
+        "type": "module",
+        "label": "rxjs/operators",
+        "summary": "map, filter, mergeMap, debounceTime, switchMap, etc.",
+        "difficulty": 2,
+        "tags": [
+          "operators"
+        ]
+      },
+      {
+        "id": "pipe",
+        "type": "function",
+        "label": ".pipe()",
+        "summary": "Chain operators: obs.pipe(op1, op2, op3)",
+        "difficulty": 1,
+        "tags": [
+          "composition"
+        ]
+      },
+      {
+        "id": "switchmap",
+        "type": "function",
+        "label": "switchMap()",
+        "summary": "Cancel previous inner observable on each new outer value",
+        "difficulty": 3,
+        "tags": [
+          "flattening"
+        ]
+      },
+      {
+        "id": "subscription",
+        "type": "class",
+        "label": "Subscription",
+        "summary": "Handle returned by .subscribe() — call .unsubscribe() to clean up",
+        "difficulty": 2,
+        "tags": [
+          "lifecycle"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "rxjs_mod",
+        "to": "observable",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "rxjs_mod",
+        "to": "subject",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "rxjs_mod",
+        "to": "operators",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "observable",
+        "to": "pipe",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "pipe",
+        "to": "operators",
+        "label": "uses"
+      },
+      {
+        "id": "e6",
+        "from": "operators",
+        "to": "switchmap",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "observable",
+        "to": "subscription",
+        "label": "returns"
+      },
+      {
+        "id": "e8",
+        "from": "subject",
+        "to": "observable",
+        "label": "inherits"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "debounce-search",
+      "title": "Debounced search with cancellation",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Debounce input and cancel old requests",
+          "code": "import { fromEvent, Subject } from 'rxjs';\nimport { debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs/operators';\n\nconst searchInput = document.getElementById('search') as HTMLInputElement;\n\nconst search$ = fromEvent(searchInput, 'input').pipe(\n  map(e => (e.target as HTMLInputElement).value.trim()),\n  debounceTime(300),           // wait 300ms after last keystroke\n  distinctUntilChanged(),      // ignore if same value\n  switchMap(query =>           // cancel previous request on new input\n    fetch(`/api/search?q=${query}`).then(r => r.json())\n  )\n);\n\nconst sub = search$.subscribe(results => renderResults(results));\n// Later: sub.unsubscribe() to clean up"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 45000000,
+    "version": "7.8.2",
+    "repo_url": "https://github.com/ReactiveX/rxjs",
+    "docs_url": "https://rxjs.dev/",
+    "npm_url": "https://www.npmjs.com/package/rxjs"
+  }
+}

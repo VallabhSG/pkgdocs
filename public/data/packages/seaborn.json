@@ -1,0 +1,209 @@
+{
+  "id": "seaborn",
+  "ecosystem": "pypi",
+  "name": "seaborn",
+  "summary": "Statistical data visualization built on matplotlib — beautiful charts with sensible defaults and one-line syntax.",
+  "tags": [
+    "visualization",
+    "statistics",
+    "data-science",
+    "plotting"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "matplotlib gives you full power but requires a lot of code for common statistical plots like distributions, correlations, and categorical comparisons. Styling it to look good takes even more effort.",
+    "mental_model": "seaborn is a high-level wrapper around matplotlib. Think of it as matplotlib with pre-built chart types for statistics, better color palettes by default, and tight pandas integration. It still returns matplotlib Figure/Axes objects, so you can drop down to matplotlib for fine-tuning.",
+    "when_to_use": "Exploratory data analysis, correlation matrices, distribution comparisons, categorical plots, regression plots, or any time you want a beautiful statistical chart in a few lines.",
+    "when_not_to_use": "Custom non-statistical visualizations, interactive web charts, or when you need pixel-perfect control over layout.",
+    "alternatives": [
+      {
+        "name": "matplotlib",
+        "reason": "More control, lower-level, no statistical defaults"
+      },
+      {
+        "name": "plotly",
+        "reason": "Interactive and web-first"
+      },
+      {
+        "name": "altair",
+        "reason": "Grammar-of-graphics declarative approach"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "seaborn",
+        "type": "module",
+        "label": "seaborn",
+        "summary": "Top-level module — most functions live here",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "scatterplot",
+        "type": "function",
+        "label": "sns.scatterplot()",
+        "summary": "Scatter plot with hue/size/style mappings",
+        "signature": "scatterplot(data, x, y, hue=None)",
+        "difficulty": 1,
+        "tags": [
+          "scatter"
+        ]
+      },
+      {
+        "id": "histplot",
+        "type": "function",
+        "label": "sns.histplot()",
+        "summary": "Histogram with optional KDE overlay",
+        "signature": "histplot(data, x=None, kde=False)",
+        "difficulty": 1,
+        "tags": [
+          "distribution"
+        ]
+      },
+      {
+        "id": "heatmap",
+        "type": "function",
+        "label": "sns.heatmap()",
+        "summary": "Color-encoded matrix, great for correlation tables",
+        "signature": "heatmap(data, annot=False, cmap=None)",
+        "difficulty": 1,
+        "tags": [
+          "matrix"
+        ]
+      },
+      {
+        "id": "pairplot",
+        "type": "function",
+        "label": "sns.pairplot()",
+        "summary": "All pairwise relationships in a dataset at once",
+        "signature": "pairplot(data, hue=None)",
+        "difficulty": 1,
+        "tags": [
+          "eda"
+        ]
+      },
+      {
+        "id": "boxplot",
+        "type": "function",
+        "label": "sns.boxplot()",
+        "summary": "Quartiles and outliers per category",
+        "signature": "boxplot(data, x=None, y=None, hue=None)",
+        "difficulty": 1,
+        "tags": [
+          "categorical"
+        ]
+      },
+      {
+        "id": "lmplot",
+        "type": "function",
+        "label": "sns.lmplot()",
+        "summary": "Scatter plot + linear regression line + confidence interval",
+        "signature": "lmplot(data, x, y, hue=None)",
+        "difficulty": 2,
+        "tags": [
+          "regression"
+        ]
+      },
+      {
+        "id": "set_theme",
+        "type": "function",
+        "label": "sns.set_theme()",
+        "summary": "Set global style, palette, and font scale",
+        "signature": "set_theme(style='darkgrid', palette='deep')",
+        "difficulty": 1,
+        "tags": [
+          "styling"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "seaborn",
+        "to": "scatterplot",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "seaborn",
+        "to": "histplot",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "seaborn",
+        "to": "heatmap",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "seaborn",
+        "to": "pairplot",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "seaborn",
+        "to": "boxplot",
+        "label": "contains"
+      },
+      {
+        "id": "e6",
+        "from": "seaborn",
+        "to": "lmplot",
+        "label": "contains"
+      },
+      {
+        "id": "e7",
+        "from": "seaborn",
+        "to": "set_theme",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "pairplot",
+        "to": "scatterplot",
+        "label": "uses"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "correlation-heatmap",
+      "title": "Correlation matrix heatmap",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Import and compute correlation",
+          "code": "import seaborn as sns\nimport pandas as pd\n\ndf = sns.load_dataset('iris')  # or your own DataFrame\ncorr = df.select_dtypes('number').corr()"
+        },
+        {
+          "label": "Plot heatmap",
+          "code": "sns.set_theme(style='white')\nfig = sns.heatmap(\n    corr,\n    annot=True,    # show numbers\n    fmt='.2f',\n    cmap='coolwarm',\n    center=0,\n    square=True,\n    linewidths=0.5\n).figure\nfig.suptitle('Feature Correlations')\nfig.tight_layout()"
+        }
+      ]
+    },
+    {
+      "id": "distribution",
+      "title": "Compare distributions across groups",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Violin + strip plot combo",
+          "code": "import seaborn as sns\nimport matplotlib.pyplot as plt\n\ntips = sns.load_dataset('tips')\nfig, ax = plt.subplots(figsize=(8, 5))\nsns.violinplot(data=tips, x='day', y='total_bill', hue='sex', split=True, ax=ax)\nsns.stripplot(data=tips, x='day', y='total_bill', hue='sex', dodge=True, size=3, alpha=0.4, ax=ax)\nax.set_title('Bill distribution by day and gender')\nplt.tight_layout()\nplt.show()"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 8000000,
+    "version": "0.13.2",
+    "repo_url": "https://github.com/mwaskom/seaborn",
+    "docs_url": "https://seaborn.pydata.org/",
+    "pypi_url": "https://pypi.org/project/seaborn/"
+  }
+}

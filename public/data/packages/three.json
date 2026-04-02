@@ -1,0 +1,219 @@
+{
+  "id": "three",
+  "ecosystem": "npm",
+  "name": "three",
+  "summary": "3D graphics in the browser — WebGL-powered scenes, lights, cameras, and geometries with a beginner-friendly JavaScript API.",
+  "tags": [
+    "3d",
+    "webgl",
+    "graphics",
+    "animation",
+    "canvas"
+  ],
+  "difficulty": 3,
+  "story": {
+    "problem": "WebGL is powerful but requires hundreds of lines of raw GLSL/JS just to render a triangle. You want to build 3D scenes — rotating objects, lighting, cameras, particle systems — without managing GPU state machines directly.",
+    "mental_model": "Think of three.js as a scene graph. You create a Scene, add Meshes (geometry + material), position a Camera, and render with WebGLRenderer. The animation loop calls renderer.render(scene, camera) on every frame. Everything is a mathematical object: Vector3, Quaternion, Matrix4.",
+    "when_to_use": "3D product viewers, data visualizations in 3D, games, interactive art, generative design, architecture visualization, any WebGL experience.",
+    "when_not_to_use": "2D graphics (use canvas API or SVG), simple CSS animations, when you need a full game engine (use Babylon.js or Unity WebGL).",
+    "alternatives": [
+      {
+        "name": "react-three-fiber",
+        "reason": "React bindings for three.js — declarative scene graph"
+      },
+      {
+        "name": "babylon.js",
+        "reason": "Full game engine, more batteries included"
+      },
+      {
+        "name": "p5.js",
+        "reason": "Creative coding, 2D/simple 3D, easier for beginners"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "three_mod",
+        "type": "module",
+        "label": "three",
+        "summary": "Package root, exports all core classes",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "scene",
+        "type": "class",
+        "label": "Scene",
+        "summary": "Container for all 3D objects",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "camera",
+        "type": "class",
+        "label": "PerspectiveCamera",
+        "summary": "Camera with field-of-view — most common type",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "renderer",
+        "type": "class",
+        "label": "WebGLRenderer",
+        "summary": "Renders scene to a canvas element",
+        "difficulty": 1,
+        "tags": [
+          "rendering"
+        ]
+      },
+      {
+        "id": "mesh",
+        "type": "class",
+        "label": "Mesh",
+        "summary": "Geometry + Material = visible 3D object",
+        "difficulty": 1,
+        "tags": [
+          "objects"
+        ]
+      },
+      {
+        "id": "geometry",
+        "type": "class",
+        "label": "BoxGeometry / SphereGeometry",
+        "summary": "Define the shape of a mesh",
+        "difficulty": 1,
+        "tags": [
+          "geometry"
+        ]
+      },
+      {
+        "id": "material",
+        "type": "class",
+        "label": "MeshStandardMaterial",
+        "summary": "PBR material that responds to lights",
+        "difficulty": 2,
+        "tags": [
+          "materials"
+        ]
+      },
+      {
+        "id": "light",
+        "type": "class",
+        "label": "DirectionalLight / AmbientLight",
+        "summary": "Light sources that illuminate materials",
+        "difficulty": 2,
+        "tags": [
+          "lighting"
+        ]
+      },
+      {
+        "id": "animloop",
+        "type": "concept",
+        "label": "Animation Loop",
+        "summary": "requestAnimationFrame loop calling renderer.render() each frame",
+        "difficulty": 1,
+        "tags": [
+          "animation"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "three_mod",
+        "to": "scene",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "three_mod",
+        "to": "camera",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "three_mod",
+        "to": "renderer",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "scene",
+        "to": "mesh",
+        "label": "contains"
+      },
+      {
+        "id": "e5",
+        "from": "mesh",
+        "to": "geometry",
+        "label": "uses"
+      },
+      {
+        "id": "e6",
+        "from": "mesh",
+        "to": "material",
+        "label": "uses"
+      },
+      {
+        "id": "e7",
+        "from": "scene",
+        "to": "light",
+        "label": "contains"
+      },
+      {
+        "id": "e8",
+        "from": "material",
+        "to": "light",
+        "label": "uses"
+      },
+      {
+        "id": "e9",
+        "from": "renderer",
+        "to": "animloop",
+        "label": "uses"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "spinning-cube",
+      "title": "Render a spinning cube",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Set up scene, camera, renderer",
+          "code": "import * as THREE from 'three';\n\nconst scene = new THREE.Scene();\nconst camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);\ncamera.position.z = 5;\n\nconst renderer = new THREE.WebGLRenderer({ antialias: true });\nrenderer.setSize(window.innerWidth, window.innerHeight);\nrenderer.setPixelRatio(window.devicePixelRatio);\ndocument.body.appendChild(renderer.domElement);"
+        },
+        {
+          "label": "Add a lit cube and animate",
+          "code": "const geometry = new THREE.BoxGeometry(1, 1, 1);\nconst material = new THREE.MeshStandardMaterial({ color: 0x6366f1 });\nconst cube = new THREE.Mesh(geometry, material);\nscene.add(cube);\n\nscene.add(new THREE.AmbientLight(0xffffff, 0.5));\nconst dirLight = new THREE.DirectionalLight(0xffffff, 1);\ndirLight.position.set(5, 5, 5);\nscene.add(dirLight);\n\nfunction animate() {\n  requestAnimationFrame(animate);\n  cube.rotation.x += 0.01;\n  cube.rotation.y += 0.01;\n  renderer.render(scene, camera);\n}\nanimate();"
+        }
+      ]
+    },
+    {
+      "id": "gltf-model",
+      "title": "Load and display a 3D model (GLTF)",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Use GLTFLoader",
+          "code": "import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';\n\nconst loader = new GLTFLoader();\nloader.load(\n  '/models/scene.gltf',\n  (gltf) => {\n    scene.add(gltf.scene);\n    gltf.scene.scale.set(0.5, 0.5, 0.5);\n    animate();\n  },\n  (progress) => console.log((progress.loaded / progress.total * 100) + '% loaded'),\n  (error) => console.error('Load error:', error)\n);"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 3000000,
+    "version": "0.170.0",
+    "repo_url": "https://github.com/mrdoob/three.js",
+    "docs_url": "https://threejs.org/docs/",
+    "npm_url": "https://www.npmjs.com/package/three"
+  }
+}

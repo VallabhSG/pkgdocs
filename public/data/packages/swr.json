@@ -1,0 +1,183 @@
+{
+  "id": "swr",
+  "ecosystem": "npm",
+  "name": "swr",
+  "summary": "React data fetching with stale-while-revalidate caching — one hook for all your remote data needs with automatic revalidation.",
+  "tags": [
+    "react",
+    "data-fetching",
+    "caching",
+    "hooks",
+    "async"
+  ],
+  "difficulty": 1,
+  "story": {
+    "problem": "Fetching data in React requires useEffect + useState + loading/error states — repeated in every component. You also need caching, deduplication (don't fetch the same key twice), automatic refetch on focus, and cache invalidation after mutations.",
+    "mental_model": "SWR's core idea: const { data, error, isLoading } = useSWR(key, fetcher). The key is a unique string (usually the URL). The fetcher is your async function. SWR caches by key — the same key anywhere in your app shares data instantly. On focus or network reconnect, it silently revalidates in the background.",
+    "when_to_use": "Read-heavy React apps: dashboards, profiles, lists. When you want simple cache-first data with background refresh. When components far apart need to share server data without prop drilling.",
+    "when_not_to_use": "Complex mutation workflows with optimistic updates and rollbacks (react-query/TanStack Query is more powerful for this). Server-side rendering where you need full control over data fetching timing.",
+    "alternatives": [
+      {
+        "name": "react-query",
+        "reason": "More powerful: built-in mutations, infinite queries, devtools, offline support"
+      },
+      {
+        "name": "RTK Query",
+        "reason": "If you're already using Redux Toolkit"
+      },
+      {
+        "name": "Apollo Client",
+        "reason": "If your API is GraphQL"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "swr_mod",
+        "type": "module",
+        "label": "swr",
+        "summary": "Package root",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "useSWR",
+        "type": "function",
+        "label": "useSWR()",
+        "summary": "Main hook — key + fetcher → { data, error, isLoading }",
+        "difficulty": 1,
+        "tags": [
+          "core"
+        ]
+      },
+      {
+        "id": "mutate",
+        "type": "function",
+        "label": "mutate()",
+        "summary": "Trigger revalidation or optimistic update for a key",
+        "difficulty": 2,
+        "tags": [
+          "mutations"
+        ]
+      },
+      {
+        "id": "swrconfig",
+        "type": "class",
+        "label": "SWRConfig",
+        "summary": "Provider for global fetcher, cache, and options",
+        "difficulty": 2,
+        "tags": [
+          "config"
+        ]
+      },
+      {
+        "id": "useSWRInfinite",
+        "type": "function",
+        "label": "useSWRInfinite()",
+        "summary": "Paginated/infinite scroll data fetching",
+        "difficulty": 2,
+        "tags": [
+          "pagination"
+        ]
+      },
+      {
+        "id": "revalidation",
+        "type": "concept",
+        "label": "Revalidation",
+        "summary": "Auto-refetch on focus, network recovery, or interval",
+        "difficulty": 1,
+        "tags": [
+          "caching"
+        ]
+      },
+      {
+        "id": "deduplication",
+        "type": "concept",
+        "label": "Deduplication",
+        "summary": "Same key across 100 components = 1 network request",
+        "difficulty": 1,
+        "tags": [
+          "caching"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "from": "swr_mod",
+        "to": "useSWR",
+        "label": "contains"
+      },
+      {
+        "id": "e2",
+        "from": "swr_mod",
+        "to": "swrconfig",
+        "label": "contains"
+      },
+      {
+        "id": "e3",
+        "from": "swr_mod",
+        "to": "useSWRInfinite",
+        "label": "contains"
+      },
+      {
+        "id": "e4",
+        "from": "useSWR",
+        "to": "mutate",
+        "label": "returns"
+      },
+      {
+        "id": "e5",
+        "from": "useSWR",
+        "to": "revalidation",
+        "label": "uses"
+      },
+      {
+        "id": "e6",
+        "from": "useSWR",
+        "to": "deduplication",
+        "label": "uses"
+      },
+      {
+        "id": "e7",
+        "from": "swrconfig",
+        "to": "useSWR",
+        "label": "uses"
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "basic-fetch",
+      "title": "Fetch and display data with loading state",
+      "difficulty": "beginner",
+      "steps": [
+        {
+          "label": "Basic useSWR",
+          "code": "import useSWR from 'swr';\n\nconst fetcher = (url: string) => fetch(url).then(r => r.json());\n\nexport function UserProfile({ userId }: { userId: string }) {\n  const { data: user, error, isLoading } = useSWR(\n    `/api/users/${userId}`,\n    fetcher,\n    { revalidateOnFocus: true }\n  );\n\n  if (isLoading) return <div>Loading...</div>;\n  if (error) return <div>Error: {error.message}</div>;\n  return <div>{user.name} — {user.email}</div>;\n}"
+        }
+      ]
+    },
+    {
+      "id": "mutation",
+      "title": "Mutate cache after an update",
+      "difficulty": "intermediate",
+      "steps": [
+        {
+          "label": "Optimistic update",
+          "code": "import useSWR, { mutate } from 'swr';\n\nasync function updateUser(id: string, data: Partial<User>) {\n  // Optimistic update — update cache immediately\n  mutate(`/api/users/${id}`, { ...currentUser, ...data }, false);\n\n  // Persist to server\n  await fetch(`/api/users/${id}`, {\n    method: 'PATCH',\n    body: JSON.stringify(data)\n  });\n\n  // Revalidate to get server truth\n  mutate(`/api/users/${id}`);\n}"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "weekly_downloads": 3500000,
+    "version": "2.3.3",
+    "repo_url": "https://github.com/vercel/swr",
+    "docs_url": "https://swr.vercel.app/",
+    "npm_url": "https://www.npmjs.com/package/swr"
+  }
+}
