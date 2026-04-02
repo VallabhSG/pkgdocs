@@ -4,6 +4,9 @@ import Link from "next/link";
 import type { Package } from "@/lib/types";
 import SearchBar from "@/components/SearchBar";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { AnimatedGradientText } from "@/components/ui/AnimatedGradientText";
+import { ShimmerButton } from "@/components/ui/ShimmerButton";
+import { Meteors } from "@/components/ui/Meteors";
 
 async function getPackages(): Promise<Package[]> {
   if (isSupabaseConfigured() && supabase) {
@@ -32,23 +35,31 @@ const FEATURED_IDS = ["requests", "pandas", "fastapi", "zod", "axios", "vite"];
 const FEATURES = [
   {
     icon: "📖",
-    title: "Story view",
-    desc: "The problem, mental model, when to use it — written for humans, not robots.",
+    title: "Story View",
+    desc: "The problem, mental model, when to use — written for humans, not robots.",
+    color: "from-blue-500/10 to-indigo-500/10 border-blue-200/60",
+    iconBg: "bg-blue-50",
   },
   {
     icon: "▶",
-    title: "Live demos",
+    title: "Live Demos",
     desc: "Interactive playgrounds that run in the browser. No setup required.",
+    color: "from-violet-500/10 to-purple-500/10 border-violet-200/60",
+    iconBg: "bg-violet-50",
   },
   {
     icon: "🗺",
-    title: "API map",
-    desc: "Visual graph of classes, functions and relationships — navigate the API visually.",
+    title: "API Map",
+    desc: "Visual graph of classes, functions and relationships — navigate visually.",
+    color: "from-emerald-500/10 to-teal-500/10 border-emerald-200/60",
+    iconBg: "bg-emerald-50",
   },
   {
     icon: "⚡",
     title: "Recipes",
     desc: "Copy-paste code snippets for the most common tasks. One click to copy.",
+    color: "from-amber-500/10 to-orange-500/10 border-amber-200/60",
+    iconBg: "bg-amber-50",
   },
 ];
 
@@ -68,15 +79,16 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Nav */}
-      <header className="border-b border-slate-200 bg-white sticky top-0 z-10">
+
+      {/* ── Sticky Nav ── */}
+      <header className="border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-20">
         <div className="max-w-5xl mx-auto px-6 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xl">📦</span>
-            <span className="font-bold text-slate-900">pkgdocs</span>
+            <span className="font-bold text-slate-900 tracking-tight">pkgdocs</span>
             <span className="text-xs bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full font-medium">beta</span>
           </div>
-          <div className="flex items-center gap-4 text-sm text-slate-500">
+          <div className="flex items-center gap-5 text-sm text-slate-500">
             <span className="hidden sm:inline">
               <span className="font-semibold text-slate-700">{packages.length}</span> packages
             </span>
@@ -84,7 +96,7 @@ export default async function HomePage() {
               href="https://github.com/VallabhSG/pkgdocs"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-slate-800 transition-colors"
+              className="flex items-center gap-1.5 hover:text-slate-800 transition-colors font-medium"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.749 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
@@ -95,43 +107,86 @@ export default async function HomePage() {
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="bg-white border-b border-slate-200">
-        <div className="max-w-5xl mx-auto px-6 py-16 text-center">
-          <div className="flex items-center justify-center gap-2 mb-5">
-            <span className="text-xs font-semibold bg-indigo-50 text-indigo-600 border border-indigo-100 px-3 py-1 rounded-full">
-              {pypiCount} Python · {npmCount} npm packages
-            </span>
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden bg-slate-950 border-b border-slate-800">
+        {/* Meteor background */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Meteors number={25} />
+        </div>
+
+        {/* Radial glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(99,102,241,0.25),transparent)] pointer-events-none" />
+
+        <div className="relative max-w-5xl mx-auto px-6 py-20 sm:py-28 text-center">
+          {/* Badge */}
+          <div className="flex justify-center mb-6">
+            <AnimatedGradientText className="text-slate-200">
+              <span className="mr-2">✨</span>
+              <span>{pypiCount} Python · {npmCount} npm packages</span>
+              <span className="ml-2 text-slate-400">→</span>
+            </AnimatedGradientText>
           </div>
-          <h1 className="text-5xl sm:text-6xl font-bold text-slate-900 mb-5 leading-tight tracking-tight">
+
+          {/* Headline */}
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-[1.08] tracking-tight">
             Package docs that
             <br />
-            <span className="text-indigo-600">actually make sense</span>
+            <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400 bg-clip-text text-transparent">
+              actually make sense
+            </span>
           </h1>
-          <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-8 leading-relaxed">
+
+          {/* Sub */}
+          <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
             Every package explained with a story, a visual API map, a live demo,
-            and copy-paste recipes. For beginners and experts alike.
+            and copy-paste recipes — for beginners and experts alike.
           </p>
-          <a
-            href="#search"
-            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
-          >
-            Browse packages
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </a>
+
+          {/* CTA */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a href="#search">
+              <ShimmerButton
+                background="rgba(99,102,241,1)"
+                borderRadius="12px"
+                className="text-sm font-semibold px-7 py-3 gap-2"
+              >
+                Browse all {packages.length} packages
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </ShimmerButton>
+            </a>
+            <a
+              href="https://github.com/VallabhSG/pkgdocs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white border border-slate-700 hover:border-slate-500 px-5 py-3 rounded-xl transition-all"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.749 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+              </svg>
+              Star on GitHub
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* Feature pills */}
-      <section className="border-b border-slate-200 bg-slate-50">
-        <div className="max-w-5xl mx-auto px-6 py-8">
+      {/* ── Features ── */}
+      <section className="bg-white border-b border-slate-200">
+        <div className="max-w-5xl mx-auto px-6 py-12">
+          <p className="text-center text-xs font-bold text-slate-400 uppercase tracking-widest mb-8">
+            Four ways to understand any package
+          </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {FEATURES.map(({ icon, title, desc }) => (
-              <div key={title} className="bg-white border border-slate-200 rounded-xl p-4 text-center">
-                <div className="text-2xl mb-2">{icon}</div>
-                <div className="text-sm font-semibold text-slate-800 mb-1">{title}</div>
+            {FEATURES.map(({ icon, title, desc, color, iconBg }) => (
+              <div
+                key={title}
+                className={`bg-gradient-to-br ${color} border rounded-2xl p-5 hover:shadow-md transition-shadow`}
+              >
+                <div className={`w-9 h-9 ${iconBg} rounded-xl flex items-center justify-center text-lg mb-3`}>
+                  {icon}
+                </div>
+                <div className="text-sm font-bold text-slate-800 mb-1">{title}</div>
                 <div className="text-xs text-slate-500 leading-snug">{desc}</div>
               </div>
             ))}
@@ -139,15 +194,15 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Featured packages */}
+      {/* ── Featured packages ── */}
       {featured.length > 0 && (
-        <section className="border-b border-slate-200 bg-white">
+        <section className="border-b border-slate-200 bg-slate-50">
           <div className="max-w-5xl mx-auto px-6 py-10">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-sm font-bold text-slate-700 uppercase tracking-widest">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest">
                 Popular packages
               </h2>
-              <a href="#search" className="text-xs text-indigo-600 hover:text-indigo-800">
+              <a href="#search" className="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
                 View all {packages.length} →
               </a>
             </div>
@@ -156,30 +211,36 @@ export default async function HomePage() {
                 <Link
                   key={p.id}
                   href={`/package/${p.id}`}
-                  className="group border border-slate-200 rounded-xl p-4 hover:border-indigo-300 hover:shadow-md transition-all bg-slate-50 hover:bg-white"
+                  className="group relative bg-white border border-slate-200 rounded-2xl p-4 hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-100 transition-all overflow-hidden"
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold font-mono text-sm text-slate-900 group-hover:text-indigo-700 transition-colors">
-                      {p.name}
-                    </span>
-                    <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${
-                      p.ecosystem === "npm" ? "bg-rose-50 text-rose-500" : "bg-blue-50 text-blue-500"
-                    }`}>
-                      {p.ecosystem === "npm" ? "npm" : "Python"}
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-500 leading-snug line-clamp-2">{p.summary}</p>
-                  <div className="mt-2.5 flex items-center justify-between">
-                    <div className="flex gap-1">
-                      {p.tags.slice(0, 2).map((t) => (
-                        <span key={t} className="text-xs bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-mono">
-                          {t}
-                        </span>
-                      ))}
+                  {/* Subtle glow on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/0 to-indigo-50/0 group-hover:from-indigo-50/60 group-hover:to-violet-50/30 transition-all rounded-2xl pointer-events-none" />
+                  <div className="relative">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-bold font-mono text-sm text-slate-900 group-hover:text-indigo-700 transition-colors">
+                        {p.name}
+                      </span>
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
+                        p.ecosystem === "npm"
+                          ? "bg-rose-50 text-rose-500 border border-rose-100"
+                          : "bg-blue-50 text-blue-500 border border-blue-100"
+                      }`}>
+                        {p.ecosystem === "npm" ? "npm" : "Python"}
+                      </span>
                     </div>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${difficultyColor[p.difficulty]}`}>
-                      {difficultyLabel[p.difficulty]}
-                    </span>
+                    <p className="text-xs text-slate-500 leading-snug line-clamp-2 mb-3">{p.summary}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex gap-1 flex-wrap">
+                        {p.tags.slice(0, 2).map((t) => (
+                          <span key={t} className="text-xs bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-mono">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${difficultyColor[p.difficulty]}`}>
+                        {difficultyLabel[p.difficulty]}
+                      </span>
+                    </div>
                   </div>
                 </Link>
               ))}
@@ -188,18 +249,21 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Search */}
-      <div id="search" className="max-w-5xl mx-auto px-6 py-10 pb-20">
-        <h2 className="text-sm font-bold text-slate-700 uppercase tracking-widest mb-5">
-          All packages
-        </h2>
+      {/* ── Search / All packages ── */}
+      <div id="search" className="max-w-5xl mx-auto px-6 py-10 pb-24">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+            All packages
+          </h2>
+          <span className="text-xs text-slate-400">{packages.length} total</span>
+        </div>
         <SearchBar packages={packages} />
       </div>
 
-      {/* Footer */}
+      {/* ── Footer ── */}
       <footer className="border-t border-slate-200 bg-white">
         <div className="max-w-5xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-          <span>pkgdocs · {packages.length} packages across Python and npm</span>
+          <span>pkgdocs · {packages.length} packages · Python &amp; npm</span>
           <div className="flex items-center gap-4">
             <a href="https://github.com/VallabhSG/pkgdocs" target="_blank" rel="noopener noreferrer" className="hover:text-slate-600 transition-colors">
               GitHub
