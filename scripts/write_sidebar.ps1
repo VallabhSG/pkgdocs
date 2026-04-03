@@ -1,8 +1,8 @@
-﻿"use client";
+$content = @'
+"use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { ExternalLink, ChevronLeft, Download, Tag, BookOpen, Play, Map, Zap, Copy, Check } from "lucide-react";
+import { ExternalLink, ChevronLeft, Download, Tag, BookOpen, Play, Map, Zap } from "lucide-react";
 import type { Package, ViewMode } from "@/lib/types";
 
 interface RelatedCard {
@@ -50,15 +50,6 @@ function DifficultyBar({ level }: { level: 1 | 2 | 3 }) {
 
 export default function PackageSidebar({ pkg, activeView, onViewChange, related = [] }: Props) {
   const isNpm = pkg.ecosystem === "npm";
-  const installCmd = isNpm ? `npm install ${pkg.name}` : `pip install ${pkg.name}`;
-  const [copied, setCopied] = useState(false);
-
-  function copyInstall() {
-    navigator.clipboard.writeText(installCmd).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  }
 
   return (
     <aside className="w-64 flex-shrink-0 border-r border-warm-200 h-full flex flex-col bg-white overflow-y-auto">
@@ -93,7 +84,7 @@ export default function PackageSidebar({ pkg, activeView, onViewChange, related 
         </p>
 
         {/* Stats row */}
-        <div className="flex items-center gap-4 text-xs mb-3">
+        <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1.5 text-emerald-600">
             <Download className="w-3.5 h-3.5" />
             <span className="font-semibold tabular-nums"><DownloadCount n={pkg.meta.weekly_downloads} /></span>
@@ -101,20 +92,6 @@ export default function PackageSidebar({ pkg, activeView, onViewChange, related 
           </div>
           <span className="text-warm-400 font-mono">v{pkg.meta.version}</span>
         </div>
-
-        {/* Install command */}
-        <button
-          onClick={copyInstall}
-          className="w-full flex items-center justify-between gap-2 bg-warm-50 hover:bg-accent-light border border-warm-200 hover:border-accent/30 rounded-lg px-3 py-2 transition-all group"
-          title="Copy install command"
-        >
-          <code className="text-[11px] font-mono text-warm-700 group-hover:text-accent truncate">
-            {installCmd}
-          </code>
-          <span className="flex-shrink-0 text-warm-400 group-hover:text-accent transition-colors">
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-          </span>
-        </button>
       </div>
 
       {/* Difficulty */}
@@ -149,10 +126,10 @@ export default function PackageSidebar({ pkg, activeView, onViewChange, related 
         <p className="px-2 text-[10px] font-bold text-warm-400 uppercase tracking-widest mb-1.5">Start here</p>
         <div className="space-y-0.5">
           {[
-            { icon: "\uD83C\uDD95", bold: `New to ${pkg.name}?`, rest: "Read the story",  view: "story" as ViewMode },
-            { icon: "\uD83D\uDD0D", bold: "Already using it?",   rest: "Explore API map", view: "graph" as ViewMode },
-            { icon: "\u25B6",  bold: "Want to try it?",     rest: "Open the demo",   view: "demo"  as ViewMode },
-            { icon: "\u26A1", bold: "In a hurry?",         rest: "Copy a recipe",   view: "tasks" as ViewMode },
+            { icon: "🆕", bold: `New to ${pkg.name}?`, rest: "Read the story",  view: "story" as ViewMode },
+            { icon: "🔍", bold: "Already using it?",   rest: "Explore API map", view: "graph" as ViewMode },
+            { icon: "▶",  bold: "Want to try it?",     rest: "Open the demo",   view: "demo"  as ViewMode },
+            { icon: "⚡", bold: "In a hurry?",         rest: "Copy a recipe",   view: "tasks" as ViewMode },
           ].map(({ icon, bold, rest, view }) => (
             <button
               key={view}
@@ -238,3 +215,7 @@ export default function PackageSidebar({ pkg, activeView, onViewChange, related 
     </aside>
   );
 }
+'@
+
+Set-Content -Path 'e:\Java WorkSpace\pkgdocs\src\components\PackageSidebar\index.tsx' -Encoding UTF8 -Value $content
+Write-Output "done"

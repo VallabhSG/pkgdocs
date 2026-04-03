@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
-import { BookOpen, Play, Map, Zap, ChevronLeft } from "lucide-react";
+import { BookOpen, Play, Map, Zap, ChevronLeft, Copy, Check } from "lucide-react";
 import type { Package, ViewMode } from "@/lib/types";
 import PackageSidebar from "@/components/PackageSidebar";
 import StoryView from "@/components/StoryView";
@@ -44,14 +44,41 @@ interface Props {
   related: RelatedCard[];
 }
 
+const VALID_VIEWS = new Set<ViewMode>(["story", "demo", "graph", "tasks"]);
+
+function hashToView(hash: string): ViewMode {
+  const v = hash.replace("#", "") as ViewMode;
+  return VALID_VIEWS.has(v) ? v : "story";
+}
+
 export default function PackagePageClient({ pkg, related }: Props) {
   const [activeView, setActiveView] = useState<ViewMode>("story");
   const [prevView,   setPrevView]   = useState<ViewMode>("story");
   const [focusNodeId, setFocusNodeId] = useState<string | null>(null);
+  const [mobileCopied, setMobileCopied] = useState(false);
+
+  const installCmd = pkg.ecosystem === "npm" ? `npm install ${pkg.name}` : `pip install ${pkg.name}`;
+
+  function copyInstall() {
+    navigator.clipboard.writeText(installCmd).then(() => {
+      setMobileCopied(true);
+      setTimeout(() => setMobileCopied(false), 2000);
+    });
+  }
+
+  // Sync initial view from URL hash
+  useEffect(() => {
+    const v = hashToView(window.location.hash);
+    if (v !== "story") {
+      setActiveView(v);
+      setPrevView(v);
+    }
+  }, []);
 
   const changeView = useCallback((v: ViewMode) => {
     setPrevView(activeView);
     setActiveView(v);
+    window.history.replaceState(null, "", "#" + v);
   }, [activeView]);
 
   const handleNodeFocus = useCallback((nodeId: string) => {
@@ -75,7 +102,7 @@ export default function PackagePageClient({ pkg, related }: Props) {
           <Link href="/" className="text-warm-400 hover:text-warm-800 transition-colors" aria-label="Back">
             <ChevronLeft className="w-5 h-5" />
           </Link>
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
             <span className={`flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded border ${
               pkg.ecosystem === "npm"
                 ? "bg-rose-50 text-rose-600 border-rose-200"
@@ -86,6 +113,14 @@ export default function PackagePageClient({ pkg, related }: Props) {
             <span className="font-bold font-mono text-sm text-warm-950 truncate">{pkg.name}</span>
             <span className="text-xs text-warm-400 font-mono flex-shrink-0">v{pkg.meta.version}</span>
           </div>
+          <button
+            onClick={copyInstall}
+            className="flex-shrink-0 flex items-center gap-1.5 text-xs text-warm-400 hover:text-accent bg-warm-50 hover:bg-accent-light border border-warm-200 rounded-lg px-2.5 py-1.5 transition-all"
+            title={installCmd}
+          >
+            {mobileCopied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+            <span className="font-mono text-[11px]">{mobileCopied ? "Copied!" : "Install"}</span>
+          </button>
         </div>
         <div className="flex">
           {mobileViewConfig.map((v) => (
