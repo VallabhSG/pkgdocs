@@ -13,10 +13,13 @@ import dynamic from "next/dynamic";
 const ApiMapView = dynamic(() => import("@/components/ApiMapView"), { ssr: false });
 const DemoView   = dynamic(() => import("@/components/DemoView"),   { ssr: false });
 
+// ease-out-expo for natural deceleration (no bounce)
+const EASE_OUT = [0.16, 1, 0.3, 1] as const;
+
 const viewVariants = {
-  enter:  (dir: number) => ({ opacity: 0, x: dir * 32, filter: "blur(4px)" }),
+  enter:  (dir: number) => ({ opacity: 0, x: dir * 24, filter: "blur(3px)" }),
   center: { opacity: 1, x: 0, filter: "blur(0px)" },
-  exit:   (dir: number) => ({ opacity: 0, x: dir * -32, filter: "blur(4px)" }),
+  exit:   (dir: number) => ({ opacity: 0, x: dir * -16, filter: "blur(2px)" }),
 };
 
 const viewOrder: ViewMode[] = ["story", "demo", "graph", "tasks"];
@@ -59,29 +62,29 @@ export default function PackagePageClient({ pkg, related }: Props) {
   const direction = viewOrder.indexOf(activeView) > viewOrder.indexOf(prevView) ? 1 : -1;
 
   return (
-    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-slate-50">
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-warm-50">
 
-      {/* ── Sidebar (desktop) ── */}
+      {/* Sidebar (desktop) */}
       <div className="hidden md:block">
         <PackageSidebar pkg={pkg} activeView={activeView} onViewChange={changeView} related={related} />
       </div>
 
-      {/* ── Mobile top bar ── */}
-      <div className="md:hidden flex-shrink-0 bg-slate-950 text-white">
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800">
-          <Link href="/" className="text-slate-400 hover:text-white transition-colors" aria-label="Back">
+      {/* Mobile top bar — clean white, no dark background */}
+      <div className="md:hidden flex-shrink-0 bg-white border-b border-warm-200">
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-warm-100">
+          <Link href="/" className="text-warm-400 hover:text-warm-800 transition-colors" aria-label="Back">
             <ChevronLeft className="w-5 h-5" />
           </Link>
           <div className="flex items-center gap-2 min-w-0">
-            <span className={`flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+            <span className={`flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded border ${
               pkg.ecosystem === "npm"
-                ? "bg-rose-900/40 text-rose-300 border-rose-700/50"
-                : "bg-blue-900/40 text-blue-300 border-blue-700/50"
+                ? "bg-rose-50 text-rose-600 border-rose-200"
+                : "bg-blue-50 text-blue-600 border-blue-200"
             }`}>
               {pkg.ecosystem === "npm" ? "npm" : "Python"}
             </span>
-            <span className="font-bold font-mono text-sm text-white truncate">{pkg.name}</span>
-            <span className="text-xs text-slate-500 font-mono flex-shrink-0">v{pkg.meta.version}</span>
+            <span className="font-bold font-mono text-sm text-warm-950 truncate">{pkg.name}</span>
+            <span className="text-xs text-warm-400 font-mono flex-shrink-0">v{pkg.meta.version}</span>
           </div>
         </div>
         <div className="flex">
@@ -90,13 +93,13 @@ export default function PackagePageClient({ pkg, related }: Props) {
               key={v.id}
               onClick={() => changeView(v.id)}
               className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 text-[11px] font-medium transition-all relative ${
-                activeView === v.id ? "text-indigo-400" : "text-slate-500 hover:text-slate-300"
+                activeView === v.id ? "text-accent" : "text-warm-400 hover:text-warm-700"
               }`}
             >
               {activeView === v.id && (
                 <motion.div
                   layoutId="mobile-tab-indicator"
-                  className="absolute bottom-0 left-1 right-1 h-0.5 bg-indigo-500 rounded-full"
+                  className="absolute bottom-0 left-1 right-1 h-0.5 bg-accent rounded-full"
                 />
               )}
               {v.icon}
@@ -106,7 +109,7 @@ export default function PackagePageClient({ pkg, related }: Props) {
         </div>
       </div>
 
-      {/* ── Main content area ── */}
+      {/* Main content area */}
       <main className="flex-1 overflow-hidden relative">
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
@@ -116,7 +119,7 @@ export default function PackagePageClient({ pkg, related }: Props) {
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.2, ease: "easeInOut" }}
+            transition={{ duration: 0.22, ease: EASE_OUT }}
             className="absolute inset-0 overflow-auto"
           >
             {activeView === "story" && <StoryView pkg={pkg} onNodeFocus={handleNodeFocus} />}
@@ -127,18 +130,18 @@ export default function PackagePageClient({ pkg, related }: Props) {
                   <ApiMapView pkg={pkg} focusNodeId={focusNodeId} />
                 </div>
                 <div className="md:hidden flex flex-col items-center justify-center h-full px-8 text-center gap-5">
-                  <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center">
-                    <Map className="w-8 h-8 text-indigo-400" />
+                  <div className="w-14 h-14 bg-accent-light rounded-xl flex items-center justify-center">
+                    <Map className="w-7 h-7 text-accent" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-800 mb-1">API Map needs a bigger screen</h3>
-                    <p className="text-sm text-slate-500 max-w-xs">
+                    <h3 className="font-bold text-warm-900 mb-1">API Map needs a bigger screen</h3>
+                    <p className="text-sm text-warm-500 max-w-xs">
                       The interactive graph works best on desktop. Try Recipes for copy-paste code on mobile.
                     </p>
                   </div>
                   <button
                     onClick={() => changeView("tasks")}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+                    className="bg-accent hover:bg-accent-dark text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors"
                   >
                     View Recipes instead
                   </button>
