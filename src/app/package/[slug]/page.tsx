@@ -68,5 +68,29 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
 
   const related = computeRelated(pkg, allCards);
 
-  return <PackagePageClient pkg={pkg} related={related} />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: pkg.name,
+    description: pkg.summary,
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "Any",
+    url: `https://pkgdocs.dev/package/${pkg.id}`,
+    downloadUrl: pkg.meta.pypi_url ?? pkg.meta.npm_url,
+    softwareVersion: pkg.meta.version,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    ...(pkg.meta.repo_url ? { codeRepository: pkg.meta.repo_url } : {}),
+    ...(pkg.meta.docs_url ? { documentation: pkg.meta.docs_url } : {}),
+    keywords: pkg.tags.join(", "),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <PackagePageClient pkg={pkg} related={related} />
+    </>
+  );
 }

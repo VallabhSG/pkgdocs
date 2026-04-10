@@ -207,6 +207,27 @@ export default function PackageSidebar({ pkg, activeView, onViewChange, related 
         </div>
       )}
 
+      {/* Compare with */}
+      {related.length > 0 && (
+        <div className="px-5 py-3 border-b border-warm-100">
+          <p className="text-[10px] font-bold text-warm-400 uppercase tracking-widest mb-2">Compare with</p>
+          <div className="flex flex-col gap-1">
+            {related.slice(0, 3).map((r) => (
+              <Link
+                key={r.id}
+                href={`/compare/${[pkg.id, r.id].sort().join("/")}`}
+                className="flex items-center justify-between group rounded-lg px-2 py-1.5 hover:bg-accent-light transition-colors"
+              >
+                <span className="text-xs font-mono text-warm-600 group-hover:text-accent transition-colors">
+                  {pkg.name} vs {r.name}
+                </span>
+                <span className="text-[10px] text-warm-300 group-hover:text-accent transition-colors">→</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* External links */}
       <div className="px-5 py-3 mt-auto">
         <p className="text-[10px] font-bold text-warm-400 uppercase tracking-widest mb-2">Links</p>
