@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "motion/react";
 
 type HeroSectionProps = {
@@ -88,12 +87,17 @@ export function HeroSection({ packageCount, pypiCount, npmCount }: HeroSectionPr
           transition={{ duration: 0.5, ease: EASE_OUT, delay: 0.26 }}
           className="flex flex-col sm:flex-row items-start gap-3"
         >
-          <Link
-            href="#search"
-            className="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-white text-sm font-semibold px-6 py-3 rounded-lg transition-colors duration-200"
+          <button
+            onClick={() =>
+              window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }))
+            }
+            className="inline-flex items-center gap-2.5 bg-accent hover:bg-accent-dark text-white text-sm font-semibold px-6 py-3 rounded-lg transition-colors duration-200"
           >
-            Browse {packageCount} packages
-          </Link>
+            <svg className="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+            </svg>
+            Search {packageCount} packages
+          </button>
           <a
             href="https://github.com/VallabhSG/pkgdocs"
             target="_blank"

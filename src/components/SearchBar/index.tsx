@@ -32,6 +32,7 @@ function score(pkg: Package, query: string): number {
 
 interface Props {
   packages: Package[];
+  stars?: Record<string, number>;
 }
 
 const ecosystemLabel: Record<string, string> = {
@@ -43,7 +44,7 @@ const ecosystemColor: Record<string, { active: string; idle: string; dot: string
   npm:   { active: "bg-rose-500 text-white",  idle: "bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-600",  dot: "bg-rose-400"  },
 };
 
-export default function SearchBar({ packages }: Props) {
+export default function SearchBar({ packages, stars = {} }: Props) {
   const [query, setQuery] = useState("");
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [activeEcosystem, setActiveEcosystem] = useState<string | null>(null);
@@ -234,8 +235,15 @@ export default function SearchBar({ packages }: Props) {
                   {difficultyLabel[p.difficulty]}
                 </span>
               </div>
-              <div className="mt-3 text-xs text-slate-400">
-                ⬇ <DownloadCount n={p.meta.weekly_downloads} />
+              <div className="mt-3 flex items-center gap-3 text-xs text-slate-400">
+                <span>⬇ <DownloadCount n={p.meta.weekly_downloads} /></span>
+                {stars[p.id] ? (
+                  <span className="flex items-center gap-1">
+                    ★ {stars[p.id] >= 1000
+                      ? `${(stars[p.id] / 1000).toFixed(stars[p.id] >= 10000 ? 0 : 1)}k`
+                      : stars[p.id]}
+                  </span>
+                ) : null}
               </div>
             </Link>
           ))}

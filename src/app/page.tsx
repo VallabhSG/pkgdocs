@@ -2,6 +2,8 @@ import { readdir, readFile } from "fs/promises";
 
 import path from "path";
 
+import { Star } from "lucide-react";
+
 import Link from "next/link";
 
 import type { Package } from "@/lib/types";
@@ -13,6 +15,18 @@ import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { HeroSection } from "@/components/HeroSection";
 
 import CmdKTrigger from "@/components/CmdKTrigger";
+
+async function getStars(): Promise<Record<string, number>> {
+  try {
+    const raw = await readFile(
+      path.join(process.cwd(), "public", "data", "stars.json"),
+      "utf-8"
+    );
+    return JSON.parse(raw) as Record<string, number>;
+  } catch {
+    return {};
+  }
+}
 
 async function getPackages(): Promise<Package[]> {
 
@@ -110,7 +124,7 @@ const difficultyColor = [
 
 export default async function HomePage() {
 
-  const packages = await getPackages();
+  const [packages, stars] = await Promise.all([getPackages(), getStars()]);
 
   const featured = FEATURED_IDS.map((id) => packages.find((p) => p.id === id)).filter(Boolean) as Package[];
 
@@ -149,6 +163,12 @@ export default async function HomePage() {
           <div className="flex items-center gap-4 text-sm text-warm-500">
 
             <CmdKTrigger />
+
+            <Link href="/compare" className="hidden sm:inline text-warm-500 hover:text-warm-900 transition-colors font-medium">
+
+              Compare
+
+            </Link>
 
             <span className="hidden sm:inline">
 
@@ -330,11 +350,27 @@ export default async function HomePage() {
 
                     </div>
 
-                    <span className={`text-[10px] px-2 py-0.5 rounded font-medium ${difficultyColor[p.difficulty]}`}>
+                    {stars[p.id] ? (
 
-                      {difficultyLabel[p.difficulty]}
+                      <span className="flex items-center gap-1 text-[10px] text-warm-400 tabular-nums">
 
-                    </span>
+                        <Star className="w-3 h-3 text-amber-400" />
+
+                        {stars[p.id] >= 1000
+                          ? `${(stars[p.id] / 1000).toFixed(stars[p.id] >= 10000 ? 0 : 1)}k`
+                          : stars[p.id]}
+
+                      </span>
+
+                    ) : (
+
+                      <span className={`text-[10px] px-2 py-0.5 rounded font-medium ${difficultyColor[p.difficulty]}`}>
+
+                        {difficultyLabel[p.difficulty]}
+
+                      </span>
+
+                    )}
 
                   </div>
 
@@ -360,7 +396,7 @@ export default async function HomePage() {
 
         </div>
 
-        <SearchBar packages={packages} />
+        <SearchBar packages={packages} stars={stars} />
 
       </div>
 
