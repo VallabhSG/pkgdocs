@@ -4,11 +4,22 @@ import { readdir, readFile } from "fs/promises";
 import path from "path";
 import { notFound } from "next/navigation";
 import type { Package } from "@/lib/types";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import PackagePageClient from "@/components/PackagePageClient";
 
 const PACKAGES_DIR = path.join(process.cwd(), "public", "data", "packages");
 
+// --- Data helpers: Supabase first, filesystem fallback ---
+
 async function readPackage(slug: string): Promise<Package | null> {
+  if (isSupabaseConfigured() && supabase) {
+    const { data, error } = await supabase
+      .from("packages")
+      .select("data")
+      .eq("id", slug)
+      .single();
+    if (!error && data) return (data as { data: Package }).data;
+  }
   try {
     const raw = await readFile(path.join(PACKAGES_DIR, `${slug}.json`), "utf-8");
     return JSON.parse(raw) as Package;
@@ -18,8 +29,17 @@ async function readPackage(slug: string): Promise<Package | null> {
 }
 
 async function readAllCards() {
+  if (isSupabaseConfigured() && supabase) {
+    const { data, error } = await supabase
+      .from("packages")
+      .select("id, name, ecosystem, summary, tags")
+      .limit(500);
+    if (!error && data && data.length > 0) {
+      return data as { id: string; name: string; ecosystem: string; summary: string; tags: string[] }[];
+    }
+  }
   const files = await readdir(PACKAGES_DIR);
-  const cards = await Promise.all(
+  return Promise.all(
     files
       .filter((f) => f.endsWith(".json"))
       .map(async (f) => {
@@ -28,10 +48,21 @@ async function readAllCards() {
         return { id: pkg.id, name: pkg.name, ecosystem: pkg.ecosystem, summary: pkg.summary, tags: pkg.tags };
       })
   );
-  return cards;
 }
 
-function computeRelated(pkg: Package, all: Awaited<ReturnType<typeof readAllCards>>) {
+async function getAllSlugs(): Promise<string[]> {
+  if (isSupabaseConfigured() && supabase) {
+    const { data, error } = await supabase.from("packages").select("id").limit(500);
+    if (!error && data && data.length > 0) return data.map((r: { id: string }) => r.id);
+  }
+  const files = await readdir(PACKAGES_DIR);
+  return files.filter((f) => f.endsWith(".json")).map((f) => f.replace(/\.json$/, ""));
+}
+
+function computeRelated(
+  pkg: Package,
+  all: { id: string; name: string; ecosystem: string; summary: string; tags: string[] }[]
+) {
   return all
     .filter((p) => p.id !== pkg.id)
     .map((p) => ({ card: p, shared: p.tags.filter((t) => pkg.tags.includes(t)).length }))
@@ -41,11 +72,11 @@ function computeRelated(pkg: Package, all: Awaited<ReturnType<typeof readAllCard
     .map((x) => x.card);
 }
 
+// --- Next.js route exports ---
+
 export async function generateStaticParams() {
-  const files = await readdir(PACKAGES_DIR);
-  return files
-    .filter((f) => f.endsWith(".json"))
-    .map((f) => ({ slug: f.replace(/\.json$/, "") }));
+  const slugs = await getAllSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -55,10 +86,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${pkg.name} — pkgdocs`,
     description: pkg.summary,
-    openGraph: {
-      title: `${pkg.name} — pkgdocs`,
-      description: pkg.summary,
-    },
+    openGraph: { title: `${pkg.name} — pkgdocs`, description: pkg.summary },
   };
 }
 

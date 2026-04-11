@@ -12,6 +12,8 @@ import type { Package } from "@/lib/types";
 
 import SearchBar from "@/components/SearchBar";
 
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+
 import { HeroSection } from "@/components/HeroSection";
 
 import CmdKTrigger from "@/components/CmdKTrigger";
@@ -28,9 +30,20 @@ async function getStars(): Promise<Record<string, number>> {
   }
 }
 
-// Always read from filesystem — single source of truth for package count and data.
-// Supabase is not used here to avoid count mismatch between DB and filesystem.
 async function getPackages(): Promise<Package[]> {
+  // Supabase is the source of truth — always up to date without redeploys.
+  if (isSupabaseConfigured() && supabase) {
+    const { data, error } = await supabase
+      .from("packages")
+      .select("data")
+      .order("weekly_downloads", { ascending: false })
+      .limit(500);
+    if (!error && data && data.length > 0) {
+      return data.map((row) => (row as { data: Package }).data);
+    }
+  }
+
+  // Filesystem fallback (local dev without Supabase configured)
   const dir = path.join(process.cwd(), "public", "data", "packages");
 
   const files = await readdir(dir);

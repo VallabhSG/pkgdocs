@@ -5,11 +5,20 @@ import path from "path";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import type { Package } from "@/lib/types";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import CompareView from "@/components/CompareView";
 
 const PACKAGES_DIR = path.join(process.cwd(), "public", "data", "packages");
 
 async function readPackage(slug: string): Promise<Package | null> {
+  if (isSupabaseConfigured() && supabase) {
+    const { data, error } = await supabase
+      .from("packages")
+      .select("data")
+      .eq("id", slug)
+      .single();
+    if (!error && data) return (data as { data: Package }).data;
+  }
   try {
     const raw = await readFile(path.join(PACKAGES_DIR, `${slug}.json`), "utf-8");
     return JSON.parse(raw) as Package;
@@ -19,6 +28,15 @@ async function readPackage(slug: string): Promise<Package | null> {
 }
 
 async function readAllPackages(): Promise<Package[]> {
+  if (isSupabaseConfigured() && supabase) {
+    const { data, error } = await supabase
+      .from("packages")
+      .select("data")
+      .limit(500);
+    if (!error && data && data.length > 0) {
+      return data.map((r) => (r as { data: Package }).data);
+    }
+  }
   const files = await readdir(PACKAGES_DIR);
   return Promise.all(
     files
