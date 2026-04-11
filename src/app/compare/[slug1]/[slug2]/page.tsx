@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 import { readdir, readFile } from "fs/promises";
 import path from "path";
 import { notFound } from "next/navigation";

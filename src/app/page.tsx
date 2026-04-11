@@ -1,3 +1,5 @@
+export const revalidate = 3600; // re-render every hour so new packages appear without a full redeploy
+
 import { readdir, readFile } from "fs/promises";
 
 import path from "path";
@@ -9,8 +11,6 @@ import Link from "next/link";
 import type { Package } from "@/lib/types";
 
 import SearchBar from "@/components/SearchBar";
-
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 import { HeroSection } from "@/components/HeroSection";
 
@@ -28,24 +28,9 @@ async function getStars(): Promise<Record<string, number>> {
   }
 }
 
+// Always read from filesystem — single source of truth for package count and data.
+// Supabase is not used here to avoid count mismatch between DB and filesystem.
 async function getPackages(): Promise<Package[]> {
-
-  if (isSupabaseConfigured() && supabase) {
-
-    const { data, error } = await supabase
-
-      .from("packages")
-
-      .select("data")
-
-      .order("weekly_downloads", { ascending: false })
-
-      .limit(200);
-
-    if (!error && data) return data.map((row) => (row as { data: Package }).data);
-
-  }
-
   const dir = path.join(process.cwd(), "public", "data", "packages");
 
   const files = await readdir(dir);
