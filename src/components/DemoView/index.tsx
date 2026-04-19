@@ -4,22 +4,30 @@ import dynamic from "next/dynamic";
 import type { Package } from "@/lib/types";
 import { SCENARIOS } from "./scenarios";
 
-const SimulatedDemo = dynamic(() => import("./SimulatedDemo"), { ssr: false });
-const PretextDemo   = dynamic(() => import("./demos/PretextDemo"),  { ssr: false });
-const ZodDemo       = dynamic(() => import("./demos/ZodDemo"),      { ssr: false });
-const DayjsDemo     = dynamic(() => import("./demos/DayjsDemo"),    { ssr: false });
-const UuidDemo      = dynamic(() => import("./demos/UuidDemo"),     { ssr: false });
-const ImmerDemo     = dynamic(() => import("./demos/ImmerDemo"),    { ssr: false });
-const LodashDemo    = dynamic(() => import("./demos/LodashDemo"),   { ssr: false });
+const SimulatedDemo      = dynamic(() => import("./SimulatedDemo"),               { ssr: false });
+const PretextDemo        = dynamic(() => import("./demos/PretextDemo"),            { ssr: false });
+const ZodDemo            = dynamic(() => import("./demos/ZodDemo"),                { ssr: false });
+const DayjsDemo          = dynamic(() => import("./demos/DayjsDemo"),              { ssr: false });
+const UuidDemo           = dynamic(() => import("./demos/UuidDemo"),               { ssr: false });
+const ImmerDemo          = dynamic(() => import("./demos/ImmerDemo"),              { ssr: false });
+const LodashDemo         = dynamic(() => import("./demos/LodashDemo"),             { ssr: false });
+const DateFnsDemo        = dynamic(() => import("./demos/DateFnsDemo"),            { ssr: false });
+const ZustandDemo        = dynamic(() => import("./demos/ZustandDemo"),            { ssr: false });
+const ReactHookFormDemo  = dynamic(() => import("./demos/ReactHookFormDemo"),      { ssr: false });
+const FramerMotionDemo   = dynamic(() => import("./demos/FramerMotionDemo"),       { ssr: false });
 
 // Packages with custom live demos
 const LIVE: Record<string, React.ComponentType> = {
-  pretext:         PretextDemo,
-  zod:             ZodDemo,
-  dayjs:           DayjsDemo,
-  uuid:            UuidDemo,
-  immer:           ImmerDemo,
-  lodash:          LodashDemo,
+  pretext:          PretextDemo,
+  zod:              ZodDemo,
+  dayjs:            DayjsDemo,
+  uuid:             UuidDemo,
+  immer:            ImmerDemo,
+  lodash:           LodashDemo,
+  "date-fns":       DateFnsDemo,
+  zustand:          ZustandDemo,
+  "react-hook-form": ReactHookFormDemo,
+  "framer-motion":  FramerMotionDemo,
 };
 
 interface Props { pkg: Package }
