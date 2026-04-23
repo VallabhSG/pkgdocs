@@ -17,6 +17,7 @@ import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { HeroSection } from "@/components/HeroSection";
 
 import CmdKTrigger from "@/components/CmdKTrigger";
+import { LIVE_DEMO_IDS } from "@/components/DemoView/live-ids";
 
 async function getStars(): Promise<Record<string, number>> {
   try {
@@ -318,19 +319,26 @@ export default async function HomePage() {
 
                     <span className="font-bold font-mono text-sm text-warm-950 group-hover:text-accent transition-colors truncate mr-2">{p.name}</span>
 
-                    <span className={`shrink-0 text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                    <div className="flex items-center gap-1 shrink-0">
+                      {LIVE_DEMO_IDS.has(p.id) && (
+                        <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+                          Live
+                        </span>
+                      )}
+                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
 
-                      p.ecosystem === "npm"
+                        p.ecosystem === "npm"
 
-                        ? "bg-rose-50 text-rose-500 border border-rose-100"
+                          ? "bg-rose-50 text-rose-500 border border-rose-100"
 
-                        : "bg-blue-50 text-blue-500 border border-blue-100"
+                          : "bg-blue-50 text-blue-500 border border-blue-100"
 
-                    }`}>
+                      }`}>
 
-                      {p.ecosystem === "npm" ? "npm" : "py"}
+                        {p.ecosystem === "npm" ? "npm" : "py"}
 
-                    </span>
+                      </span>
+                    </div>
 
                   </div>
 

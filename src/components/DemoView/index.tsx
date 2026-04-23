@@ -18,6 +18,9 @@ const FramerMotionDemo   = dynamic(() => import("./demos/FramerMotionDemo"),    
 const RechartsDemo       = dynamic(() => import("./demos/RechartsDemo"),            { ssr: false });
 const JotaiDemo          = dynamic(() => import("./demos/JotaiDemo"),               { ssr: false });
 const RxjsDemo           = dynamic(() => import("./demos/RxjsDemo"),                { ssr: false });
+const AxiosDemo          = dynamic(() => import("./demos/AxiosDemo"),               { ssr: false });
+const SwrDemo            = dynamic(() => import("./demos/SwrDemo"),                 { ssr: false });
+const ReactQueryDemo     = dynamic(() => import("./demos/ReactQueryDemo"),          { ssr: false });
 
 // Packages with custom live demos
 const LIVE: Record<string, React.ComponentType> = {
@@ -34,6 +37,9 @@ const LIVE: Record<string, React.ComponentType> = {
   recharts:         RechartsDemo,
   jotai:            JotaiDemo,
   rxjs:             RxjsDemo,
+  axios:            AxiosDemo,
+  swr:              SwrDemo,
+  "react-query":    ReactQueryDemo,
 };
 
 interface Props { pkg: Package }

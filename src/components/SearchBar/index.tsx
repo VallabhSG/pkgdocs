@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { Package } from "@/lib/types";
+import { LIVE_DEMO_IDS } from "@/components/DemoView/live-ids";
 
 const difficultyLabel = ["", "Beginner", "Intermediate", "Advanced"];
 const difficultyColor = [
@@ -204,15 +205,22 @@ export default function SearchBar({ packages, stars = {} }: Props) {
                 <span className="font-bold font-mono text-slate-900 group-hover:text-indigo-700 transition-colors">
                   {p.name}
                 </span>
-                <span
-                  className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
-                    p.ecosystem === "npm"
-                      ? "bg-rose-50 text-rose-500"
-                      : "bg-blue-50 text-blue-500"
-                  }`}
-                >
-                  {ecosystemLabel[p.ecosystem] ?? p.ecosystem}
-                </span>
+                <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                  {LIVE_DEMO_IDS.has(p.id) && (
+                    <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+                      Live
+                    </span>
+                  )}
+                  <span
+                    className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
+                      p.ecosystem === "npm"
+                        ? "bg-rose-50 text-rose-500"
+                        : "bg-blue-50 text-blue-500"
+                    }`}
+                  >
+                    {ecosystemLabel[p.ecosystem] ?? p.ecosystem}
+                  </span>
+                </div>
               </div>
               <p className="text-sm text-slate-600 mb-4 leading-snug">{p.summary}</p>
               <div className="flex items-center justify-between">
