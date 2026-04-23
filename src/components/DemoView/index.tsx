@@ -15,6 +15,9 @@ const DateFnsDemo        = dynamic(() => import("./demos/DateFnsDemo"),         
 const ZustandDemo        = dynamic(() => import("./demos/ZustandDemo"),            { ssr: false });
 const ReactHookFormDemo  = dynamic(() => import("./demos/ReactHookFormDemo"),      { ssr: false });
 const FramerMotionDemo   = dynamic(() => import("./demos/FramerMotionDemo"),       { ssr: false });
+const RechartsDemo       = dynamic(() => import("./demos/RechartsDemo"),            { ssr: false });
+const JotaiDemo          = dynamic(() => import("./demos/JotaiDemo"),               { ssr: false });
+const RxjsDemo           = dynamic(() => import("./demos/RxjsDemo"),                { ssr: false });
 
 // Packages with custom live demos
 const LIVE: Record<string, React.ComponentType> = {
@@ -28,6 +31,9 @@ const LIVE: Record<string, React.ComponentType> = {
   zustand:          ZustandDemo,
   "react-hook-form": ReactHookFormDemo,
   "framer-motion":  FramerMotionDemo,
+  recharts:         RechartsDemo,
+  jotai:            JotaiDemo,
+  rxjs:             RxjsDemo,
 };
 
 interface Props { pkg: Package }
