@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
+import { LIVE_DEMO_IDS } from "@/components/DemoView/live-ids";
 
 interface PkgCard {
   id: string;
@@ -26,17 +27,42 @@ function score(pkg: PkgCard, q: string): number {
   return s;
 }
 
+/**
+ * Parse smart prefixes from the raw query string:
+ *   npm: / py:       → ecosystem filter
+ *   #tag-name        → tag filter
+ *   live:            → only packages with live demos
+ *   remainder        → freetext to score against
+ */
+function parseQuery(raw: string): {
+  freetext: string;
+  ecosystem: string | null;
+  tag: string | null;
+  liveOnly: boolean;
+} {
+  let q = raw.trim();
+  let ecosystem: string | null = null;
+  let tag: string | null = null;
+  let liveOnly = false;
+
+  if (/^npm:/i.test(q)) { ecosystem = "npm"; q = q.slice(4).trim(); }
+  else if (/^py:/i.test(q)) { ecosystem = "pypi"; q = q.slice(3).trim(); }
+
+  if (/^live:/i.test(q)) { liveOnly = true; q = q.slice(5).trim(); }
+  else if (/^live$/i.test(q)) { liveOnly = true; q = ""; }
+
+  const tagMatch = q.match(/^#([\w-]+)\s*(.*)/);
+  if (tagMatch) { tag = tagMatch[1]; q = tagMatch[2].trim(); }
+
+  return { freetext: q, ecosystem, tag, liveOnly };
+}
+
 const ecosystemColor: Record<string, string> = {
   pypi: "bg-blue-100 text-blue-600",
-  npm: "bg-rose-100 text-rose-500",
+  npm:  "bg-rose-100 text-rose-500",
 };
 const diffLabel = ["", "Beginner", "Intermediate", "Advanced"];
-const diffColor = [
-  "",
-  "text-emerald-600",
-  "text-amber-600",
-  "text-rose-600",
-];
+const diffColor  = ["", "text-emerald-600", "text-amber-600", "text-rose-600"];
 
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -46,14 +72,11 @@ export default function CommandPalette() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
+  const listRef  = useRef<HTMLDivElement>(null);
   const fetchedRef = useRef(false);
 
   const fetchPackages = useCallback(async () => {
-    if (cachedPackages) {
-      setPackages(cachedPackages);
-      return;
-    }
+    if (cachedPackages) { setPackages(cachedPackages); return; }
     if (fetchedRef.current) return;
     fetchedRef.current = true;
     setLoading(true);
@@ -72,10 +95,7 @@ export default function CommandPalette() {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        setOpen((prev) => {
-          if (!prev) fetchPackages();
-          return !prev;
-        });
+        setOpen((prev) => { if (!prev) fetchPackages(); return !prev; });
       }
       if (e.key === "Escape") setOpen(false);
     };
@@ -83,53 +103,52 @@ export default function CommandPalette() {
     return () => window.removeEventListener("keydown", handler);
   }, [fetchPackages]);
 
-  // Focus input when opened
+  // Focus + reset when opened
   useEffect(() => {
-    if (open) {
-      setQuery("");
-      setActiveIdx(0);
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
+    if (open) { setQuery(""); setActiveIdx(0); setTimeout(() => inputRef.current?.focus(), 50); }
   }, [open]);
 
-  const results =
-    query.trim().length === 0
-      ? packages.slice(0, 8)
-      : packages
-          .map((p) => ({ pkg: p, s: score(p, query.trim()) }))
-          .filter((x) => x.s > 0)
-          .sort((a, b) => b.s - a.s)
-          .slice(0, 8)
-          .map((x) => x.pkg);
+  const { freetext, ecosystem, tag, liveOnly } = parseQuery(query);
+
+  const results = (() => {
+    let pool = packages;
+
+    if (ecosystem) pool = pool.filter((p) => p.ecosystem === ecosystem);
+    if (tag)       pool = pool.filter((p) => p.tags.includes(tag));
+    if (liveOnly)  pool = pool.filter((p) => LIVE_DEMO_IDS.has(p.id));
+
+    if (!freetext) return pool.slice(0, 8);
+
+    return pool
+      .map((p) => ({ pkg: p, s: score(p, freetext) }))
+      .filter((x) => x.s > 0)
+      .sort((a, b) => b.s - a.s)
+      .slice(0, 8)
+      .map((x) => x.pkg);
+  })();
 
   const navigate = useCallback(
-    (pkg: PkgCard) => {
-      setOpen(false);
-      router.push(`/package/${pkg.id}`);
-    },
+    (pkg: PkgCard) => { setOpen(false); router.push(`/package/${pkg.id}`); },
     [router]
   );
 
-  // Keyboard navigation inside palette
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setActiveIdx((i) => Math.min(i + 1, results.length - 1));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setActiveIdx((i) => Math.max(i - 1, 0));
-    } else if (e.key === "Enter") {
-      if (results[activeIdx]) navigate(results[activeIdx]);
-    } else if (e.key === "Escape") {
-      setOpen(false);
-    }
+    if (e.key === "ArrowDown") { e.preventDefault(); setActiveIdx((i) => Math.min(i + 1, results.length - 1)); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); setActiveIdx((i) => Math.max(i - 1, 0)); }
+    else if (e.key === "Enter") { if (results[activeIdx]) navigate(results[activeIdx]); }
+    else if (e.key === "Escape") setOpen(false);
   };
 
-  // Scroll active item into view
   useEffect(() => {
-    const el = listRef.current?.querySelector(`[data-idx="${activeIdx}"]`);
-    el?.scrollIntoView({ block: "nearest" });
+    listRef.current?.querySelector(`[data-idx="${activeIdx}"]`)?.scrollIntoView({ block: "nearest" });
   }, [activeIdx]);
+
+  // Active filter chips derived from query
+  const chips: { label: string; color: string }[] = [];
+  if (ecosystem === "npm")  chips.push({ label: "npm", color: "bg-rose-100 text-rose-600" });
+  if (ecosystem === "pypi") chips.push({ label: "Python", color: "bg-blue-100 text-blue-600" });
+  if (tag)                  chips.push({ label: `#${tag}`, color: "bg-indigo-100 text-indigo-600" });
+  if (liveOnly)             chips.push({ label: "Live", color: "bg-emerald-100 text-emerald-700" });
 
   if (typeof window === "undefined") return null;
 
@@ -137,7 +156,6 @@ export default function CommandPalette() {
     <AnimatePresence>
       {open && (
         <>
-          {/* Backdrop */}
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
@@ -148,7 +166,6 @@ export default function CommandPalette() {
             onClick={() => setOpen(false)}
           />
 
-          {/* Panel */}
           <motion.div
             key="panel"
             initial={{ opacity: 0, scale: 0.96, y: -8 }}
@@ -168,16 +185,25 @@ export default function CommandPalette() {
                 type="text"
                 value={query}
                 onChange={(e) => { setQuery(e.target.value); setActiveIdx(0); }}
-                placeholder="Search packages…"
+                placeholder="Search… npm: py: #tag live:"
                 className="flex-1 text-sm text-slate-800 placeholder-slate-400 outline-none bg-transparent"
               />
               {query && (
-                <button onClick={() => setQuery("")} className="text-slate-300 hover:text-slate-500 text-xs">
-                  ✕
-                </button>
+                <button onClick={() => setQuery("")} className="text-slate-300 hover:text-slate-500 text-xs">✕</button>
               )}
               <kbd className="text-xs text-slate-300 border border-slate-200 rounded px-1.5 py-0.5 font-mono">esc</kbd>
             </div>
+
+            {/* Active filter chips */}
+            {chips.length > 0 && (
+              <div className="flex gap-2 px-4 py-2 border-b border-slate-100 bg-slate-50/60">
+                {chips.map((c) => (
+                  <span key={c.label} className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${c.color}`}>
+                    {c.label}
+                  </span>
+                ))}
+              </div>
+            )}
 
             {/* Results */}
             <div ref={listRef} className="max-h-[min(400px,60vh)] overflow-y-auto">
@@ -191,7 +217,7 @@ export default function CommandPalette() {
                 </div>
               ) : results.length === 0 ? (
                 <div className="py-10 text-center text-sm text-slate-400">
-                  No packages match &ldquo;{query}&rdquo;
+                  {query ? `No packages match "${query}"` : "No packages found"}
                 </div>
               ) : (
                 results.map((pkg, idx) => (
@@ -208,11 +234,16 @@ export default function CommandPalette() {
                       {pkg.ecosystem === "pypi" ? "py" : "js"}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-baseline gap-2">
+                      <div className="flex items-center gap-2">
                         <span className={`text-sm font-bold font-mono ${idx === activeIdx ? "text-indigo-700" : "text-slate-900"}`}>
                           {pkg.name}
                         </span>
-                        <span className={`text-xs ${diffColor[pkg.difficulty]}`}>
+                        {LIVE_DEMO_IDS.has(pkg.id) && (
+                          <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+                            Live
+                          </span>
+                        )}
+                        <span className={`text-xs ml-auto ${diffColor[pkg.difficulty]}`}>
                           {diffLabel[pkg.difficulty]}
                         </span>
                       </div>
@@ -238,6 +269,7 @@ export default function CommandPalette() {
               <div className="flex items-center gap-3">
                 <span><kbd className="border border-slate-200 rounded px-1 font-mono bg-white">↑↓</kbd> navigate</span>
                 <span><kbd className="border border-slate-200 rounded px-1 font-mono bg-white">↵</kbd> open</span>
+                <span className="hidden sm:inline text-slate-300">npm: · py: · #tag · live:</span>
               </div>
               <span>{packages.length} packages</span>
             </div>

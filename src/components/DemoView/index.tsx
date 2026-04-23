@@ -21,6 +21,9 @@ const RxjsDemo           = dynamic(() => import("./demos/RxjsDemo"),            
 const AxiosDemo          = dynamic(() => import("./demos/AxiosDemo"),               { ssr: false });
 const SwrDemo            = dynamic(() => import("./demos/SwrDemo"),                 { ssr: false });
 const ReactQueryDemo     = dynamic(() => import("./demos/ReactQueryDemo"),          { ssr: false });
+const GsapDemo           = dynamic(() => import("./demos/GsapDemo"),               { ssr: false });
+const TailwindDemo       = dynamic(() => import("./demos/TailwindDemo"),            { ssr: false });
+const VitestDemo         = dynamic(() => import("./demos/VitestDemo"),              { ssr: false });
 
 // Packages with custom live demos
 const LIVE: Record<string, React.ComponentType> = {
@@ -40,6 +43,9 @@ const LIVE: Record<string, React.ComponentType> = {
   axios:            AxiosDemo,
   swr:              SwrDemo,
   "react-query":    ReactQueryDemo,
+  gsap:             GsapDemo,
+  tailwindcss:      TailwindDemo,
+  vitest:           VitestDemo,
 };
 
 interface Props { pkg: Package }

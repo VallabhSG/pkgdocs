@@ -20,4 +20,7 @@ export const LIVE_DEMO_IDS = new Set([
   "axios",
   "swr",
   "react-query",
+  "gsap",
+  "tailwindcss",
+  "vitest",
 ]);
